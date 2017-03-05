@@ -1,4 +1,4 @@
-TicTacToe
+Boggle
 =========
 
-TicTacToe game
+Boggle game
