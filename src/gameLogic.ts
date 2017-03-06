@@ -1,7 +1,8 @@
-type Board = string[][];
+type Board = string[];
 interface BoardDelta {
-  row: number;
-  col: number;
+  //row: number;
+ // col: number;
+  arrDice: string[];
 }
 type IProposalData = BoardDelta;
 interface IState {
@@ -20,14 +21,35 @@ module gameLogic {
   export const ROWS = 3;
   export const COLS = 3;
 
-  /** Returns the initial TicTacToe board, which is a ROWSxCOLS matrix containing ''. */
+  /** Returns the initial board, which is a 4x4 matrix containing letters. */
   export function getInitialBoard(): Board {
     let board: Board = [];
-    for (let i = 0; i < ROWS; i++) {
-      board[i] = [];
-      for (let j = 0; j < COLS; j++) {
-        board[i][j] = '';
-      }
+
+    let die0 =['A','A','C','I','O','T'];
+    let die1 =['A','H','M','O','R','S'];
+    let die2 =['E','G','K','L','U','Y'];
+    let die3 =['A','B','I','L','T','Y'];
+    let die4 =['A','C','D','E','M','P'];
+    let die5 =['E','G','I','N','T','V'];
+    let die6 =['G','I','L','R','U','W'];
+    let die7 =['E','L','P','S','T','U'];
+    let die8 =['D','E','N','O','S','W'];
+    let die9 =['A','C','E','L','R','S'];
+    let die10 =['A','B','J','M','O','Qu'];
+    let die11 =['E','E','F','H','I','Y'];
+    let die12 =['E','H','I','N','P','S'];
+    let die13 =['D','K','N','O','T','U'];
+    let die14 =['A','D','E','N','V','Z'];
+    let die15 =['B','I','F','O','R','X'];
+
+    
+
+
+    for (let i = 0; i < 15; i++) {
+      let ran = Math.floor((Math.random() * 5) + 0);
+      let curDi = "die"+i
+      board[i] = curDi[ran];
+
     }
     return board;
   }
@@ -99,8 +121,10 @@ module gameLogic {
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
-  export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
+  export function createMove( 
+    stateBeforeMove: IState, arrDice: string[], turnIndexBeforeMove: number): IMove {
+   
+   
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
@@ -112,7 +136,7 @@ module gameLogic {
       throw new Error("Can only make a move if the game is not over!");
     }
     let boardAfterMove = angular.copy(board);
-    boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+   //////////// boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
     let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
@@ -127,11 +151,7 @@ module gameLogic {
     }
     let delta: BoardDelta = {row: row, col: col};
     let state: IState = {delta: delta, board: boardAfterMove};
-    return {
-      endMatchScores: endMatchScores,
-      turnIndex: turnIndex,
-      state: state
-    };
+    return {endMatchScores: endMatchScores, turnIndex: turnIndex, state: state};
   }
   
   export function createInitialMove(): IMove {
