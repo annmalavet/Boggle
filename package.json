@@ -16,7 +16,7 @@
     "grunt-http-server": "*",
     "grunt-karma": "*",
     "grunt-manifest": "*",
-    "grunt-postcss": "*",
+    "grunt-postcss": "^0.8.0",
     "grunt-processhtml": "*",
     "grunt-protractor-runner": "*",
     "grunt-shell": "*",
@@ -28,8 +28,8 @@
     "karma-coverage": "*",
     "karma-jasmine": "*",
     "load-grunt-tasks": "*",
-    "typescript": "*",
-    "protractor": "*"
+    "protractor": "*",
+    "typescript": "*"
   },
   "scripts": {
     "postinstall": "webdriver-manager update",
