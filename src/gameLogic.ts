@@ -64,7 +64,7 @@ module gameLogic {
    *     [['X', 'O', 'X'],
    *      ['X', 'O', 'O'],
    *      ['O', 'X', 'X']]
-   */
+   
   function isTie(board: Board): boolean {
     for (let i = 0; i < ROWS; i++) {
       for (let j = 0; j < COLS; j++) {
@@ -77,7 +77,7 @@ module gameLogic {
     // No empty cells, so we have a tie!
     return true;
   }
-
+*/
   /**
    * Return the winner (either 'X' or 'O') or '' if there is no winner.
    * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
@@ -85,7 +85,7 @@ module gameLogic {
    *     [['X', 'O', ''],
    *      ['X', 'O', ''],
    *      ['X', '', '']]
-   */
+   
   function getWinner(board: Board): string {
     let boardString = '';
     for (let i = 0; i < ROWS; i++) {
@@ -116,11 +116,12 @@ module gameLogic {
     }
     return '';
   }
-
+*/
   /**
    * Returns the move that should be performed when player
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
+  /*
   export function createMove( 
     stateBeforeMove: IState, arrDice: string[], turnIndexBeforeMove: number): IMove {
    

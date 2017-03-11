@@ -192,6 +192,36 @@ module game {
       currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
+  export function getDice(){
+let die0 =['A','A','C','I','O','T'];
+    let die1 =['A','H','M','O','R','S'];
+    let die2 =['E','G','K','L','U','Y'];
+    let die3 =['A','B','I','L','T','Y'];
+    let die4 =['A','C','D','E','M','P'];
+    let die5 =['E','G','I','N','T','V'];
+    let die6 =['G','I','L','R','U','W'];
+    let die7 =['E','L','P','S','T','U'];
+    let die8 =['D','E','N','O','S','W'];
+    let die9 =['A','C','E','L','R','S'];
+    let die10 =['A','B','J','M','O','Qu'];
+    let die11 =['E','E','F','H','I','Y'];
+    let die12 =['E','H','I','N','P','S'];
+    let die13 =['D','K','N','O','T','U'];
+    let die14 =['A','D','E','N','V','Z'];
+    let die15 =['B','I','F','O','R','X'];
+
+    
+
+
+    for (let i = 0; i < 15; i++) {
+      let ran = Math.floor((Math.random() * 5) + 0);
+      let curDi = "die"+i
+      let arrDice = [];
+      arrDice.push(curDi[ran]);
+      return arrDice;
+    }
+  }
+/*
   export function cellClicked(row: number, col: number): void {
     log.info("Clicked on cell:", row, col);
     if (!isHumanTurn()) return;
@@ -206,7 +236,7 @@ module game {
     // Move is legal, make it!
     makeMove(nextMove);
   }
-
+*/
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
   }

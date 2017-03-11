@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- build:[manifest] index.min.appcache -->
-<html lang="en" ng-app="boggle" ng-strict-di>
+<html lang="en" ng-app="myApp" ng-strict-di>
 <!-- /build -->
 <head>
   <meta charset="utf-8">
@@ -14,30 +14,38 @@
   <link rel="stylesheet" type="text/css" href="css/bog_style.css">
   <!-- /build -->
 
-  <!-- build:js js/everything.min.js -->
+  <!-- build:js js/everything.min.js 
   <script type="text/javascript" src="lib/boggle.js"></script>
+  -->
+  
   <script src="lib/angular.js"></script>
   <script src="lib/turnBasedServices.4.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/gameLogic.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/game.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/aiService.js"></script>
   <!-- /build -->
+   <script>
+    angular.module('myApp', ['gameServices']).run(function () { resizeGameAreaService.setWidthToHeight(1); });
+  </script>
 </head>
 <body >
 
+    <div id="gameArea">
 
-<div ng-controller="AppController">
+
+    </div>
+
+<div>
+
   <a id="img0">
     <figure>
-      <img src="http://annmalavet.com/Boggle/button0.png" alt="">
+      <img  src="http://annmalavet.com/Boggle/alphabet/img_A.png">
 
     </figure>
   </a>
  <a id="img1">
     <figure>
       <img src="http://annmalavet.com/Boggle/button0.png" alt="">
-     
-      <figcaption>  <h6 ng-model="cur_hours" value="{{cur_hours}}"> </h6></figcaption>
     </figure>
   </a>
   <a id="img2">
@@ -100,7 +108,7 @@
 
     </figure>
   </a>
-</div>
+    </div>
 
 <form>
 
