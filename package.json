@@ -21,6 +21,7 @@
     "grunt-protractor-runner": "*",
     "grunt-shell": "*",
     "grunt-ts": "*",
+    "grunt-typescript": "^0.8.0",
     "http-server": "*",
     "jasmine-core": "*",
     "karma": "*",
@@ -28,7 +29,7 @@
     "karma-coverage": "*",
     "karma-jasmine": "*",
     "load-grunt-tasks": "*",
-    "protractor": "*",
+    "protractor": "^5.1.1",
     "typescript": "*"
   },
   "scripts": {

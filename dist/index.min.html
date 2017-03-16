@@ -1,18 +1,112 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp" ng-strict-di manifest="index.min.appcache">
+<html lang="en" ng-app="myApp"  manifest="index.min.appcache">
 <head>
-  <meta charset="utf-8">
+   <meta http-equiv="Content-Type" content="text/html, charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>TicTacToe</title>
-  <meta name="description" content="TicTacToe game">
+  <title>Boggle Game</title>
+  <meta name="description" content="Boggle game">
   <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,"><!-- Suppress browser request for favicon.ico -->
 
   <!-- To ensure CSS files are downloaded in parallel, always include external CSS before external JavaScript. -->
   <link rel="stylesheet" type="text/css" href="css/everything.min.css">
 
-  <script src="js/everything.min.js"></script>
+  <script src="undefined"></script>
+
 </head>
-<body ng-cloak>
+<body ng-cloak >
+
+    <div id="gameArea">
+    </div>
+<div>
+
+  <a id="img0">
+    <figure>
+      <img  alt="">
+    </figure>
+  </a>
+ <a id="img1">
+<div >
+
+<button ng-repeat="box in [0,1,2,3,4]"  ng-style="{ 'background-image': 'url(http://annmalavet.com/Boggle/button0.png)'}"
+
+>
+</div>
+  </a>
+
+  </a>
+  <a id="img2">
+    <figure>
+      <img ng-src="{{game.setDice()}}" alt="" >
+
+    </figure>
+  </a>
+
+  <a id="img3">
+    <figure>
+      <img src="http://annmalavet.com/Boggle/button0.png"  ng-click="game.onClick()">
+
+    </figure>
+  </a>
+ <a id="img4245">
+    <figure>
+      
+<div ng-style="{'background-image':'url(http://annmalavet.com/Boggle/button0.png)'}"> </div>
+    </figure>
+  </a>
+  <a id="img43452">
+    <figure>
+  <img src="http://annmalavet.com/Boggle/button0.png" alt="">
+
+    </figure>
+  </a>
+  <a id="img445">
+    <figure>
+       <img src="http://annmalavet.com/Boggle/button0.png" alt="">
+
+    </figure>
+  </a>
+  <a id="img567">
+    <figure>
+       <img src="http://annmalavet.com/Boggle/button0.png" alt="">
+
+    </figure>
+  </a>
+  <a id="img55">
+    <figure>
+        <img ng-src="http://annmalavet.com/Boggle/button0.png" alt=""  ng-click="game.onClick()">
+
+    </figure>
+  </a>
+  <a id="img5">
+    <figure>
+        <img src="http://annmalavet.com/Boggle/button0.png" alt=""  ng-click="game.onClick()">
+
+    </figure>
+  </a>
+    <a id="img10">
+    <figure>
+      <img src="http://annmalavet.com/Boggle/button0.png" alt="" ng-click="game.onClick()">
+
+    </figure>
+  </a>
+   <a id="img11">
+    <figure>
+       <img src="http://annmalavet.com/Boggle/button0.png" alt="">
+
+    </figure>
+  </a>
+    </div>
+
+<form>
+
+		<div>
+		
+			<input type="text" ng-model="alphabet"  > </input>
+		
+	</form>
+</div>
+
+  <!--
 <div id="gameArea">
   <div ng-repeat="row in [0, 1, 2]"
       style="position:absolute; top:{{row * 33}}%; left:0; width:100%; height:33%;">
@@ -47,6 +141,6 @@
     </div>
   </div>
 </div>
-
+-->
 </body>
 </html>

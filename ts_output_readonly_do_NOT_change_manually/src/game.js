@@ -25,6 +25,7 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
+        window.alert("init in game");
     }
     game.init = init;
     function registerServiceWorker() {
@@ -48,23 +49,30 @@ var game;
         return game.proposals && game.proposals[row][col] > 0;
     }
     game.isProposal = isProposal;
-    function getCellStyle(row, col) {
-        if (!isProposal(row, col))
-            return {};
-        // proposals[row][col] is > 0
-        var countZeroBased = game.proposals[row][col] - 1;
-        var maxCount = game.currentUpdateUI.numberOfPlayersRequiredToMove - 2;
-        var ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
-        // scale will be between 0.6 and 0.8.
-        var scale = 0.6 + 0.2 * ratio;
-        // opacity between 0.5 and 0.7
-        var opacity = 0.5 + 0.2 * ratio;
-        return {
-            transform: "scale(" + scale + ", " + scale + ")",
-            opacity: "" + opacity,
-        };
+    ///
+    ///
+    ///
+    ///
+    function setDice(board) {
+        var s = 'http://annmalavet.com/Boggle/alphabet/img_A.png';
+        var a = "A";
+        return board;
     }
-    game.getCellStyle = getCellStyle;
+    game.setDice = setDice;
+    function getA() {
+        var a = 'A';
+        return a;
+    }
+    game.getA = getA;
+    function onClick() {
+        window.alert("something");
+        log.info("this is logged");
+    }
+    game.onClick = onClick;
+    ///
+    ///
+    ///
+    ///
     function getProposalsBoard(playerIdToProposal) {
         var proposals = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
@@ -174,22 +182,6 @@ var game;
             game.currentUpdateUI.turnIndex >= 0 &&
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
-    function cellClicked(row, col) {
-        log.info("Clicked on cell:", row, col);
-        if (!isHumanTurn())
-            return;
-        var nextMove = null;
-        try {
-            nextMove = gameLogic.createMove(game.state, row, col, game.currentUpdateUI.turnIndex);
-        }
-        catch (e) {
-            log.info(["Cell is already full in position:", row, col]);
-            return;
-        }
-        // Move is legal, make it!
-        makeMove(nextMove);
-    }
-    game.cellClicked = cellClicked;
     function shouldShowImage(row, col) {
         return game.state.board[row][col] !== "" || isProposal(row, col);
     }

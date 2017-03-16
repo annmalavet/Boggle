@@ -32,6 +32,8 @@ module game {
       updateUI: updateUI,
       getStateForOgImage: null,
     });
+
+      window.alert("init in game");
   }
 
   function registerServiceWorker() {
@@ -56,23 +58,35 @@ module game {
   export function isProposal(row: number, col: number) {
     return proposals && proposals[row][col] > 0;
   }
+  ///
+  ///
+  ///
+  ///
+export function setDice(board:Board){
 
-  export function getCellStyle(row: number, col: number): Object {
-    if (!isProposal(row, col)) return {};
-    // proposals[row][col] is > 0
-    let countZeroBased = proposals[row][col] - 1;
-    let maxCount = currentUpdateUI.numberOfPlayersRequiredToMove - 2;
-    let ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
-    // scale will be between 0.6 and 0.8.
-    let scale = 0.6 + 0.2 * ratio;
-    // opacity between 0.5 and 0.7
-    let opacity = 0.5 + 0.2 * ratio;
-    return {
-      transform: `scale(${scale}, ${scale})`,
-      opacity: "" + opacity,
-    };
-  }
-  
+ let s = 'http://annmalavet.com/Boggle/alphabet/img_A.png';
+ let a = "A";
+ return board;
+}
+
+export function getA(){
+ 
+
+ let a = 'A';
+ return a;
+}
+
+export function onClick(): void {
+window.alert("something");
+log.info("this is logged");
+
+}
+  ///
+  ///
+  ///
+  ///
+
+
   function getProposalsBoard(playerIdToProposal: IProposals): number[][] {
     let proposals: number[][] = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
@@ -192,51 +206,10 @@ module game {
       currentUpdateUI.yourPlayerIndex === currentUpdateUI.turnIndex; // it's my turn
   }
 
-  export function getDice(){
-let die0 =['A','A','C','I','O','T'];
-    let die1 =['A','H','M','O','R','S'];
-    let die2 =['E','G','K','L','U','Y'];
-    let die3 =['A','B','I','L','T','Y'];
-    let die4 =['A','C','D','E','M','P'];
-    let die5 =['E','G','I','N','T','V'];
-    let die6 =['G','I','L','R','U','W'];
-    let die7 =['E','L','P','S','T','U'];
-    let die8 =['D','E','N','O','S','W'];
-    let die9 =['A','C','E','L','R','S'];
-    let die10 =['A','B','J','M','O','Qu'];
-    let die11 =['E','E','F','H','I','Y'];
-    let die12 =['E','H','I','N','P','S'];
-    let die13 =['D','K','N','O','T','U'];
-    let die14 =['A','D','E','N','V','Z'];
-    let die15 =['B','I','F','O','R','X'];
 
-    
+ 
 
 
-    for (let i = 0; i < 15; i++) {
-      let ran = Math.floor((Math.random() * 5) + 0);
-      let curDi = "die"+i
-      let arrDice = [];
-      arrDice.push(curDi[ran]);
-      return arrDice;
-    }
-  }
-/*
-  export function cellClicked(row: number, col: number): void {
-    log.info("Clicked on cell:", row, col);
-    if (!isHumanTurn()) return;
-    let nextMove: IMove = null;
-    try {
-      nextMove = gameLogic.createMove(
-          state, row, col, currentUpdateUI.turnIndex);
-    } catch (e) {
-      log.info(["Cell is already full in position:", row, col]);
-      return;
-    }
-    // Move is legal, make it!
-    makeMove(nextMove);
-  }
-*/
   export function shouldShowImage(row: number, col: number): boolean {
     return state.board[row][col] !== "" || isProposal(row, col);
   }
@@ -256,9 +229,9 @@ let die0 =['A','A','C','I','O','T'];
   export function shouldSlowlyAppear(row: number, col: number): boolean {
     return state.delta &&
         state.delta.row === row && state.delta.col === col;
-  }
+  
 }
-
+  }
 angular.module('myApp', ['gameServices'])
   .run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
