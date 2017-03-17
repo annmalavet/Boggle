@@ -33,7 +33,7 @@ module game {
       getStateForOgImage: null,
     });
 
-      window.alert("init in game");
+     // window.alert("init in game");
   }
 
   function registerServiceWorker() {
@@ -76,15 +76,13 @@ export function getA(){
  return a;
 }
 
-export function onClick(): void {
-window.alert("something");
-log.info("this is logged");
-
+export function onClick(row: number, col: number) {
+//state = gameLogic.getInitialState();
+// window.alert(state.board[0][0]);
+let oka ='alphabet/img_A.png'
+return oka;
 }
-  ///
-  ///
-  ///
-  ///
+
 
 
   function getProposalsBoard(playerIdToProposal: IProposals): number[][] {
@@ -124,6 +122,7 @@ log.info("this is logged");
     state = params.state;
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
+      //window.alert(state);
     }
     // We calculate the AI move only after the animation finishes,
     // because if we call aiService now

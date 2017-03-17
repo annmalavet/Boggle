@@ -25,7 +25,7 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
-        window.alert("init in game");
+        // window.alert("init in game");
     }
     game.init = init;
     function registerServiceWorker() {
@@ -64,9 +64,13 @@ var game;
         return a;
     }
     game.getA = getA;
-    function onClick() {
-        window.alert("something");
-        log.info("this is logged");
+    function onClick(row, col) {
+        //window.alert("something");
+        //state = gameLogic.getInitialState();
+        // window.alert(state.board[0][0]);
+        //return state.board[0][0];
+        var oka = 'alphabet/img_A.png';
+        return oka;
     }
     game.onClick = onClick;
     ///
@@ -109,6 +113,7 @@ var game;
         game.state = params.state;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
+            //window.alert(state);
         }
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now
