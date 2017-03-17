@@ -78,8 +78,8 @@ export function getA(){
 
 export function onClick(row: number, col: number) {
 //state = gameLogic.getInitialState();
-// window.alert(state.board[0][0]);
-let oka ='alphabet/img_A.png'
+//window.alert(row+ ', '+col+ ' '+state.board[row][col]);
+let oka ='alphabet/img_'+state.board[row][col]+'.png'
 return oka;
 }
 

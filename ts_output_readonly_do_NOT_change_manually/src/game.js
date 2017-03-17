@@ -65,18 +65,12 @@ var game;
     }
     game.getA = getA;
     function onClick(row, col) {
-        //window.alert("something");
         //state = gameLogic.getInitialState();
-        // window.alert(state.board[0][0]);
-        //return state.board[0][0];
-        var oka = 'alphabet/img_A.png';
+        //window.alert(row+ ', '+col+ ' '+state.board[row][col]);
+        var oka = 'alphabet/img_' + game.state.board[row][col] + '.png';
         return oka;
     }
     game.onClick = onClick;
-    ///
-    ///
-    ///
-    ///
     function getProposalsBoard(playerIdToProposal) {
         var proposals = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
