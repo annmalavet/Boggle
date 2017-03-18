@@ -5,23 +5,7 @@ node_modules
 
 
 
-ts_output_readonly_do_NOT_change_manually/src/aiService.js
 
-ts_output_readonly_do_NOT_change_manually/src/aiService.js.map
-
-ts_output_readonly_do_NOT_change_manually/src/gameLogic.js
-
-ts_output_readonly_do_NOT_change_manually/src/gameLogic.js.map
-
-ts_output_readonly_do_NOT_change_manually/src/aiService.js
-
-ts_output_readonly_do_NOT_change_manually/src/aiService.js.map
-
-ts_output_readonly_do_NOT_change_manually/src/gameLogic.js
-
-ts_output_readonly_do_NOT_change_manually/src/gameLogic.js.map
-
-ts_output_readonly_do_NOT_change_manually/src/aiService.js
 
 index0.html
 
@@ -33,10 +17,6 @@ example_state.html
 
 lib/boggle.js
 
-alphabet/img_H.psd
-
-alphabet/img_F.psd
-
-alphabet/img_G.psd
-
 *.psd
+
+
