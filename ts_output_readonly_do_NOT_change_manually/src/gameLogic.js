@@ -78,7 +78,6 @@ var gameLogic;
         // let winner = getWinner(boardAfterMove);
         var endMatchScores;
         var turnIndex;
-        var listOf;
         var delta = { row: row, col: col };
         var state = { delta: delta, board: boardAfterMove };
         return {

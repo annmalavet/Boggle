@@ -51,9 +51,8 @@ var game;
     game.isProposal = isProposal;
     ///
     function listOf(row, col) {
-        var arr = ["oiio", "afad"];
+        var arr = [];
         arr.push(game.state.board[row][col]);
-        window.alert(arr);
         console.log(arr);
         return arr;
     }
