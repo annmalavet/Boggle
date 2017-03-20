@@ -50,7 +50,14 @@ var game;
     }
     game.isProposal = isProposal;
     ///
-    ///
+    function listOf(row, col) {
+        var arr = ["oiio", "afad"];
+        arr.push(game.state.board[row][col]);
+        window.alert(arr);
+        console.log(arr);
+        return arr;
+    }
+    game.listOf = listOf;
     ///
     ///
     function setDice(board) {
@@ -59,11 +66,11 @@ var game;
         return board;
     }
     game.setDice = setDice;
-    function getA() {
+    function addText(row, col) {
         var a = 'A';
         return a;
     }
-    game.getA = getA;
+    game.addText = addText;
     function onClick(row, col) {
         //state = gameLogic.getInitialState();
         //window.alert(row+ ', '+col+ ' '+state.board[row][col]);

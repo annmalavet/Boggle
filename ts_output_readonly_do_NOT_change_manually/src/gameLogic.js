@@ -48,7 +48,8 @@ var gameLogic;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
-        return { board: getInitialBoard(), delta: null };
+        return { board: getInitialBoard(), delta: null
+        };
     }
     gameLogic.getInitialState = getInitialState;
     function createInitialMove() {
@@ -77,12 +78,13 @@ var gameLogic;
         // let winner = getWinner(boardAfterMove);
         var endMatchScores;
         var turnIndex;
+        var listOf;
         var delta = { row: row, col: col };
         var state = { delta: delta, board: boardAfterMove };
         return {
             endMatchScores: endMatchScores,
             turnIndex: turnIndex,
-            state: state
+            state: state,
         };
     }
     gameLogic.createMove = createMove;

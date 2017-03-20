@@ -31647,7 +31647,7 @@ var gameLogic;
      *      ['E', 'A', 'B', 'C']]
      */
     function getInitialBoard() {
-        window.alert("get initial board");
+        // window.alert("get initial board");
         var board = [];
         var diceArr = [
             ['A', 'A', 'C', 'I', 'O', 'T'],
@@ -31709,7 +31709,7 @@ var gameLogic;
         // let winner = getWinner(boardAfterMove);
         var endMatchScores;
         var turnIndex;
-        var delta = { row: row, col: col };
+        var delta = { row: row, col: col, ansString: ansString };
         var state = { delta: delta, board: boardAfterMove };
         return {
             endMatchScores: endMatchScores,
@@ -31777,7 +31777,7 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
-        window.alert("init in game");
+        // window.alert("init in game");
     }
     game.init = init;
     function registerServiceWorker() {
@@ -31811,20 +31811,19 @@ var game;
         return board;
     }
     game.setDice = setDice;
-    function getA() {
+    function addText(row, col) {
+        game.state.ansString.push();
         var a = 'A';
         return a;
     }
-    game.getA = getA;
-    function onClick() {
-        window.alert("something");
-        log.info("this is logged");
+    game.addText = addText;
+    function onClick(row, col) {
+        //state = gameLogic.getInitialState();
+        //window.alert(row+ ', '+col+ ' '+state.board[row][col]);
+        var oka = 'alphabet/img_' + game.state.board[row][col] + '.png';
+        return oka;
     }
     game.onClick = onClick;
-    ///
-    ///
-    ///
-    ///
     function getProposalsBoard(playerIdToProposal) {
         var proposals = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
@@ -31861,6 +31860,7 @@ var game;
         game.state = params.state;
         if (isFirstMove()) {
             game.state = gameLogic.getInitialState();
+            //window.alert(state);
         }
         // We calculate the AI move only after the animation finishes,
         // because if we call aiService now

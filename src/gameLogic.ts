@@ -1,21 +1,22 @@
 type Board = string[][];
-interface BoardDelta {
+
+
+
+interface BoardDelta {// extends Array<TextOf> {
   row: number;
   col: number;
-//  arrDice: string[];
 }
 
 type IProposalData = BoardDelta;
 interface IState {
   board: Board;
   delta: BoardDelta;
+  //guessList: TextOf;
 }
 
 interface IState {
   board: Board;
   delta: BoardDelta;
-  //dictionary: Dictionary;
-  //guesses: Guesses;
 }
 
 import gameService = gamingPlatform.gameService;
@@ -35,6 +36,9 @@ module gameLogic {
    *      ['D', 'A', 'B', 'C'],
    *      ['E', 'A', 'B', 'C']]
    */
+
+
+
   export function getInitialBoard(): Board {
 
     // window.alert("get initial board");
@@ -72,7 +76,8 @@ module gameLogic {
     return board;
   }
   export function getInitialState(): IState {
-    return {board: getInitialBoard(), delta: null};
+    return {board: getInitialBoard(), delta: null
+    };
   }
 
     export function createInitialMove(): IMove {
@@ -86,7 +91,7 @@ module gameLogic {
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
+      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number ): IMove {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
@@ -103,13 +108,13 @@ module gameLogic {
    // let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
-    
-    let delta: BoardDelta = {row: row, col: col};
+    let delta: BoardDelta = {row: row, col: col } ;
     let state: IState = {delta: delta, board: boardAfterMove};
     return {
       endMatchScores: endMatchScores,
       turnIndex: turnIndex,
-      state: state
+      state: state,
+   
     };
   }
 // 1) return an array of the 16 char pools and 2) return an int array of 16 chosen indices.

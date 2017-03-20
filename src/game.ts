@@ -59,7 +59,12 @@ module game {
     return proposals && proposals[row][col] > 0;
   }
   ///
-  ///
+export function listOf (row:number, col:number){
+  let arr = [];
+  arr.push(state.board[row][col]);
+  console.log(arr);
+  return arr;
+}
   ///
   ///
 export function setDice(board:Board){
@@ -69,7 +74,7 @@ export function setDice(board:Board){
  return board;
 }
 
-export function getA(){
+export function addText (row: number, col: number){
  
 
  let a = 'A';
@@ -80,6 +85,7 @@ export function onClick(row: number, col: number) {
 //state = gameLogic.getInitialState();
 //window.alert(row+ ', '+col+ ' '+state.board[row][col]);
 let oka ='alphabet/img_'+state.board[row][col]+'.png'
+
 return oka;
 }
 

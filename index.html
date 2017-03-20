@@ -31,7 +31,7 @@
     <div >
     </div>
 <div>
-   <a id="img0">
+   <a id="img0"  >
       <div>  <img ng-src="{{game.onClick(0,0)}}"></div>
 
    </a>
@@ -75,38 +75,62 @@
 
     </figure>
   </a>
-  <a id="img8">
+    <button class="grow" id="img8" ng-click="game.listOf(2,0)">
     <figure>
         <img ng-src="{{game.onClick(2,0)}}">
 
     </figure>
-  </a>
-  <a id="img9">
+    </button>
+    <button class="grow" id="img9" ng-click="game.listOf(2,1)">
     <figure>
          <img ng-src="{{game.onClick(2,1)}}">
 
     </figure>
-  </a>
-    <a id="img10">
+    </button>
+    <button class="grow" id="img10" ng-click="game.listOf(2,2)">
     <figure>
       <img ng-src="{{game.onClick(2,2)}}">
 
     </figure>
-  </a>
-   <a id="img11">
+  </button>
+    <button class="grow" id="img11" ng-click="game.listOf(2,3)">
     <figure>
         <img ng-src="{{game.onClick(2,3)}}">
 
     </figure>
-  </a>
+  </button>
+
+    <button class="grow" id="img12" ng-click="game.listOf(3,0)">
+    <figure>
+        <img ng-src="{{game.onClick(3,0)}}">
+
+    </figure>
+  </button>
+      <button class="grow" id="img13" ng-click="game.listOf(3,1)">
+    <figure>
+        <img ng-src="{{game.onClick(3,1)}}">
+
+    </figure>
+  </button>
+      <button class="grow" id="img14" ng-click="game.listOf(3,2)">
+    <figure>
+        <img ng-src="{{game.onClick(3,2)}}">
+
+    </figure>
+  </button>
+      <button class="grow" id="img15" ng-click="game.listOf(3,3)">
+    <figure>
+        <img ng-src="{{game.onClick(3,3)}}">
+
+    </figure>
+  </button>
 
     </div>
 
 <form>
 
 		<div>
-		
-			<input type="text" ng-model="alphabet"  > </input>
+			<input id="box" type="text" > </input>
 		
 	</form>
 </div>
