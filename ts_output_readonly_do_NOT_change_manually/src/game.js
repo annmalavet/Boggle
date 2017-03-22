@@ -52,11 +52,10 @@ var game;
     game.isProposal = isProposal;
     ///
     function listOf(row, col) {
-        var a = game.guessList.concat(game.state.board[row][col]);
-        game.guessList.join('');
+        game.guessList = game.guessList.concat(game.state.board[row][col]);
         //window.alert(guessList);
-        console.log(a);
-        return a;
+        console.log(game.guessList);
+        return game.guessList;
     }
     game.listOf = listOf;
     ///
