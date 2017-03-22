@@ -14,6 +14,7 @@ var game;
     // For community games.
     game.proposals = null;
     game.yourPlayerInfo = null;
+    game.guessList = [];
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
@@ -51,10 +52,11 @@ var game;
     game.isProposal = isProposal;
     ///
     function listOf(row, col) {
-        var arr = [];
-        arr.push(game.state.board[row][col]);
-        console.log(arr);
-        return arr;
+        var a = game.guessList.concat(game.state.board[row][col]);
+        game.guessList.join('');
+        //window.alert(guessList);
+        console.log(a);
+        return a;
     }
     game.listOf = listOf;
     ///

@@ -21,6 +21,7 @@ module game {
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
 
+    export let guessList:string[] = [];
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
@@ -60,10 +61,10 @@ module game {
   }
   ///
 export function listOf (row:number, col:number){
-  let arr = [];
-  arr.push(state.board[row][col]);
-  console.log(arr);
-  return arr;
+guessList = guessList.concat(state.board[row][col]);
+ //window.alert(guessList);
+ console.log(guessList);
+  return guessList;
 }
   ///
   ///
