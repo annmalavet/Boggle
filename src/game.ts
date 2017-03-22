@@ -20,8 +20,8 @@ module game {
   // For community games.
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
-
-    export let guessList:string[] = [];
+export let tempString:string ='';
+ export let guessList:string[] = [];
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
@@ -61,10 +61,11 @@ module game {
   }
   ///
 export function listOf (row:number, col:number){
-guessList = guessList.concat(state.board[row][col]);
- //window.alert(guessList);
- console.log(guessList);
-  return guessList;
+  let arr = [];
+tempString = state.board[row][col].concat(tempString);
+  arr.push(state.board[row][col]);
+  console.log(tempString);
+  return tempString;
 }
   ///
   ///
