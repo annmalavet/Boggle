@@ -7,18 +7,41 @@ var game;
     // I export all variables to make it easy to debug in the browser by
     // simply typing in the console, e.g.,
     // game.currentUpdateUI
+    game.board = null;
     game.currentUpdateUI = null;
     game.didMakeMove = false; // You can only make one move per updateUI
     game.animationEndedTimeout = null;
     game.state = null;
     // For community games.
+    game.buttonNums = 16;
     game.proposals = null;
     game.yourPlayerInfo = null;
     game.tempString = '';
     game.guessList = [];
+    //
+    ///
+    //
+    //
+    game.counter = 100;
+    game.countDownLeft = 100;
+    game.moveToConfirm = null;
+    var clickToDragPiece;
+    game.deadBoard = null;
+    //
+    ///
+    ///
+    //
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
+        //
+        ///
+        clickToDragPiece = document.getElementById("clickToDragPiece");
+        game.gameArea = document.getElementById("gameArea");
+        game.boardArea = document.getElementById("boardArea");
+        dragAndDropService.addDragListener("boardArea", handleDragEvent);
+        //
+        //
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
@@ -52,9 +75,25 @@ var game;
     }
     game.isProposal = isProposal;
     ///
+    function startTimer() {
+        var timerCount = 60;
+        var countDown = function () {
+            if (timerCount < 0) {
+                window.alert("done");
+            }
+            else {
+                game.countDownLeft = timerCount;
+                timerCount--;
+                game.$timeout(countDown, 1000);
+            }
+        };
+        game.countDownLeft = timerCount;
+        countDown();
+    }
+    game.startTimer = startTimer;
     function listOf(row, col) {
         var arr = [];
-        game.tempString = game.state.board[row][col].concat(game.tempString);
+        game.tempString = game.tempString.concat(game.state.board[row][col]);
         arr.push(game.state.board[row][col]);
         console.log(game.tempString);
         return game.tempString;
@@ -68,18 +107,97 @@ var game;
         return board;
     }
     game.setDice = setDice;
-    function addText(row, col) {
+    function addText() {
+        //window.alert(tempString);
+        var s = game.tempString;
         var a = 'A';
-        return a;
+        return s;
     }
     game.addText = addText;
     function onClick(row, col) {
-        //state = gameLogic.getInitialState();
-        //window.alert(row+ ', '+col+ ' '+state.board[row][col]);
         var oka = 'alphabet/img_' + game.state.board[row][col] + '.png';
         return oka;
     }
     game.onClick = onClick;
+    function handleDragEvent(type, clientX, clientY) {
+        //  if (!isHumanTurn() || passes == 2) {
+        ///   return; // if the game is over, do not display dragging effect
+        //}
+        if (type === "touchstart" && game.moveToConfirm != null && game.deadBoard == null) {
+            game.moveToConfirm = null;
+            game.$rootScope.$apply();
+        }
+        // Center point in boardArea
+        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
+        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
+        // Is outside boardArea?
+        var button = document.getElementById("img0");
+        if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
+            // clearClickToDrag();
+            return;
+        }
+        // Inside boardArea. Let's find the containing square's row and col
+        var col = Math.floor(4 * x / game.boardArea.clientWidth);
+        var row = Math.floor(4 * y / game.boardArea.clientHeight);
+        game.tempString = game.tempString.concat(game.state.board[row][col]);
+        // if the cell is not empty, don't preview the piece, but still show the dragging lines
+        // if ((board[row][col] !== '' && deadBoard == null) ||
+        //     (board[row][col] == '' && deadBoard != null)) {
+        // clearClickToDrag();
+        //  return;
+        //  }
+        //  clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
+        // draggingLines.style.display = "inline";
+        var centerXY = getSquareCenterXY(row, col);
+        // show the piece
+        //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
+        var topLeft = getSquareTopLeft(row, col);
+        // clickToDragPiece.style.left = topLeft.left + "px";
+        //  clickToDragPiece.style.top = topLeft.top + "px";
+        if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+            // drag ended
+            dragDone(row, col);
+        }
+    }
+    ///******** *
+    ///******** *
+    ///******** *
+    ///******** *
+    ///******** *
+    function getSquareTopLeft(row, col) {
+        var size = getSquareWidthHeight();
+        return { top: row * size.height, left: col * size.width };
+    }
+    function getSquareWidthHeight() {
+        var boardArea = document.getElementById("boardArea");
+        return {
+            width: boardArea.clientWidth / (9),
+            height: boardArea.clientHeight / (9)
+        };
+    }
+    function getSquareCenterXY(row, col) {
+        var size = getSquareWidthHeight();
+        return {
+            x: col,
+            y: row //* size.height + size.height / 2
+        };
+    }
+    function dragDone(row, col) {
+        game.$rootScope.$apply(function () {
+            if (game.deadBoard == null) {
+                // moveToConfirm = {row: row, col: col};
+                alert(game.board[row][col]);
+            }
+            else {
+                game.tempString = game.tempString.concat(game.board[row][col]);
+                // clearClickToDrag();
+            }
+        });
+    }
+    //********* *
+    ///******** *
+    ///******** *
+    ///******** *
     function getProposalsBoard(playerIdToProposal) {
         var proposals = [];
         for (var i = 0; i < gameLogic.ROWS; i++) {
@@ -112,6 +230,8 @@ var game;
                 return;
         }
         game.currentUpdateUI = params;
+        startTimer();
+        addText();
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {

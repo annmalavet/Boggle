@@ -13,18 +13,45 @@ module game {
   // I export all variables to make it easy to debug in the browser by
   // simply typing in the console, e.g.,
   // game.currentUpdateUI
+  export let board: Board = null;
   export let currentUpdateUI: IUpdateUI = null;
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
   // For community games.
+  export let buttonNums = 16;
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
-export let tempString:string ='';
- export let guessList:string[] = [];
+  export let tempString:string ='';
+  export let guessList:string[] = [];
+//
+///
+//
+//
+  export let counter = 100;
+   export let countDownLeft = 100;
+  export let moveToConfirm: BoardDelta = null;
+  let clickToDragPiece: HTMLImageElement;
+  export let gameArea: HTMLElement;
+  export let boardArea: HTMLElement;
+  export let deadBoard: boolean[][] = null;
+//
+///
+///
+//
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
+//
+///
+    clickToDragPiece = <HTMLImageElement>document.getElementById("clickToDragPiece");
+    gameArea = document.getElementById("gameArea");
+    boardArea = document.getElementById("boardArea");
+    dragAndDropService.addDragListener("boardArea", handleDragEvent);
+//
+//
+
+
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
@@ -60,9 +87,25 @@ export let tempString:string ='';
     return proposals && proposals[row][col] > 0;
   }
   ///
+  export function startTimer(){
+	var timerCount = 60;
+
+	var countDown = function () {
+		if (timerCount < 0) {
+		  window.alert("done");
+		} else {
+		  countDownLeft = timerCount;
+		  timerCount--;
+		  $timeout(countDown, 1000);
+		}
+	};
+	countDownLeft = timerCount;
+	countDown();
+    
+  }
 export function listOf (row:number, col:number){
   let arr = [];
-tempString = state.board[row][col].concat(tempString);
+tempString = tempString.concat(state.board[row][col]);
   arr.push(state.board[row][col]);
   console.log(tempString);
   return tempString;
@@ -76,23 +119,106 @@ export function setDice(board:Board){
  return board;
 }
 
-export function addText (row: number, col: number){
- 
-
+export function addText (){
+ //window.alert(tempString);
+let s = tempString;
  let a = 'A';
- return a;
+ return s;
 }
 
 export function onClick(row: number, col: number) {
-//state = gameLogic.getInitialState();
-//window.alert(row+ ', '+col+ ' '+state.board[row][col]);
 let oka ='alphabet/img_'+state.board[row][col]+'.png'
-
 return oka;
 }
 
+  function handleDragEvent(type: any, clientX: any, clientY: any) {
+  //  if (!isHumanTurn() || passes == 2) {
+   ///   return; // if the game is over, do not display dragging effect
+//}
+
+    if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
+      moveToConfirm = null;
+      $rootScope.$apply();
+    }
+
+    // Center point in boardArea
+    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
+    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
+    // Is outside boardArea?
+    let button = document.getElementById("img0");
+
+    
+    if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
+     // clearClickToDrag();
+      return;
+    }
+    // Inside boardArea. Let's find the containing square's row and col
+    let col = Math.floor(4 * x / boardArea.clientWidth);
+    let row = Math.floor(4 * y / boardArea.clientHeight);
+    tempString = tempString.concat(state.board[row][col]);
+    // if the cell is not empty, don't preview the piece, but still show the dragging lines
+   // if ((board[row][col] !== '' && deadBoard == null) ||
+   //     (board[row][col] == '' && deadBoard != null)) {
+     // clearClickToDrag();
+    //  return;
+  //  }
+  //  clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
+   // draggingLines.style.display = "inline";
+    let centerXY = getSquareCenterXY(row, col);
+
+    // show the piece
+    //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
+
+    let topLeft = getSquareTopLeft(row, col);
+   // clickToDragPiece.style.left = topLeft.left + "px";
+  //  clickToDragPiece.style.top = topLeft.top + "px";
+    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+      // drag ended
+      dragDone(row, col);
+    }
+  }
+///******** *
+///******** *
+///******** *
+///******** *
+///******** *
 
 
+  function getSquareTopLeft(row: number, col: number) {
+    let size = getSquareWidthHeight();
+    return { top: row * size.height, left: col * size.width }
+  }
+  function getSquareWidthHeight() {
+    let boardArea = document.getElementById("boardArea");
+    return {
+      width: boardArea.clientWidth / (9), ///******** * TODO: 9 is hardcoded
+      height: boardArea.clientHeight / (9)
+    };
+  }
+  function getSquareCenterXY(row: number, col: number) {
+    let size = getSquareWidthHeight();
+    return {
+      x: col, //col * size.width + size.width / 2,
+      y: row //* size.height + size.height / 2
+    };
+  }
+  function dragDone(row: number, col: number) {
+    $rootScope.$apply(function () {
+      if (deadBoard == null) {
+       // moveToConfirm = {row: row, col: col};
+        alert(board[row][col]);
+      } else {
+        tempString = tempString.concat(board[row][col])
+       // clearClickToDrag();
+      }
+    });
+  }
+
+
+//********* *
+///******** *
+///******** *
+///******** *
   function getProposalsBoard(playerIdToProposal: IProposals): number[][] {
     let proposals: number[][] = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
@@ -126,6 +252,8 @@ return oka;
     }
 
     currentUpdateUI = params;
+    startTimer();
+    addText();
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {

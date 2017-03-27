@@ -1,3 +1,5 @@
+
+
 body {
   width: 80%;
   margin: 30px auto;
@@ -106,9 +108,11 @@ form > div {
     padding: 10px 0 5px 0;
 }
 
-form div input {
-width: 70%;
-margin-left: 5px;
-margin-bottom: 5px;
-
+form div textarea {
+width: 85%;
+ font-size:24px;
+margin-left: 15px;
+margin-bottom: 15px;
+display: block;
+  float: left;
 }

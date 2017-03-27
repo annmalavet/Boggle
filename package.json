@@ -1,11 +1,12 @@
 {
-  "name": "boggle0",
+  "name": "boggle",
   "repository": {
     "type": "git",
-    "url": "https://github.com/annmalavet/Boggle.git"
+    "url": "git+https://github.com/annmalavet/Boggle.git"
   },
   "version": "1.0.0",
   "devDependencies": {
+    "angular-timer": "^1.3.5",
     "autoprefixer": "*",
     "cssnano": "*",
     "grunt": "*",
@@ -41,5 +42,15 @@
   "author": "Ann M",
   "dependencies": {
     "word-list-json": "^0.2.0"
-  }
+  },
+  "description": "Boggle ========= ************************",
+  "bugs": {
+    "url": "https://github.com/annmalavet/Boggle/issues"
+  },
+  "homepage": "https://github.com/annmalavet/Boggle#readme",
+  "main": "Gruntfile.js",
+  "keywords": [
+    "timer"
+  ],
+  "license": "ISC"
 }
