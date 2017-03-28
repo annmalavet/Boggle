@@ -2,7 +2,7 @@
   "name": "boggle",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/annmalavet/Boggle.git"
+    "url": "https://github.com/annmalavet/Boggle.git"
   },
   "version": "1.0.0",
   "devDependencies": {
@@ -49,8 +49,12 @@
   },
   "homepage": "https://github.com/annmalavet/Boggle#readme",
   "main": "Gruntfile.js",
+<<<<<<< Updated upstream
   "keywords": [
     "timer"
   ],
+=======
+  "keywords": [],
+>>>>>>> Stashed changes
   "license": "ISC"
 }
