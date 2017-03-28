@@ -14,6 +14,10 @@ module game {
   // simply typing in the console, e.g.,
   // game.currentUpdateUI
   export let board: Board = null;
+
+
+  export let boardBeforeMove: Board = null;
+  export let delta: BoardDelta = null;
   export let currentUpdateUI: IUpdateUI = null;
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
@@ -35,6 +39,54 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let deadBoard: boolean[][] = null;
+
+    export let hasDim = false;
+  export let dim =4;
+  export function rowsPercent() {
+    return 100/dim;
+  }
+  let cacheIntegersTill: number[][] = [];
+    export function getIntegersTill(number: any): number[] {
+    if (cacheIntegersTill[number]) return cacheIntegersTill[number]; 
+    let res: number[] = [];
+    for (let i = 0; i < number; i++) {
+      res.push(i);
+    }
+    cacheIntegersTill[number] = res;
+    return res;
+  }
+ export function getCellStyle(row: number, col: number): Object {
+    if (!proposals) return {};
+    let count = proposals[row][col];
+    if (count == 0) return {};
+    // proposals[row][col] is > 0
+    let countZeroBased = count - 1;
+    let maxCount = currentUpdateUI.numberOfPlayersRequiredToMove - 2;
+    let ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
+    // scale will be between 0.6 and 0.8.
+    let scale = 0.6 + 0.2 * ratio;
+    // opacity between 0.5 and 0.7
+    let opacity = 0.5 + 0.2 * ratio;
+    return {
+      transform: `scale(${scale}, ${scale})`,
+      opacity: "" + opacity,
+    };
+  }
+    export function getBoardPiece(row: number, col: number): string {
+    let piece = game.board[row][col];
+    let pieceBefore = game.boardBeforeMove[row][col]; 
+    let isProposal = proposals && proposals[row][col] > 0;
+    //
+    
+    return isProposal ? (currentUpdateUI.turnIndex == 0 ? '1' : '2') :
+        !piece && !pieceBefore ? '' : (piece == 'A'  || pieceBefore == 'B' ? 'B' : 'C');
+  } 
+    export function shouldSlowlyDrop(rrow: number, ccol: number) {
+    return delta &&
+      delta.row === rrow &&
+      delta.col === ccol;
+  }
+
 //
 ///
 ///
@@ -88,11 +140,11 @@ module game {
   }
   ///
   export function startTimer(){
-	var timerCount = 60;
+	let timerCount = 60;
 
-	var countDown = function () {
+	let countDown = function () {
 		if (timerCount < 0) {
-		  window.alert("done");
+		 // window.alert("done");
 		} else {
 		  countDownLeft = timerCount;
 		  timerCount--;
@@ -136,16 +188,16 @@ return oka;
    ///   return; // if the game is over, do not display dragging effect
 //}
 
-    if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-      moveToConfirm = null;
-      $rootScope.$apply();
-    }
+  //  if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
+  //    moveToConfirm = null;
+  //    $rootScope.$apply();
+ //   }
 
     // Center point in boardArea
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     // Is outside boardArea?
-    let button = document.getElementById("img0");
+    let button = document.getElementById("button");
 
     
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
@@ -153,25 +205,20 @@ return oka;
       return;
     }
     // Inside boardArea. Let's find the containing square's row and col
-    let col = Math.floor(4 * x / boardArea.clientWidth);
-    let row = Math.floor(4 * y / boardArea.clientHeight);
+    let col = Math.floor(x * 4 / boardArea.clientWidth);
+    let row = Math.floor(y * 4 / boardArea.clientHeight);
+
+    let centerXY = getSquareCenterXY(row, col);
+
+    let topLeft = getSquareTopLeft(row, col);
     tempString = tempString.concat(state.board[row][col]);
     // if the cell is not empty, don't preview the piece, but still show the dragging lines
-   // if ((board[row][col] !== '' && deadBoard == null) ||
-   //     (board[row][col] == '' && deadBoard != null)) {
      // clearClickToDrag();
     //  return;
   //  }
   //  clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
    // draggingLines.style.display = "inline";
-    let centerXY = getSquareCenterXY(row, col);
 
-    // show the piece
-    //let cell = document.getElementById('board' + row + 'x' + col).className = $scope.turnIndex === 0 ? 'black' : 'white';
-
-    let topLeft = getSquareTopLeft(row, col);
-   // clickToDragPiece.style.left = topLeft.left + "px";
-  //  clickToDragPiece.style.top = topLeft.top + "px";
     if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
       dragDone(row, col);
@@ -191,8 +238,8 @@ return oka;
   function getSquareWidthHeight() {
     let boardArea = document.getElementById("boardArea");
     return {
-      width: boardArea.clientWidth / (9), ///******** * TODO: 9 is hardcoded
-      height: boardArea.clientHeight / (9)
+      width: boardArea.clientWidth / (4), ///******** * TODO: 9 is hardcoded
+      height: boardArea.clientHeight / (4)
     };
   }
   function getSquareCenterXY(row: number, col: number) {

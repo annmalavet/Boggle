@@ -43,32 +43,40 @@ module gameLogic {
 
     // window.alert("get initial board");
     let board: Board = [];
-
-
-  let diceArr =[
-    ['A','A','C','I','O','T'],
-    ['A','H','M','O','R','S'],
-    ['E','G','K','L','U','Y'],
-    ['A','B','I','L','T','Y'],
-    ['A','C','D','E','M','P'],
-    ['E','G','I','N','T','V'],
-    ['G','I','L','R','U','W'],
-    ['E','L','P','S','T','U'],
-    ['D','E','N','O','S','W'],
-    ['A','C','E','L','R','S'],
-    ['A','B','J','M','O','Qu'],
-    ['E','E','F','H','I','Y'],
-    ['E','H','I','N','P','S'],
-    ['D','K','N','O','T','U'],
-    ['A','D','E','N','V','Z'],
-    ['B','I','F','O','R','X']
-];
+      let diceArr =[
+	    [
+	    	['A','A','C','I','O','T'],
+	   		['A','H','M','O','R','S'],
+	    	['E','G','K','L','U','Y'],
+	    	['A','B','I','L','T','Y']
+	    ],
+	    [
+	    	['A','C','D','E','M','P'],
+	    	['E','G','I','N','T','V'],
+	    	['G','I','L','R','U','W'],
+	    	['E','L','P','S','T','U']
+	    ],
+	    [
+	    	['D','E','N','O','S','W'],
+	    	['A','C','E','L','R','S'],
+	    	['A','B','J','M','O','Qu'],
+	    	['E','E','F','H','I','Y']
+	    ],
+	    [
+	    	['E','H','I','N','P','S'],
+	    	['D','K','N','O','T','U'],
+	    	['A','D','E','N','V','Z'],
+	    	['B','I','F','O','R','X']
+	    ]
+	];
     let curArr = [];
     for (let i = 0; i < ROWS; i++) {
-  board[i] = [];
-      for (let j = 0; j < COLS; j++) {
-        let ran = Math.floor((Math.random() * 5) + 0);
-         board[i][j] = diceArr[i][ran];
+        board[i] = [];
+        for (let j = 0; j < COLS; j++) {
+        let ran = Math.floor((Math.random() * 5));
+         board[i][j] = diceArr[i][j][ran];
+         //board[i][j] = diceArr[i][ran];
+         log.info([ran, i, j, board[i][j]]);
          console.log (diceArr[i][ran]);
 
       }
