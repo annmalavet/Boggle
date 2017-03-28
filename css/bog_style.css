@@ -99,7 +99,7 @@ img {
 }
 
 #myDiv form br { display:none}
-form > div {
+form  {
     background-color: #efc20f;
     width: 100%;
     float: left;
