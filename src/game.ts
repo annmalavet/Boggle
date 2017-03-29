@@ -28,6 +28,7 @@ module game {
   export let yourPlayerInfo: IPlayerInfo = null;
   export let tempString:string ='';
   export let guessList:string[] = [];
+  export let arrAnswer:string[] = null;
 //
 ///
 //
@@ -188,11 +189,10 @@ return oka;
    ///   return; // if the game is over, do not display dragging effect
 //}
 
-  //  if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-  //    moveToConfirm = null;
-  //    $rootScope.$apply();
- //   }
-
+   if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
+     moveToConfirm = null;
+      $rootScope.$apply();
+   }
     // Center point in boardArea
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
@@ -205,13 +205,13 @@ return oka;
       return;
     }
     // Inside boardArea. Let's find the containing square's row and col
-    let col = Math.floor(x * 4 / boardArea.clientWidth);
-    let row = Math.floor(y * 4 / boardArea.clientHeight);
-
+    let col = Math.floor(4 * x / boardArea.clientWidth);
+    let row = Math.floor(4 * y / boardArea.clientHeight);
+    tempString = tempString.concat(state.board[row][col]);  
     let centerXY = getSquareCenterXY(row, col);
 
     let topLeft = getSquareTopLeft(row, col);
-    tempString = tempString.concat(state.board[row][col]);
+    
     // if the cell is not empty, don't preview the piece, but still show the dragging lines
      // clearClickToDrag();
     //  return;
@@ -252,7 +252,8 @@ return oka;
   function dragDone(row: number, col: number) {
     $rootScope.$apply(function () {
       if (deadBoard == null) {
-       // moveToConfirm = {row: row, col: col};
+        tempString = tempString.concat(board[row][col])
+      //  moveToConfirm = {row: row, col: col};
         alert(board[row][col]);
       } else {
         tempString = tempString.concat(board[row][col])

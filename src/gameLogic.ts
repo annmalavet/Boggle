@@ -43,7 +43,13 @@ module gameLogic {
 
     // window.alert("get initial board");
     let board: Board = [];
+<<<<<<< HEAD
       let diceArr =[
+=======
+
+
+  let diceArr =[
+>>>>>>> origin/gh-pages
 	    [
 	    	['A','A','C','I','O','T'],
 	   		['A','H','M','O','R','S'],
@@ -71,12 +77,19 @@ module gameLogic {
 	];
     let curArr = [];
     for (let i = 0; i < ROWS; i++) {
+<<<<<<< HEAD
         board[i] = [];
         for (let j = 0; j < COLS; j++) {
         let ran = Math.floor((Math.random() * 5));
          board[i][j] = diceArr[i][j][ran];
          //board[i][j] = diceArr[i][ran];
          log.info([ran, i, j, board[i][j]]);
+=======
+  board[i] = [];
+      for (let j = 0; j < COLS; j++) {
+          let ran: number = Math.floor((Math.random() * 6) + 0);
+        board[i][j] = diceArr[i][j][ran];
+>>>>>>> origin/gh-pages
          console.log (diceArr[i][ran]);
 
       }
@@ -110,7 +123,7 @@ module gameLogic {
    // }
    // if (getWinner(board) !== '' || isTie(board)) {
   //    throw new Error("Can only make a move if the game is not over!");
-  //  }
+  // }
     let boardAfterMove = angular.copy(board);
    // boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
    // let winner = getWinner(boardAfterMove);
