@@ -73,12 +73,14 @@ module gameLogic {
 	];
     let curArr = [];
     for (let i = 0; i < ROWS; i++) {
-
-  board[i] = [];
-      for (let j = 0; j < COLS; j++) {
-          let ran: number = Math.floor((Math.random() * 6) + 0);
-        board[i][j] = diceArr[i][j][ran];
+   board[i] = [];
+        for (let j = 0; j < COLS; j++) {
+        let ran = Math.floor((Math.random() * 5));
+         board[i][j] = diceArr[i][j][ran];
+         //board[i][j] = diceArr[i][ran];
+         log.info([ran, i, j, board[i][j]]);
          console.log (diceArr[i][ran]);
+
 
       }
     }

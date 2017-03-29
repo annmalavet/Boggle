@@ -10,7 +10,8 @@ body {
 
 }
 
-h3 {
+h2 {
+  
   text-align: center;
   font-size: 1.65em;
   margin: 0 0 30px;
@@ -29,6 +30,7 @@ margin-right: 0%;
 top: 0%;
 left: 0%;
 right:0%;
+
  background-color: rgba(0,0,0,0);
 }
 
@@ -71,14 +73,6 @@ figure {
 }
 
 
-img {
-  border: none;
-  max-width: 100%;
-  height: auto;
-  display: block;
- background-color: #fff;
-  transition: transform .2s ease-in-out;
-}
 
 .p a {
   display: inline;
@@ -107,25 +101,25 @@ form  {
     text-align: center;
     padding: 10px 0 5px 0;
 }
-
-<<<<<<< HEAD
-
-
 #boardArea {
-
-  top:0;
-  left:0;
+  position: absolute;
+  top: 30%; 
+  left 0px;
   width:100%;
-  height: 100%;
-  background-color:#fff;
+  height: 80%;
+  background-color:rgba(0,0,0,0);
   z-index:1;
+  display: block;
   border-radius: 3%;
-=======
-form div textarea {
-width: 85%;
- font-size:24px;
-margin-bottom: 15px;
-display: block;
-  float: left;
->>>>>>> origin/gh-pages
+}
+div div form  textarea {
+  position: absolute;
+  top: 0%; 
+  left 0px;
+  z-index:6;
+  width: 100%;
+  height: 20%;
+  font-size:24px;
+  margin-bottom: 15px;
+  display: block;
 }

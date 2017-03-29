@@ -185,43 +185,53 @@ return oka;
 }
 
   function handleDragEvent(type: any, clientX: any, clientY: any) {
+     
   //  if (!isHumanTurn() || passes == 2) {
    ///   return; // if the game is over, do not display dragging effect
 //}
+let buttonName = 'board' + clientX + 'x' + clientY;
 
-   if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-     moveToConfirm = null;
-      $rootScope.$apply();
-   }
+  // if (type === "touchstart"  && deadBoard == null) {
+ //    moveToConfirm = null;
+ //     $rootScope.$apply();
+    
+  // }
     // Center point in boardArea
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     // Is outside boardArea?
-    let button = document.getElementById("button");
+    let button = document.getElementById(buttonName);
 
     
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
      // clearClickToDrag();
+     var col = Math.floor(x * 4 / boardArea.clientWidth);
+    var row = Math.floor(y * 4 / boardArea.clientHeight);
+    console.log("row="+row+" col="+col);
+       game.tempString = game.tempString.concat(game.state.board[col][row]);
       return;
     }
-    // Inside boardArea. Let's find the containing square's row and col
-    let col = Math.floor(4 * x / boardArea.clientWidth);
-    let row = Math.floor(4 * y / boardArea.clientHeight);
-    tempString = tempString.concat(state.board[row][col]);  
-    let centerXY = getSquareCenterXY(row, col);
 
+    // Inside boardArea. Let's find the containing square's row and col
+    var col = Math.floor(x * 4 / game.boardArea.clientWidth);
+    var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+   // window.alert(col+" "+row);
+    game.tempString = game.tempString.concat(game.state.board[row][col]);
+    let centerXY = getSquareCenterXY(row, col);
     let topLeft = getSquareTopLeft(row, col);
-    
+      console.log(tempString);
     // if the cell is not empty, don't preview the piece, but still show the dragging lines
      // clearClickToDrag();
     //  return;
   //  }
-  //  clickToDragPiece.style.display = deadBoard == null ? "inline" : "none";
+ // clickToDragPiece.style.display = deadBoard == null ?  tempString = tempString.concat(state.board[row][col]) : "none";
    // draggingLines.style.display = "inline";
 
     if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
+     // tempString = tempString.concat(state.board[x][y]);  
       dragDone(row, col);
+     // window.alert("touchEnd");
     }
   }
 ///******** *
@@ -245,18 +255,20 @@ return oka;
   function getSquareCenterXY(row: number, col: number) {
     let size = getSquareWidthHeight();
     return {
-      x: col, //col * size.width + size.width / 2,
-      y: row //* size.height + size.height / 2
+      x: col, // * size.width + size.width / 2,
+      y: row // * size.height + size.height / 2
     };
   }
   function dragDone(row: number, col: number) {
     $rootScope.$apply(function () {
       if (deadBoard == null) {
-        tempString = tempString.concat(board[row][col])
+        ///window.alert("something deadboard")
+        game.tempString = game.tempString.concat(game.state.board[row][col]);
       //  moveToConfirm = {row: row, col: col};
         alert(board[row][col]);
       } else {
-        tempString = tempString.concat(board[row][col])
+         //window.alert("something deadboard")
+        game.tempString = game.tempString.concat(game.state.board[row][col]);
        // clearClickToDrag();
       }
     });
