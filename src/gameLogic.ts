@@ -50,7 +50,7 @@ module gameLogic {
 
   let diceArr =[
 >>>>>>> origin/gh-pages
-	    [
+	    [ 
 	    	['A','A','C','I','O','T'],
 	   		['A','H','M','O','R','S'],
 	    	['E','G','K','L','U','Y'],
