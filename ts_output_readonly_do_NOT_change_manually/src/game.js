@@ -20,6 +20,7 @@ var game;
     game.yourPlayerInfo = null;
     game.tempString = '';
     game.guessList = [];
+    game.arrAnswer = null;
     //
     ///
     //
@@ -178,10 +179,10 @@ var game;
         //  if (!isHumanTurn() || passes == 2) {
         ///   return; // if the game is over, do not display dragging effect
         //}
-        //  if (type === "touchstart" && moveToConfirm != null && deadBoard == null) {
-        //    moveToConfirm = null;
-        //    $rootScope.$apply();
-        //   }
+        if (type === "touchstart" && game.moveToConfirm != null && game.deadBoard == null) {
+            game.moveToConfirm = null;
+            game.$rootScope.$apply();
+        }
         // Center point in boardArea
         var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
         var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
@@ -192,11 +193,11 @@ var game;
             return;
         }
         // Inside boardArea. Let's find the containing square's row and col
-        var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-        var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+        var col = Math.floor(4 * x / game.boardArea.clientWidth);
+        var row = Math.floor(4 * y / game.boardArea.clientHeight);
+        game.tempString = game.tempString.concat(game.state.board[row][col]);
         var centerXY = getSquareCenterXY(row, col);
         var topLeft = getSquareTopLeft(row, col);
-        game.tempString = game.tempString.concat(game.state.board[row][col]);
         // if the cell is not empty, don't preview the piece, but still show the dragging lines
         // clearClickToDrag();
         //  return;
@@ -234,7 +235,8 @@ var game;
     function dragDone(row, col) {
         game.$rootScope.$apply(function () {
             if (game.deadBoard == null) {
-                // moveToConfirm = {row: row, col: col};
+                game.tempString = game.tempString.concat(game.board[row][col]);
+                //  moveToConfirm = {row: row, col: col};
                 alert(game.board[row][col]);
             }
             else {

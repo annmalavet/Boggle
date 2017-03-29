@@ -82,7 +82,7 @@ var gameLogic;
         // }
         // if (getWinner(board) !== '' || isTie(board)) {
         //    throw new Error("Can only make a move if the game is not over!");
-        //  }
+        // }
         var boardAfterMove = angular.copy(board);
         // boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
         // let winner = getWinner(boardAfterMove);
