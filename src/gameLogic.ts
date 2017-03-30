@@ -45,41 +45,41 @@ module gameLogic {
     let board: Board = [];
 
 
-  let diceArr =[
-	    [ 
-	    	['A','A','C','I','O','T'],
-	   		['A','H','M','O','R','S'],
-	    	['E','G','K','L','U','Y'],
-	    	['A','B','I','L','T','Y']
-	    ],
-	    [
-	    	['A','C','D','E','M','P'],
-	    	['E','G','I','N','T','V'],
-	    	['G','I','L','R','U','W'],
-	    	['E','L','P','S','T','U']
-	    ],
-	    [
-	    	['D','E','N','O','S','W'],
-	    	['A','C','E','L','R','S'],
-	    	['A','B','J','M','O','Qu'],
-	    	['E','E','F','H','I','Y']
-	    ],
-	    [
-	    	['E','H','I','N','P','S'],
-	    	['D','K','N','O','T','U'],
-	    	['A','D','E','N','V','Z'],
-	    	['B','I','F','O','R','X']
-	    ]
-	];
+    let diceArr = [
+      [
+        ['A', 'A', 'C', 'I', 'O', 'T'],
+        ['A', 'H', 'M', 'O', 'R', 'S'],
+        ['E', 'G', 'K', 'L', 'U', 'Y'],
+        ['A', 'B', 'I', 'L', 'T', 'Y']
+      ],
+      [
+        ['A', 'C', 'D', 'E', 'M', 'P'],
+        ['E', 'G', 'I', 'N', 'T', 'V'],
+        ['G', 'I', 'L', 'R', 'U', 'W'],
+        ['E', 'L', 'P', 'S', 'T', 'U']
+      ],
+      [
+        ['D', 'E', 'N', 'O', 'S', 'W'],
+        ['A', 'C', 'E', 'L', 'R', 'S'],
+        ['A', 'B', 'J', 'M', 'O', 'Qu'],
+        ['E', 'E', 'F', 'H', 'I', 'Y']
+      ],
+      [
+        ['E', 'H', 'I', 'N', 'P', 'S'],
+        ['D', 'K', 'N', 'O', 'T', 'U'],
+        ['A', 'D', 'E', 'N', 'V', 'Z'],
+        ['B', 'I', 'F', 'O', 'R', 'X']
+      ]
+    ];
     let curArr = [];
     for (let i = 0; i < ROWS; i++) {
-   board[i] = [];
-        for (let j = 0; j < COLS; j++) {
+      board[i] = [];
+      for (let j = 0; j < COLS; j++) {
         let ran = Math.floor((Math.random() * 5));
-         board[i][j] = diceArr[i][j][ran];
-         //board[i][j] = diceArr[i][ran];
-         log.info([ran, i, j, board[i][j]]);
-         console.log (diceArr[i][ran]);
+        board[i][j] = diceArr[i][j][ran];
+        //board[i][j] = diceArr[i][ran];
+        log.info([ran, i, j, board[i][j]]);
+        console.log(diceArr[i][ran]);
 
 
       }
@@ -87,13 +87,16 @@ module gameLogic {
     return board;
   }
   export function getInitialState(): IState {
-    return {board: getInitialBoard(), delta: null
+    return {
+      board: getInitialBoard(), delta: null
     };
   }
 
-    export function createInitialMove(): IMove {
-    return {endMatchScores: null, turnIndex: 0, 
-        state: getInitialState()};  
+  export function createInitialMove(): IMove {
+    return {
+      endMatchScores: null, turnIndex: 0,
+      state: getInitialState()
+    };
   }
 
 
@@ -102,33 +105,33 @@ module gameLogic {
    * with index turnIndexBeforeMove makes a move in cell row X col.
    */
   export function createMove(
-      stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number ): IMove {
+    stateBeforeMove: IState, row: number, col: number, turnIndexBeforeMove: number): IMove {
     if (!stateBeforeMove) {
       stateBeforeMove = getInitialState();
     }
     let board: Board = stateBeforeMove.board;
     console.log("this is createMove");
-   // if (board[row][col] !== '') {
-   //   throw new Error("One can only make a move in an empty position!");
-   // }
-   // if (getWinner(board) !== '' || isTie(board)) {
-  //    throw new Error("Can only make a move if the game is not over!");
-  // }
+    // if (board[row][col] !== '') {
+    //   throw new Error("One can only make a move in an empty position!");
+    // }
+    // if (getWinner(board) !== '' || isTie(board)) {
+    //    throw new Error("Can only make a move if the game is not over!");
+    // }
     let boardAfterMove = angular.copy(board);
-   // boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-   // let winner = getWinner(boardAfterMove);
+    // boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
+    // let winner = getWinner(boardAfterMove);
     let endMatchScores: number[];
     let turnIndex: number;
-    let delta: BoardDelta = {row: row, col: col } ;
-    let state: IState = {delta: delta, board: boardAfterMove};
+    let delta: BoardDelta = { row: row, col: col };
+    let state: IState = { delta: delta, board: boardAfterMove };
     return {
       endMatchScores: endMatchScores,
       turnIndex: turnIndex,
       state: state,
-   
+
     };
   }
-// 1) return an array of the 16 char pools and 2) return an int array of 16 chosen indices.
+  // 1) return an array of the 16 char pools and 2) return an int array of 16 chosen indices.
 
   /**
    * Returns true if the game ended in a tie because there are no empty cells.

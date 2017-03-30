@@ -29,32 +29,26 @@
 
 </head>
 
-<body ng-cloak ng-app="myApp">
+<body ng-cloak ng-app="myApp" style="position:absolute; top:0; left:0; width:100%; height:100%;">
 
   <div id="gameArea" id="clickToDragPiece">
-        <div id="inputArea">
-        <form>
-          <textarea name="text" rows="14" cols="100" wrap="soft"> {{game.addText()}}</textarea>
-        </form>
-   </div>
-  <h2>Time remaining: {{game.countDownLeft}}</h2>
-
-      <div id="boardArea" >
-                <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row * 110 / game.dim}}%; left:0; width:110%; height:100%;">
-                    <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 110 / game.dim}}%; width:110%; height:100%;"
-                        
-                   >
-                        <button class="grow" id="clickToDragPiece" 
-                        style="z-index: 30; width: 25%; height: 25%; "
-                           ng-style="{ 'background-image': 'url(' + game.onClick(row, col) + ')' }"
-                         ng-click="game.listOf(row, col)"
-                           >
-                    </div>
-                </div>
+    <div id="inputArea">
+        <textarea name="text" rows="14" cols="100" wrap="soft"> {{game.addText()}}</textarea>
+    </div>
+    <div>
+    <h2>Time remaining: {{game.countDownLeft}}</h2>
+</div>
+    <div id="boardArea" 00000>0
+      <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row * 110 / game.dim}}%; left:0; width:100%; height:100%;">
+        <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 110 / game.dim}}%; width:100%; height:100%;">
+          <button class="grow" id="clickToDragPiece" style="z-index: 30; width: 25%; height: 25%; " ng-style="{ 'background-image': 'url(' + game.onClick(row, col) + ')' }"
+            ng-click="game.listOf(row, col)"></button>
+        </div>
       </div>
+    </div>
   </div>
 
-   </div>
+  </div>
 </body>
 
 </html>
