@@ -126,6 +126,8 @@ var data = require("../dictionary/dictionary.js");
     });
 
      window.alert(data);
+     window.alert("data");
+  }
   }
 
   function registerServiceWorker() {
