@@ -58,13 +58,16 @@ var gameLogic;
     }
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
-        return { board: getInitialBoard(), delta: null
+        return {
+            board: getInitialBoard(), delta: null
         };
     }
     gameLogic.getInitialState = getInitialState;
     function createInitialMove() {
-        return { endMatchScores: null, turnIndex: 0,
-            state: getInitialState() };
+        return {
+            endMatchScores: null, turnIndex: 0,
+            state: getInitialState()
+        };
     }
     gameLogic.createInitialMove = createInitialMove;
     /**
