@@ -51,7 +51,7 @@ background-color: rgba(0,0,0,0);
 -o-transform:scale(.8);
 transform:scale(.7);
 border-style: solid;
-background-size: 80% 80%;
+background-size: 90% 90%;
 background-position: center;
 }
 #boardArea {
@@ -69,8 +69,7 @@ border-radius: 3%;
 -ms-transform:scale(.8);
 -o-transform:scale(.8);
 transform:scale(.9);
-border-style: solid;
-border-width: medium;
+
 }
 
 #inputarea {
@@ -100,7 +99,8 @@ h2 {
   position: absolute;
   display: inline-block;
   z-index: 50;
-  top: 80%;
+  top: 85%;
+  font-size: 10px;
   align-content: center;
   width: 100%;
 }
@@ -121,8 +121,7 @@ height: 80%;
 background-color:rgba(0,0,0,0);
 z-index:999;
 border-radius: 3%;
-border-style: solid;
-border-width: small;
+
 display: inline-block;
 vertical-align: top;
 }

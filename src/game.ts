@@ -26,29 +26,29 @@ module game {
   export let buttonNums = 16;
   export let proposals: number[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
-  export let tempString:string ='';
-  export let guessList:string[] = [];
-  export let arrAnswer:string[] = null;
-//
-///
-//
-//
+  export let tempString: string = '';
+  export let guessList: string[] = [];
+  export let arrAnswer: string[] = null;
+  //
+  ///
+  //
+  //
   export let counter = 100;
-   export let countDownLeft = 100;
+  export let countDownLeft = 100;
   export let moveToConfirm: BoardDelta = null;
   let clickToDragPiece: HTMLImageElement;
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let deadBoard: boolean[][] = null;
 
-    export let hasDim = false;
-  export let dim =4;
+  export let hasDim = false;
+  export let dim = 4;
   export function rowsPercent() {
-    return 100/dim;
+    return 100 / dim;
   }
   let cacheIntegersTill: number[][] = [];
-    export function getIntegersTill(number: any): number[] {
-    if (cacheIntegersTill[number]) return cacheIntegersTill[number]; 
+  export function getIntegersTill(number: any): number[] {
+    if (cacheIntegersTill[number]) return cacheIntegersTill[number];
     let res: number[] = [];
     for (let i = 0; i < number; i++) {
       res.push(i);
@@ -56,7 +56,7 @@ module game {
     cacheIntegersTill[number] = res;
     return res;
   }
- export function getCellStyle(row: number, col: number): Object {
+  export function getCellStyle(row: number, col: number): Object {
     if (!proposals) return {};
     let count = proposals[row][col];
     if (count == 0) return {};
@@ -73,36 +73,39 @@ module game {
       opacity: "" + opacity,
     };
   }
-    export function getBoardPiece(row: number, col: number): string {
+
+
+
+  export function getBoardPiece(row: number, col: number): string {
     let piece = game.board[row][col];
-    let pieceBefore = game.boardBeforeMove[row][col]; 
+    let pieceBefore = game.boardBeforeMove[row][col];
     let isProposal = proposals && proposals[row][col] > 0;
     //
-    
+
     return isProposal ? (currentUpdateUI.turnIndex == 0 ? '1' : '2') :
-        !piece && !pieceBefore ? '' : (piece == 'A'  || pieceBefore == 'B' ? 'B' : 'C');
-  } 
-    export function shouldSlowlyDrop(rrow: number, ccol: number) {
+      !piece && !pieceBefore ? '' : (piece == 'A' || pieceBefore == 'B' ? 'B' : 'C');
+  }
+  export function shouldSlowlyDrop(rrow: number, ccol: number) {
     return delta &&
       delta.row === rrow &&
       delta.col === ccol;
   }
 
-//
-///
-///
-//
+  //
+  ///
+  ///
+  //
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
-//
-///
+    //
+    ///
     clickToDragPiece = <HTMLImageElement>document.getElementById("clickToDragPiece");
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
-//
-//
+    //
+    //
 
 
     registerServiceWorker();
@@ -114,7 +117,7 @@ module game {
       getStateForOgImage: null,
     });
 
-     // window.alert("init in game");
+    // window.alert("init in game");
   }
 
   function registerServiceWorker() {
@@ -124,9 +127,9 @@ module game {
     if (!window.applicationCache && 'serviceWorker' in navigator) {
       let n: any = navigator;
       log.log('Calling serviceWorker.register');
-      n.serviceWorker.register('service-worker.js').then(function(registration: any) {
-        log.log('ServiceWorker registration successful with scope: ',    registration.scope);
-      }).catch(function(err: any) {
+      n.serviceWorker.register('service-worker.js').then(function (registration: any) {
+        log.log('ServiceWorker registration successful with scope: ', registration.scope);
+      }).catch(function (err: any) {
         log.log('ServiceWorker registration failed: ', err);
       });
     }
@@ -140,105 +143,107 @@ module game {
     return proposals && proposals[row][col] > 0;
   }
   ///
-  export function startTimer(){
-	let timerCount = 60;
+  export function startTimer() {
+    let timerCount = 60;
 
-	let countDown = function () {
-		if (timerCount < 0) {
-		 // window.alert("done");
-		} else {
-		  countDownLeft = timerCount;
-		  timerCount--;
-		  $timeout(countDown, 1000);
-		}
-	};
-	countDownLeft = timerCount;
-	countDown();
-    
+    let countDown = function () {
+      if (timerCount < 0) {
+        // window.alert("done");
+      } else {
+        countDownLeft = timerCount;
+        timerCount--;
+        $timeout(countDown, 1000);
+      }
+    };
+    countDownLeft = timerCount;
+    countDown();
+
   }
-export function listOf (row:number, col:number){
-  let arr = [];
-tempString = tempString.concat(state.board[row][col]);
-  arr.push(state.board[row][col]);
-  console.log(tempString);
-  return tempString;
-}
+  export function listOf(row: number, col: number) {
+    let arr = [];
+    tempString = tempString.concat(state.board[row][col]);
+    arr.push(state.board[row][col]);
+    console.log(tempString);
+    return tempString;
+  }
   ///
   ///
-export function setDice(board:Board){
+  export function setDice(board: Board) {
 
- let s = 'http://annmalavet.com/Boggle/alphabet/img_A.png';
- let a = "A";
- return board;
-}
+    let s = 'http://annmalavet.com/Boggle/alphabet/img_A.png';
+    let a = "A";
+    return board;
+  }
 
-export function addText (){
- //window.alert(tempString);
-let s = tempString;
- let a = 'A';
- return s;
-}
+  export function addText() {
+    //window.alert(tempString);
+    let s = tempString;
+    let a = 'A';
+    return s;
+  }
 
-export function onClick(row: number, col: number) {
-let oka ='alphabet/img_'+state.board[row][col]+'.png'
-return oka;
-}
+  export function onClick(row: number, col: number) {
+    let oka = 'alphabet/img_' + state.board[row][col] + '.png'
+    return oka;
+  }
 
   function handleDragEvent(type: any, clientX: any, clientY: any) {
-     
-  //  if (!isHumanTurn() || passes == 2) {
-   ///   return; // if the game is over, do not display dragging effect
-//}
-let buttonName = 'board' + clientX + 'x' + clientY;
 
-  // if (type === "touchstart"  && deadBoard == null) {
- //    moveToConfirm = null;
- //     $rootScope.$apply();
-    
-  // }
+    //  if (!isHumanTurn() || passes == 2) {
+    ///   return; // if the game is over, do not display dragging effect
+    //}
+    let buttonName = 'board' + clientX + 'x' + clientY;
+
+    // if (type === "touchstart"  && deadBoard == null) {
+    //    moveToConfirm = null;
+    //     $rootScope.$apply();
+
+    // }
     // Center point in boardArea
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     // Is outside boardArea?
     let button = document.getElementById(buttonName);
 
-    
+
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
-     // clearClickToDrag();
-     var col = Math.floor(x * 4 / boardArea.clientWidth);
-    var row = Math.floor(y * 4 / boardArea.clientHeight);
-    console.log("row="+row+" col="+col);
-       game.tempString = game.tempString.concat(game.state.board[col][row]);
+      // clearClickToDrag();
+      var col = Math.floor(x * 4 / boardArea.clientWidth);
+      var row = Math.floor(y * 4 / boardArea.clientHeight);
+      console.log("row=" + row + " col=" + col);
+     // game.tempString = game.tempString.concat(game.state.board[col][row]);
       return;
     }
 
     // Inside boardArea. Let's find the containing square's row and col
     var col = Math.floor(x * 4 / game.boardArea.clientWidth);
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-   // window.alert(col+" "+row);
+    // window.alert(col+" "+row);
+
     game.tempString = game.tempString.concat(game.state.board[row][col]);
+  
     let centerXY = getSquareCenterXY(row, col);
     let topLeft = getSquareTopLeft(row, col);
-      console.log(tempString);
+    console.log(tempString);
     // if the cell is not empty, don't preview the piece, but still show the dragging lines
-     // clearClickToDrag();
+    // clearClickToDrag();
     //  return;
-  //  }
- // clickToDragPiece.style.display = deadBoard == null ?  tempString = tempString.concat(state.board[row][col]) : "none";
-   // draggingLines.style.display = "inline";
+    //  }
+    // clickToDragPiece.style.display = deadBoard == null ?  tempString = tempString.concat(state.board[row][col]) : "none";
+    // draggingLines.style.display = "inline";
 
     if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
-     // tempString = tempString.concat(state.board[x][y]);  
-      dragDone(row, col);
-     // window.alert("touchEnd");
+      // tempString = tempString.concat(state.board[x][y]);  
+      dragDone(tempString);
+      // window.alert("touchEnd");
     }
   }
-///******** *
-///******** *
-///******** *
-///******** *
-///******** *
+  ///******** *
+  ///******** *
+  ///******** *
+  ///******** *
+  ///******** *
 
 
   function getSquareTopLeft(row: number, col: number) {
@@ -259,26 +264,26 @@ let buttonName = 'board' + clientX + 'x' + clientY;
       y: row // * size.height + size.height / 2
     };
   }
-  function dragDone(row: number, col: number) {
+  function dragDone(tempString:any) {
     $rootScope.$apply(function () {
-      if (deadBoard == null) {
+     // if (deadBoard == null) {
         ///window.alert("something deadboard")
-        game.tempString = game.tempString.concat(game.state.board[row][col]);
-      //  moveToConfirm = {row: row, col: col};
-        alert(board[row][col]);
-      } else {
-         //window.alert("something deadboard")
-        game.tempString = game.tempString.concat(game.state.board[row][col]);
-       // clearClickToDrag();
-      }
+       // game.tempString = game.tempString.concat(game.state.board[row][col]);
+        //  moveToConfirm = {row: row, col: col};
+       // alert(board[row][col]);
+     // } else {
+        //window.alert("something deadboard")
+        //game.tempString = game.tempString.concat(game.state.board[row][col]);
+        // clearClickToDrag();
+      //}
     });
   }
 
 
-//********* *
-///******** *
-///******** *
-///******** *
+  //********* *
+  ///******** *
+  ///******** *
+  ///******** *
   function getProposalsBoard(playerIdToProposal: IProposals): number[][] {
     let proposals: number[][] = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
@@ -298,7 +303,7 @@ let buttonName = 'board' + clientX + 'x' + clientY;
   export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     let playerIdToProposal = params.playerIdToProposal;
-     // Only one move/proposal per updateUI
+    // Only one move/proposal per updateUI
     didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
@@ -340,7 +345,7 @@ let buttonName = 'board' + clientX + 'x' + clientY;
 
   function maybeSendComputerMove() {
     if (!isComputerTurn()) return;
-    let currentMove:IMove = {
+    let currentMove: IMove = {
       endMatchScores: currentUpdateUI.endMatchScores,
       state: currentUpdateUI.state,
       turnIndex: currentUpdateUI.turnIndex,
@@ -355,12 +360,12 @@ let buttonName = 'board' + clientX + 'x' + clientY;
       return;
     }
     didMakeMove = true;
-    
+
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
       let delta = move.state.delta;
-      let myProposal:IProposal = {
+      let myProposal: IProposal = {
         data: delta,
         chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
         playerInfo: yourPlayerInfo,
@@ -402,7 +407,7 @@ let buttonName = 'board' + clientX + 'x' + clientY;
   }
 
 
- 
+
 
 
   export function shouldShowImage(row: number, col: number): boolean {
@@ -412,7 +417,7 @@ let buttonName = 'board' + clientX + 'x' + clientY;
   function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
-  
+
   export function isPieceX(row: number, col: number): boolean {
     return isPiece(row, col, 0, 'X');
   }
@@ -423,10 +428,10 @@ let buttonName = 'board' + clientX + 'x' + clientY;
 
   export function shouldSlowlyAppear(row: number, col: number): boolean {
     return state.delta &&
-        state.delta.row === row && state.delta.col === col;
-  
-}
+      state.delta.row === row && state.delta.col === col;
+
   }
+}
 angular.module('myApp', ['gameServices'])
   .run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
