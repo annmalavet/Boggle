@@ -125,7 +125,7 @@ var data = require("../dictionary/dictionary.js");
       getStateForOgImage: null,
     });
 
-     window.alert(data[0]);
+     window.alert(data);
   }
 
   function registerServiceWorker() {
