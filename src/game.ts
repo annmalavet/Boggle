@@ -33,6 +33,7 @@ module game {
   ///
   //
   //
+  export let buttonBg = false;
   export let counter = 100;
   export let countDownLeft = 100;
   export let moveToConfirm: BoardDelta = null;
@@ -161,7 +162,7 @@ module game {
   }
   export function listOf(row: number, col: number) {
     let arr = [];
-    tempString = tempString.concat(state.board[row][col]);
+    //tempString = tempString.concat(state.board[row][col]);
     arr.push(state.board[row][col]);
     console.log(tempString);
     return tempString;
@@ -221,7 +222,7 @@ module game {
     // window.alert(col+" "+row);
 
     game.tempString = game.tempString.concat(game.state.board[row][col]);
-  
+    buttonBg = true;
     let centerXY = getSquareCenterXY(row, col);
     let topLeft = getSquareTopLeft(row, col);
     console.log(tempString);

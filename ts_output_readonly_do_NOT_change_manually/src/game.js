@@ -25,6 +25,7 @@ var game;
     ///
     //
     //
+    game.buttonBg = false;
     game.counter = 100;
     game.countDownLeft = 100;
     game.moveToConfirm = null;
@@ -194,7 +195,7 @@ var game;
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
             console.log("row=" + row + " col=" + col);
-            game.tempString = game.tempString.concat(game.state.board[col][row]);
+            // game.tempString = game.tempString.concat(game.state.board[col][row]);
             return;
         }
         // Inside boardArea. Let's find the containing square's row and col
@@ -202,6 +203,7 @@ var game;
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
         // window.alert(col+" "+row);
         game.tempString = game.tempString.concat(game.state.board[row][col]);
+        game.buttonBg = true;
         var centerXY = getSquareCenterXY(row, col);
         var topLeft = getSquareTopLeft(row, col);
         console.log(game.tempString);
