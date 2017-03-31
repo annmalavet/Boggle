@@ -4,7 +4,6 @@ interface SupportedLanguages {
   el: string, fr: string,
   hi: string, es: string,
 };
-
 module game {
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;
@@ -15,6 +14,12 @@ module game {
   // game.currentUpdateUI
   export let board: Board = null;
 
+
+
+  // Declare your variables
+
+
+var data = require("../dictionary/dictionary.js");
 
   export let boardBeforeMove: Board = null;
   export let delta: BoardDelta = null;
@@ -33,6 +38,8 @@ module game {
   ///
   //
   //
+
+ 
   export let buttonBg = false;
   export let counter = 100;
   export let countDownLeft = 100;
@@ -118,7 +125,7 @@ module game {
       getStateForOgImage: null,
     });
 
-    // window.alert("init in game");
+     window.alert(data[0]);
   }
 
   function registerServiceWorker() {
@@ -201,8 +208,8 @@ module game {
 
     // }
     // Center point in boardArea
-    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
-    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
+    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft-.5;
+    let y = clientY - boardArea.offsetTop - gameArea.offsetTop-.5;
     // Is outside boardArea?
     let button = document.getElementById(buttonName);
 

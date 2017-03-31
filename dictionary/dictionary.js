@@ -1,4 +1,5 @@
-words=\\\AA
+words=
+AA
 AAH
 AAHED
 AAHING
@@ -267749,4 +267750,4 @@ ZYZZYVA
 ZYZZYVAS
 ZZZ
 ZZZS
-\\\
+

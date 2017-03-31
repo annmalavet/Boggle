@@ -8,6 +8,8 @@ var game;
     // simply typing in the console, e.g.,
     // game.currentUpdateUI
     game.board = null;
+    // Declare your variables
+    var data = require("../dictionary/dictionary.js");
     game.boardBeforeMove = null;
     game.delta = null;
     game.currentUpdateUI = null;
@@ -107,7 +109,7 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
-        // window.alert("init in game");
+        window.alert(data[0]);
     }
     game.init = init;
     function registerServiceWorker() {
@@ -150,7 +152,7 @@ var game;
     game.startTimer = startTimer;
     function listOf(row, col) {
         var arr = [];
-        game.tempString = game.tempString.concat(game.state.board[row][col]);
+        //tempString = tempString.concat(state.board[row][col]);
         arr.push(game.state.board[row][col]);
         console.log(game.tempString);
         return game.tempString;
@@ -186,8 +188,8 @@ var game;
         //     $rootScope.$apply();
         // }
         // Center point in boardArea
-        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
-        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
+        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft - .5;
+        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop - .5;
         // Is outside boardArea?
         var button = document.getElementById(buttonName);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {

@@ -10,6 +10,7 @@
         "outDir": "ts_output_readonly_do_NOT_change_manually/",
         "sourceMap": true,
         "noLib": false,
+         "allowJs": true,
         "newLine": "CRLF"
     },
     "filesGlob": [
@@ -31,6 +32,7 @@
         "placeOpenBraceOnNewLineForControlBlocks": false
     },
     "files": [
+        "dictionary/dictionary.js",
         "src/aiService_test.ts",
         "src/aiService.ts",
         "src/end_to_end_tests.ts",
