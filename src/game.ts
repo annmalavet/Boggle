@@ -4,6 +4,7 @@ interface SupportedLanguages {
   el: string, fr: string,
   hi: string, es: string,
 };
+
 module game {
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;
@@ -13,13 +14,6 @@ module game {
   // simply typing in the console, e.g.,
   // game.currentUpdateUI
   export let board: Board = null;
-
-
-
-  // Declare your variables
-
-
-var data = require("../dictionary/dictionary.js");
 
   export let boardBeforeMove: Board = null;
   export let delta: BoardDelta = null;
@@ -34,12 +28,18 @@ var data = require("../dictionary/dictionary.js");
   export let tempString: string = '';
   export let guessList: string[] = [];
   export let arrAnswer: string[] = null;
+  export let dragArr:string[];
+  export let g:string ='';
   //
   ///
   //
   //
+  declare var require: any;
+//var data0 = "../dictionary/dictionary.js";
 
- 
+
+
+var data1 = require(["../dictionary/dictionary"]);
   export let buttonBg = false;
   export let counter = 100;
   export let countDownLeft = 100;
@@ -112,6 +112,9 @@ var data = require("../dictionary/dictionary.js");
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
+    dragArr=[];
+    dragArr.push(4+''+4);
+ 
     //
     //
 
@@ -125,10 +128,19 @@ var data = require("../dictionary/dictionary.js");
       getStateForOgImage: null,
     });
 
-     window.alert(data);
-     window.alert("data");
+//window.alert(data);
+     
   }
+  function checkIf(row:number, col:number){
+    for(let i=0; i<dragArr.length; i++) {
+        if(dragArr.indexOf(row+''+col)===-1) {
+           game.tempString = game.tempString.concat(game.state.board[row][col]);
+            dragArr.push(row+''+col);
+        }    
+}
+ console.log(dragArr.length);
   }
+  
 
   function registerServiceWorker() {
     // I prefer to use appCache over serviceWorker
@@ -185,9 +197,9 @@ var data = require("../dictionary/dictionary.js");
     return board;
   }
 
-  export function addText() {
+  export function addText(guessList:string[]) {
     //window.alert(tempString);
-    let s = tempString;
+    let s = guessList;
     let a = 'A';
     return s;
   }
@@ -204,11 +216,10 @@ var data = require("../dictionary/dictionary.js");
     //}
     let buttonName = 'board' + clientX + 'x' + clientY;
 
-    // if (type === "touchstart"  && deadBoard == null) {
+     if (type === "touchstart" ) {
     //    moveToConfirm = null;
     //     $rootScope.$apply();
-
-    // }
+    }
     // Center point in boardArea
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft-.5;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop-.5;
@@ -230,7 +241,19 @@ var data = require("../dictionary/dictionary.js");
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
     // window.alert(col+" "+row);
 
-    game.tempString = game.tempString.concat(game.state.board[row][col]);
+    //game.tempString = game.tempString.concat(game.state.board[row][col]);
+    console.log("row=" + row + " col=" + col);
+
+
+//if (dragArr.indexOf(row+''+col) === 1){
+    checkIf(row, col);
+ 
+
+
+
+
+
+
     buttonBg = true;
     let centerXY = getSquareCenterXY(row, col);
     let topLeft = getSquareTopLeft(row, col);
@@ -242,10 +265,14 @@ var data = require("../dictionary/dictionary.js");
     // clickToDragPiece.style.display = deadBoard == null ?  tempString = tempString.concat(state.board[row][col]) : "none";
     // draggingLines.style.display = "inline";
 
-    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+    //if (type === "touchend") {tempString=null}
+    if (type === "touchend"|| type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
       // tempString = tempString.concat(state.board[x][y]);  
       dragDone(tempString);
+       tempString='';
+       dragArr=[];
+      dragArr.push(4+''+4);
       // window.alert("touchEnd");
     }
   }
@@ -276,6 +303,14 @@ var data = require("../dictionary/dictionary.js");
   }
   function dragDone(tempString:any) {
     $rootScope.$apply(function () {
+      guessList.push(tempString);
+      showGuess();
+     
+      tempString=null;
+      if (dragArr.length===0){
+      dragArr.push(4+''+4);
+      }
+      console.log(guessList);
      // if (deadBoard == null) {
         ///window.alert("something deadboard")
        // game.tempString = game.tempString.concat(game.state.board[row][col]);
@@ -288,7 +323,11 @@ var data = require("../dictionary/dictionary.js");
       //}
     });
   }
-
+ export function  showGuess(){
+   g = guessList.join(", "); 
+   
+  return g; 
+}
 
   //********* *
   ///******** *
@@ -328,7 +367,7 @@ var data = require("../dictionary/dictionary.js");
 
     currentUpdateUI = params;
     startTimer();
-    addText();
+    showGuess();
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {

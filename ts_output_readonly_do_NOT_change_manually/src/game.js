@@ -8,8 +8,6 @@ var game;
     // simply typing in the console, e.g.,
     // game.currentUpdateUI
     game.board = null;
-    // Declare your variables
-    var data = require("../dictionary/dictionary.js");
     game.boardBeforeMove = null;
     game.delta = null;
     game.currentUpdateUI = null;
@@ -23,10 +21,9 @@ var game;
     game.tempString = '';
     game.guessList = [];
     game.arrAnswer = null;
-    //
-    ///
-    //
-    //
+    game.g = '';
+    //var data0 = "../dictionary/dictionary.js";
+    var data1 = require(["../dictionary/dictionary"]);
     game.buttonBg = false;
     game.counter = 100;
     game.countDownLeft = 100;
@@ -99,6 +96,8 @@ var game;
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("boardArea", handleDragEvent);
+        game.dragArr = [];
+        game.dragArr.push(4 + '' + 4);
         //
         //
         registerServiceWorker();
@@ -109,9 +108,18 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: null,
         });
-        window.alert(data[0]);
+        //window.alert(data);
     }
     game.init = init;
+    function checkIf(row, col) {
+        for (var i = 0; i < game.dragArr.length; i++) {
+            if (game.dragArr.indexOf(row + '' + col) === -1) {
+                game.tempString = game.tempString.concat(game.state.board[row][col]);
+                game.dragArr.push(row + '' + col);
+            }
+        }
+        console.log(game.dragArr.length);
+    }
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
         // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -166,9 +174,9 @@ var game;
         return board;
     }
     game.setDice = setDice;
-    function addText() {
+    function addText(guessList) {
         //window.alert(tempString);
-        var s = game.tempString;
+        var s = guessList;
         var a = 'A';
         return s;
     }
@@ -183,10 +191,10 @@ var game;
         ///   return; // if the game is over, do not display dragging effect
         //}
         var buttonName = 'board' + clientX + 'x' + clientY;
-        // if (type === "touchstart"  && deadBoard == null) {
-        //    moveToConfirm = null;
-        //     $rootScope.$apply();
-        // }
+        if (type === "touchstart") {
+            //    moveToConfirm = null;
+            //     $rootScope.$apply();
+        }
         // Center point in boardArea
         var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft - .5;
         var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop - .5;
@@ -204,7 +212,10 @@ var game;
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
         // window.alert(col+" "+row);
-        game.tempString = game.tempString.concat(game.state.board[row][col]);
+        //game.tempString = game.tempString.concat(game.state.board[row][col]);
+        console.log("row=" + row + " col=" + col);
+        //if (dragArr.indexOf(row+''+col) === 1){
+        checkIf(row, col);
         game.buttonBg = true;
         var centerXY = getSquareCenterXY(row, col);
         var topLeft = getSquareTopLeft(row, col);
@@ -215,10 +226,14 @@ var game;
         //  }
         // clickToDragPiece.style.display = deadBoard == null ?  tempString = tempString.concat(state.board[row][col]) : "none";
         // draggingLines.style.display = "inline";
+        //if (type === "touchend") {tempString=null}
         if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
             // tempString = tempString.concat(state.board[x][y]);  
             dragDone(game.tempString);
+            game.tempString = '';
+            game.dragArr = [];
+            game.dragArr.push(4 + '' + 4);
             // window.alert("touchEnd");
         }
     }
@@ -247,6 +262,13 @@ var game;
     }
     function dragDone(tempString) {
         game.$rootScope.$apply(function () {
+            game.guessList.push(tempString);
+            showGuess();
+            tempString = null;
+            if (game.dragArr.length === 0) {
+                game.dragArr.push(4 + '' + 4);
+            }
+            console.log(game.guessList);
             // if (deadBoard == null) {
             ///window.alert("something deadboard")
             // game.tempString = game.tempString.concat(game.state.board[row][col]);
@@ -259,6 +281,11 @@ var game;
             //}
         });
     }
+    function showGuess() {
+        game.g = game.guessList.join(", ");
+        return game.g;
+    }
+    game.showGuess = showGuess;
     //********* *
     ///******** *
     ///******** *
@@ -296,7 +323,7 @@ var game;
         }
         game.currentUpdateUI = params;
         startTimer();
-        addText();
+        showGuess();
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {

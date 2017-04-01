@@ -21,6 +21,9 @@
   -->
 
   <script src="lib/angular.js"></script>
+
+   <script src="lib/boggle.js"></script>
+  <script data-main="lib/boggle" src="lib/require.js"></script>
   <script src="lib/turnBasedServices.4.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/gameLogic.js"></script>
   <script src="ts_output_readonly_do_NOT_change_manually/src/game.js"></script>
@@ -30,11 +33,9 @@
 </head>
 
 <body ng-cloak ng-app="myApp">
-
   <div id="gameArea">
-
     <div>
-      <textarea id="inputarea"> {{game.addText()}}</textarea>
+      <textarea id="inputarea"> {{game.showGuess()}}</textarea>
     </div>
 
     <div id="boardArea">

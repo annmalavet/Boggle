@@ -78,7 +78,7 @@ module gameLogic {
         let ran = Math.floor((Math.random() * 5));
         board[i][j] = diceArr[i][j][ran];
         //board[i][j] = diceArr[i][ran];
-        log.info([ran, i, j, board[i][j]]);
+        log.info([ran, i, j, board[i][j][j]]);
         console.log(diceArr[i][ran]);
 
 
