@@ -32,21 +32,16 @@ module game {
   export let arrAnswer: string[] = null;
   export let dragArr:string[];
   export let g:string ='';
- 
+ export let obj:string ='';
 
 declare var require: any
 var d = "../dictionary/dict3";
-
-
-require ([d], function(text:any) { 
-var obj = JSON.parse(text);
-console.log(text+" the word");
+var s = require ([d], function(text:any) {  
+obj = JSON.stringify(text+" __");
+console.log(obj);
  });
 
-
-//onst loadJsonFile = require('load-json-file');
- // output 'testing'
-
+console.log(obj[0]);
 
   export let buttonBg = false;
   export let counter = 100;

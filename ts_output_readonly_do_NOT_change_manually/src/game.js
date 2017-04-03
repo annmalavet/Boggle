@@ -21,13 +21,13 @@ var game;
     game.guessList = [];
     game.arrAnswer = null;
     game.g = '';
+    game.obj = '';
     var d = "../dictionary/dict3";
-    require([d], function (text) {
-        var obj = JSON.parse(text);
-        console.log(text + " the word");
+    var s = require([d], function (text) {
+        game.obj = JSON.stringify(text + " __");
+        console.log(game.obj);
     });
-    //onst loadJsonFile = require('load-json-file');
-    // output 'testing'
+    console.log(game.obj[0]);
     game.buttonBg = false;
     game.counter = 100;
     game.countDownLeft = 100;
