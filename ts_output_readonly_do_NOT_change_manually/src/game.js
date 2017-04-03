@@ -1,4 +1,3 @@
-;
 var game;
 (function (game) {
     game.$rootScope = null;
@@ -22,8 +21,13 @@ var game;
     game.guessList = [];
     game.arrAnswer = null;
     game.g = '';
-    //var data0 = "../dictionary/dictionary.js";
-    var data1 = require(["../dictionary/dictionary"]);
+    var d = "../dictionary/dict3";
+    require([d], function (text) {
+        var obj = JSON.parse(text);
+        console.log(text + " the word");
+    });
+    //onst loadJsonFile = require('load-json-file');
+    // output 'testing'
     game.buttonBg = false;
     game.counter = 100;
     game.countDownLeft = 100;
@@ -116,6 +120,9 @@ var game;
             if (game.dragArr.indexOf(row + '' + col) === -1) {
                 game.tempString = game.tempString.concat(game.state.board[row][col]);
                 game.dragArr.push(row + '' + col);
+                //if( tempString in data1)  {
+                // console.log("match match match match match match match");
+                //}
             }
         }
         console.log(game.dragArr.length);
@@ -282,6 +289,9 @@ var game;
         });
     }
     function showGuess() {
+        var str = "Hello World"; // For example, lets search this string,
+        var term = "World"; // for the term "World",
+        var index = str.indexOf(term); // and get its index.
         game.g = game.guessList.join(", ");
         return game.g;
     }

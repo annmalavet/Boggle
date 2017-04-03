@@ -35,11 +35,17 @@ module game {
  
 
 declare var require: any
-var data = require("../dictionary/dictionary");
-//onst loadJsonFile = require('load-json-file');
+var d = "../dictionary/dict3";
 
-const word = data;
-console.log(word); // output 'testing'
+
+require ([d], function(text:any) { 
+var obj = JSON.parse(text);
+console.log(text+" the word");
+ });
+
+
+//onst loadJsonFile = require('load-json-file');
+ // output 'testing'
 
 
   export let buttonBg = false;
