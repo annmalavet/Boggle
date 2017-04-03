@@ -30,10 +30,12 @@
     "karma-coverage": "*",
     "karma-jasmine": "*",
     "load-grunt-tasks": "*",
+    "load-json-file": "^2.0.0",
     "protractor": "^5.1.1",
     "requirejs-plugins": "^1.0.2",
     "typescript": "*",
     "typescript-require": "^0.2.9-1",
+    "webpack": "^2.3.2",
     "word-list-json": "^0.2.0"
   },
   "scripts": {

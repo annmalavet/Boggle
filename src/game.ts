@@ -3,7 +3,9 @@ interface SupportedLanguages {
   pt: string, zh: string,
   el: string, fr: string,
   hi: string, es: string,
-};
+}
+
+
 
 module game {
   export let $rootScope: angular.IScope = null;
@@ -30,16 +32,16 @@ module game {
   export let arrAnswer: string[] = null;
   export let dragArr:string[];
   export let g:string ='';
-  //
-  ///
-  //
-  //
-  declare var require: any;
-//var data0 = "../dictionary/dictionary.js";
+ 
+
+declare var require: any
+var data = require("../dictionary/dictionary");
+//onst loadJsonFile = require('load-json-file');
+
+const word = data;
+console.log(word); // output 'testing'
 
 
-
-var data1 = require(["../dictionary/dictionary"]);
   export let buttonBg = false;
   export let counter = 100;
   export let countDownLeft = 100;
@@ -136,6 +138,11 @@ var data1 = require(["../dictionary/dictionary"]);
         if(dragArr.indexOf(row+''+col)===-1) {
            game.tempString = game.tempString.concat(game.state.board[row][col]);
             dragArr.push(row+''+col);
+
+//if( tempString in data1)  {
+// console.log("match match match match match match match");
+//}
+
         }    
 }
  console.log(dragArr.length);
@@ -324,6 +331,10 @@ var data1 = require(["../dictionary/dictionary"]);
     });
   }
  export function  showGuess(){
+
+   var str = "Hello World"; // For example, lets search this string,
+var term = "World"; // for the term "World",
+var index = str.indexOf(term); // and get its index.
    g = guessList.join(", "); 
    
   return g; 
