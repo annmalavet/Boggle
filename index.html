@@ -41,7 +41,7 @@
     <div id="boardArea">
       <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row * 110 / game.dim}}%; left:0; width:100%; height:100%;">
         <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 110 / game.dim}}%; width:100%; height:100%;" >
-          <button id="img0"class="grow" id="clickToDragPiece" style="z-index: 30; width: 25%; height: 25%; " ng-style="{ 'background-image': 'url(' + game.onClick(row, col) + ')' }" ng-click="game.listOf(row, col)"></button>
+         <button id="img0"class="grow" id="clickToDragPiece" style="z-index: 30; width: 25%; height: 25%; " ng-style="{ 'background-image': 'url(' + game.onClick(row, col) + ')' }" ng-click="game.listOf(row, col)"></button>
         </div>
       </div>
     </div>

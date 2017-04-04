@@ -32,16 +32,15 @@ module game {
   export let arrAnswer: string[] = null;
   export let dragArr:string[];
   export let g:string ='';
- export let obj:string ='';
 
-declare var require: any
-var d = "../dictionary/dict3";
-var s = require ([d], function(text:any) {  
-obj = JSON.stringify(text+" __");
-console.log(obj);
- });
 
-console.log(obj[0]);
+
+
+
+
+
+
+
 
   export let buttonBg = false;
   export let counter = 100;
@@ -290,7 +289,10 @@ console.log(obj[0]);
   ///******** *
   ///******** *
 
+export function grow(){
 
+  return 'grow';
+}
   function getSquareTopLeft(row: number, col: number) {
     let size = getSquareWidthHeight();
     return { top: row * size.height, left: col * size.width }
@@ -309,11 +311,21 @@ console.log(obj[0]);
       y: row // * size.height + size.height / 2
     };
   }
+
   function dragDone(tempString:any) {
     $rootScope.$apply(function () {
+      let dic = gameLogic.myDictionary;
+      var res = tempString.toLowerCase();
+for (var v=0;v<dic.length;v++) {
+    if (dic[v]===res) {
       guessList.push(tempString);
       showGuess();
-     
+      console.log("yes in dictionary");
+      return;
+    }else {
+      console.log("not in dictionary "+res);
+}
+}
       tempString=null;
       if (dragArr.length===0){
       dragArr.push(4+''+4);
@@ -332,12 +344,7 @@ console.log(obj[0]);
     });
   }
  export function  showGuess(){
-
-   var str = "Hello World"; // For example, lets search this string,
-var term = "World"; // for the term "World",
-var index = str.indexOf(term); // and get its index.
    g = guessList.join(", "); 
-   
   return g; 
 }
 

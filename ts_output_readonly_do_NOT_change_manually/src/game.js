@@ -21,13 +21,6 @@ var game;
     game.guessList = [];
     game.arrAnswer = null;
     game.g = '';
-    game.obj = '';
-    var d = "../dictionary/dict3";
-    var s = require([d], function (text) {
-        game.obj = JSON.stringify(text + " __");
-        console.log(game.obj);
-    });
-    console.log(game.obj[0]);
     game.buttonBg = false;
     game.counter = 100;
     game.countDownLeft = 100;
@@ -249,6 +242,10 @@ var game;
     ///******** *
     ///******** *
     ///******** *
+    function grow() {
+        return 'grow';
+    }
+    game.grow = grow;
     function getSquareTopLeft(row, col) {
         var size = getSquareWidthHeight();
         return { top: row * size.height, left: col * size.width };
@@ -269,8 +266,19 @@ var game;
     }
     function dragDone(tempString) {
         game.$rootScope.$apply(function () {
-            game.guessList.push(tempString);
-            showGuess();
+            var dic = gameLogic.myDictionary;
+            var res = tempString.toLowerCase();
+            for (var v = 0; v < dic.length; v++) {
+                if (dic[v] === res) {
+                    game.guessList.push(tempString);
+                    showGuess();
+                    console.log("yes in dictionary");
+                    return;
+                }
+                else {
+                    console.log("not in dictionary " + res);
+                }
+            }
             tempString = null;
             if (game.dragArr.length === 0) {
                 game.dragArr.push(4 + '' + 4);
@@ -289,9 +297,6 @@ var game;
         });
     }
     function showGuess() {
-        var str = "Hello World"; // For example, lets search this string,
-        var term = "World"; // for the term "World",
-        var index = str.indexOf(term); // and get its index.
         game.g = game.guessList.join(", ");
         return game.g;
     }
