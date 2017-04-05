@@ -1,12 +1,31 @@
 
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+/* To prevent long-press that will bring up copy-paste dialog. */
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -moz-touch-callout: none;
+  -ms-touch-callout: none;
+  touch-callout: none;
+  outline: 0; /* To prevent blue-box outline after click: http://stackoverflow.com/questions/21719306/getting-rid-of-a-blue-box-around-button-when-pressed */
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
 
 body {
-  height:auto;
-  width:auto;
+  height:100%;
+  width:95%;
   font-family: sans-serif;
   background-color:rgba(0,0,0,0);;
   z-index: 1;
-
 }
 
 
@@ -126,16 +145,16 @@ h2 {
 }
 
 #boardArea {
-position: absolute;
-left 0px;
-top:20%;
-width:80%;
-height: 80%;
-background-color:rgba(0,0,0,0);
-z-index:999;
-border-radius: 3%;
-display: inline-block;
-vertical-align: top;
+
+
+
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 3%;
+
 }
 
 

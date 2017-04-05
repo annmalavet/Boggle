@@ -5,18 +5,20 @@ interface SupportedLanguages {
   hi: string, es: string,
 }
 
+interface CellSize {
+  width: number;
+  height: number;
+}
 
 
 module game {
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;
-
   // Global variables are cleared when getting updateUI.
   // I export all variables to make it easy to debug in the browser by
   // simply typing in the console, e.g.,
   // game.currentUpdateUI
   export let board: Board = null;
-
   export let boardBeforeMove: Board = null;
   export let delta: BoardDelta = null;
   export let currentUpdateUI: IUpdateUI = null;
@@ -32,16 +34,6 @@ module game {
   export let arrAnswer: string[] = null;
   export let dragArr:string[];
   export let g:string ='';
-
-
-
-
-
-
-
-
-
-
   export let buttonBg = false;
   export let counter = 100;
   export let countDownLeft = 100;
@@ -110,17 +102,12 @@ module game {
     $timeout = $timeout_;
     //
     ///
-    clickToDragPiece = <HTMLElement>document.getElementById("clickToDragPiece");
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
-    dragAndDropService.addDragListener("boardArea", handleDragEvent);
+    dragAndDropService.addDragListener("gameArea", handleDragEvent);
     dragArr=[];
     dragArr.push(4+''+4);
  
-    //
-    //
-
-
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
@@ -210,8 +197,13 @@ module game {
     let a = 'A';
     return s;
   }
-
-  export function onClick(row: number, col: number) {
+  function getCellSize(): CellSize {
+    return {
+      width: gameArea.clientWidth / gameLogic.COLS,
+      height: gameArea.clientHeight / gameLogic.ROWS
+    };
+  }
+  export function getBgImg(row: number, col: number) {
     let oka = 'alphabet/img_' + state.board[row][col] + '.png'
     return oka;
   }
@@ -221,17 +213,26 @@ module game {
     //  if (!isHumanTurn() || passes == 2) {
     ///   return; // if the game is over, do not display dragging effect
     //}
-    let buttonName = 'board' + clientX + 'x' + clientY;
+    let cellSize: CellSize = getCellSize();
 
      if (type === "touchstart" ) {
-       clickToDragPiece = document.getElementById("img_" + row + "_" + col);
-
+       clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
+       console.log(clickToDragPiece.id);
+        let style: any = clickToDragPiece.style;
+        clickToDragPiece.style.visibility='visible';
+        style['transform']=1.3;
+        updateUI(currentUpdateUI);
     }
     // Center point in boardArea
-    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft-.5;
-    let y = clientY - boardArea.offsetTop - gameArea.offsetTop-.5;
+    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
+    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     // Is outside boardArea?
-    let button = document.getElementById(buttonName);
+//center x = 
+//x + 1/2 of width 
+//Center y = 
+//y + 1/2 of height 
+
+    let button = document.getElementById("img_" + row + "_" + col);
 
 
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
@@ -243,22 +244,17 @@ module game {
       return;
     }
 
+    
+
     // Inside boardArea. Let's find the containing square's row and col
     var col = Math.floor(x * 4 / game.boardArea.clientWidth);
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
     // window.alert(col+" "+row);
 
     //game.tempString = game.tempString.concat(game.state.board[row][col]);
-    console.log("row=" + row + " col=" + col);
-
-
+    console.log("row of =" + row + " colof =" + col);
 //if (dragArr.indexOf(row+''+col) === 1){
-    checkIf(row, col);
- 
-
-
-
-
+     checkIf(row, col);
 
 
     buttonBg = true;

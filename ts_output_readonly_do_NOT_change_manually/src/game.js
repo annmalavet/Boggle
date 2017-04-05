@@ -89,14 +89,11 @@ var game;
         game.$timeout = $timeout_;
         //
         ///
-        clickToDragPiece = document.getElementById("clickToDragPiece");
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
-        dragAndDropService.addDragListener("boardArea", handleDragEvent);
+        dragAndDropService.addDragListener("gameArea", handleDragEvent);
         game.dragArr = [];
         game.dragArr.push(4 + '' + 4);
-        //
-        //
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
@@ -181,24 +178,39 @@ var game;
         return s;
     }
     game.addText = addText;
-    function onClick(row, col) {
+    function getCellSize() {
+        return {
+            width: game.gameArea.clientWidth / gameLogic.COLS,
+            height: game.gameArea.clientHeight / gameLogic.ROWS
+        };
+    }
+    function getBgImg(row, col) {
         var oka = 'alphabet/img_' + game.state.board[row][col] + '.png';
         return oka;
     }
-    game.onClick = onClick;
+    game.getBgImg = getBgImg;
     function handleDragEvent(type, clientX, clientY) {
         //  if (!isHumanTurn() || passes == 2) {
         ///   return; // if the game is over, do not display dragging effect
         //}
-        var buttonName = 'board' + clientX + 'x' + clientY;
+        var cellSize = getCellSize();
         if (type === "touchstart") {
-            // https://developer.mozilla.org/en-US/docs/Web/CSS/will-change
+            clickToDragPiece = document.getElementById("img_" + row + "_" + col); //"img_" + row + "_" + col);
+            console.log(clickToDragPiece.id);
+            var style = clickToDragPiece.style;
+            clickToDragPiece.style.visibility = 'visible';
+            style['transform'] = 1.3;
+            updateUI(game.currentUpdateUI);
         }
         // Center point in boardArea
-        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft - .5;
-        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop - .5;
+        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
+        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
         // Is outside boardArea?
-        var button = document.getElementById(buttonName);
+        //center x = 
+        //x + 1/2 of width 
+        //Center y = 
+        //y + 1/2 of height 
+        var button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             // clearClickToDrag();
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
@@ -212,7 +224,7 @@ var game;
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
         // window.alert(col+" "+row);
         //game.tempString = game.tempString.concat(game.state.board[row][col]);
-        console.log("row=" + row + " col=" + col);
+        console.log("row of =" + row + " colof =" + col);
         //if (dragArr.indexOf(row+''+col) === 1){
         checkIf(row, col);
         game.buttonBg = true;
