@@ -192,8 +192,7 @@ var game;
         //}
         var buttonName = 'board' + clientX + 'x' + clientY;
         if (type === "touchstart") {
-            //    moveToConfirm = null;
-            //     $rootScope.$apply();
+            // https://developer.mozilla.org/en-US/docs/Web/CSS/will-change
         }
         // Center point in boardArea
         var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft - .5;
@@ -242,8 +241,14 @@ var game;
     ///******** *
     ///******** *
     ///******** *
-    function grow() {
-        return 'grow';
+    function grow(row, col) {
+        // scale will be between 0.6 and 0.8.
+        var scale = 0.6 + 0.2;
+        // opacity between 0.5 and 0.7
+        var opacity = 0.5 + 0.2;
+        return {
+            transform: 'scale(${scale}, ${scale})'
+        };
     }
     game.grow = grow;
     function getSquareTopLeft(row, col) {

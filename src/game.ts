@@ -46,7 +46,7 @@ module game {
   export let counter = 100;
   export let countDownLeft = 100;
   export let moveToConfirm: BoardDelta = null;
-  let clickToDragPiece: HTMLImageElement;
+  let clickToDragPiece: HTMLElement;
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let deadBoard: boolean[][] = null;
@@ -110,7 +110,7 @@ module game {
     $timeout = $timeout_;
     //
     ///
-    clickToDragPiece = <HTMLImageElement>document.getElementById("clickToDragPiece");
+    clickToDragPiece = <HTMLElement>document.getElementById("clickToDragPiece");
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
@@ -224,8 +224,8 @@ module game {
     let buttonName = 'board' + clientX + 'x' + clientY;
 
      if (type === "touchstart" ) {
-    //    moveToConfirm = null;
-    //     $rootScope.$apply();
+
+
     }
     // Center point in boardArea
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft-.5;
@@ -289,9 +289,16 @@ module game {
   ///******** *
   ///******** *
 
-export function grow(){
+export function grow(row: number, col: number) {
 
-  return 'grow';
+    // scale will be between 0.6 and 0.8.
+    let scale = 0.6 + 0.2 ;
+    // opacity between 0.5 and 0.7
+    let opacity = 0.5 + 0.2 ;
+
+    return {
+      transform: 'scale(${scale}, ${scale})'
+    };
 }
   function getSquareTopLeft(row: number, col: number) {
     let size = getSquareWidthHeight();
