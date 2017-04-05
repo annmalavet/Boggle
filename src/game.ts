@@ -224,7 +224,7 @@ module game {
     let buttonName = 'board' + clientX + 'x' + clientY;
 
      if (type === "touchstart" ) {
-
+       clickToDragPiece = document.getElementById("img_" + row + "_" + col);
 
     }
     // Center point in boardArea
