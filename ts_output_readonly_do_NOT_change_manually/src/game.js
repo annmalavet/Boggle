@@ -1,5 +1,8 @@
 var game;
 (function (game) {
+    game.isModalShown = false;
+    game.modalTitle = "Game Over";
+    game.modalBody = "Done";
     game.$rootScope = null;
     game.$timeout = null;
     // Global variables are cleared when getting updateUI.
@@ -27,12 +30,45 @@ var game;
     game.moveToConfirm = null;
     var clickToDragPiece;
     game.deadBoard = null;
+    game.curRow = 5;
+    game.curCol = 5;
     game.hasDim = false;
     game.dim = 4;
     function rowsPercent() {
         return 100 / game.dim;
     }
     game.rowsPercent = rowsPercent;
+    function getAnimationClass(row, col) {
+        return "grow";
+    }
+    game.getAnimationClass = getAnimationClass;
+    function getPieceContainerClass(row, col) {
+        return getAnimationClass(row, col);
+    }
+    game.getPieceContainerClass = getPieceContainerClass;
+    game.cachedPieceClass = getEmpty8Arrays();
+    game.cachedPieceSrc = getEmpty8Arrays();
+    game.cachedAvatarPieceCrown = getEmpty8Arrays();
+    function getEmpty8Arrays() {
+        var res = [];
+        for (var i = 0; i < 8; i++)
+            res.push([]);
+        return res;
+    }
+    function updateCache() {
+        //cachedBoardAvatar0 = getBoardAvatar(0);
+        //cachedBoardAvatar1 = getBoardAvatar(1);
+        //cachedBoardClass = getBoardClass();
+        game.cachedPieceSrc[game.curRow][game.curCol] = getPieceContainerClass(game.curRow, game.curCol);
+    }
+    game.updateCache = updateCache;
+    function showModal(titleId, bodyId) {
+        // if (!isMyTurn()) return;
+        log.info("showModal: ", titleId);
+        game.isModalShown = true;
+        game.modalTitle = translate(titleId);
+        game.modalBody = translate(bodyId);
+    }
     var cacheIntegersTill = [];
     function getIntegersTill(number) {
         if (cacheIntegersTill[number])
@@ -110,6 +146,7 @@ var game;
             if (game.dragArr.indexOf(row + '' + col) === -1) {
                 game.tempString = game.tempString.concat(game.state.board[row][col]);
                 game.dragArr.push(row + '' + col);
+                updateCache();
                 //if( tempString in data1)  {
                 // console.log("match match match match match match match");
                 //}
@@ -140,10 +177,11 @@ var game;
     game.isProposal = isProposal;
     ///
     function startTimer() {
-        var timerCount = 60;
+        var timerCount = 5; //60;
+        game.isModalShown = true;
         var countDown = function () {
             if (timerCount < 0) {
-                // window.alert("done");
+                showModal(game.modalTitle, game.modalBody);
             }
             else {
                 game.countDownLeft = timerCount;
@@ -193,9 +231,11 @@ var game;
         //  if (!isHumanTurn() || passes == 2) {
         ///   return; // if the game is over, do not display dragging effect
         //}
+        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
+        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
         var cellSize = getCellSize();
         if (type === "touchstart") {
-            clickToDragPiece = document.getElementById("img_" + row + "_" + col); //"img_" + row + "_" + col);
+            //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
             console.log(clickToDragPiece.id);
             var style = clickToDragPiece.style;
             clickToDragPiece.style.visibility = 'visible';
@@ -203,30 +243,32 @@ var game;
             updateUI(game.currentUpdateUI);
         }
         // Center point in boardArea
-        var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
-        var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
-        // Is outside boardArea?
-        //center x = 
-        //x + 1/2 of width 
-        //Center y = 
-        //y + 1/2 of height 
         var button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             // clearClickToDrag();
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
             console.log("row=" + row + " col=" + col);
-            // game.tempString = game.tempString.concat(game.state.board[col][row]);
             return;
         }
         // Inside boardArea. Let's find the containing square's row and col
+        //(coord.x * tileSize) + (tileSize / 2)
+        var voidAreacol = Math.floor(x * 8 / game.boardArea.clientWidth);
+        var voidAreaRow = Math.floor(y * 8 / game.boardArea.clientHeight);
+        //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        // window.alert(col+" "+row);
-        //game.tempString = game.tempString.concat(game.state.board[row][col]);
-        console.log("row of =" + row + " colof =" + col);
-        //if (dragArr.indexOf(row+''+col) === 1){
+        // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+        game.curRow = row;
+        game.curCol = col;
+        updateCache();
+        console.log("row of =" + row + "cur row" + game.curRow + " colof =" + col);
+        console.log(cellSize.height + " cell size " + cellSize.width);
+        console.log(game.gameArea.clientWidth + " clientWidth size ");
+        console.log(game.gameArea.clientHeight + " clientHeight size ");
+        console.log("voidAreaRow of =" + voidAreaRow + " voidAreacol =" + voidAreacol);
         checkIf(row, col);
+        //   }
         game.buttonBg = true;
         var centerXY = getSquareCenterXY(row, col);
         var topLeft = getSquareTopLeft(row, col);
@@ -235,12 +277,10 @@ var game;
         // clearClickToDrag();
         //  return;
         //  }
-        // clickToDragPiece.style.display = deadBoard == null ?  tempString = tempString.concat(state.board[row][col]) : "none";
         // draggingLines.style.display = "inline";
         //if (type === "touchend") {tempString=null}
         if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
-            // tempString = tempString.concat(state.board[x][y]);  
             dragDone(game.tempString);
             game.tempString = '';
             game.dragArr = [];
@@ -253,14 +293,10 @@ var game;
     ///******** *
     ///******** *
     ///******** *
-    function grow(row, col) {
-        // scale will be between 0.6 and 0.8.
-        var scale = 0.6 + 0.2;
-        // opacity between 0.5 and 0.7
-        var opacity = 0.5 + 0.2;
-        return {
-            transform: 'scale(${scale}, ${scale})'
-        };
+    function grow(rrow, ccol) {
+        return game.delta &&
+            game.delta.row === rrow &&
+            game.delta.col === ccol;
     }
     game.grow = grow;
     function getSquareTopLeft(row, col) {
@@ -356,6 +392,7 @@ var game;
         game.currentUpdateUI = params;
         startTimer();
         showGuess();
+        updateCache();
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {

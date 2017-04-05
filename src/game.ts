@@ -12,6 +12,11 @@ interface CellSize {
 
 
 module game {
+
+  export let isModalShown = false;
+  export let modalTitle = "Game Over";
+  export let modalBody = "Done";
+
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;
   // Global variables are cleared when getting updateUI.
@@ -42,12 +47,47 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let deadBoard: boolean[][] = null;
-
+  export let curRow:number = 5;
+  export let curCol:number = 5;
   export let hasDim = false;
   export let dim = 4;
   export function rowsPercent() {
     return 100 / dim;
   }
+
+export function getAnimationClass(row: number, col: number) {
+      return "grow";
+}
+  export function getPieceContainerClass(row: number, col: number) {
+    return getAnimationClass(row, col);
+  }
+  export let cachedPieceClass: string[][] = getEmpty8Arrays();
+  export let cachedPieceSrc: string[][] = getEmpty8Arrays();
+  export let cachedAvatarPieceCrown: string[][] = getEmpty8Arrays();
+  function getEmpty8Arrays(): string[][] {
+    let res: string[][] = [];
+    for (let i = 0; i < 8; i++) res.push([]);
+    return res;
+  }
+  export function updateCache() {
+    //cachedBoardAvatar0 = getBoardAvatar(0);
+    //cachedBoardAvatar1 = getBoardAvatar(1);
+    //cachedBoardClass = getBoardClass();
+
+        cachedPieceSrc[curRow][curCol] = getPieceContainerClass(curRow, curCol);
+      
+    
+  
+}
+
+  function showModal(titleId: string, bodyId: string) {
+   // if (!isMyTurn()) return;
+    log.info("showModal: ", titleId);
+    isModalShown = true;
+    modalTitle = translate(titleId);
+    modalBody = translate(bodyId);
+  }
+
   let cacheIntegersTill: number[][] = [];
   export function getIntegersTill(number: any): number[] {
     if (cacheIntegersTill[number]) return cacheIntegersTill[number];
@@ -125,7 +165,7 @@ module game {
         if(dragArr.indexOf(row+''+col)===-1) {
            game.tempString = game.tempString.concat(game.state.board[row][col]);
             dragArr.push(row+''+col);
-
+updateCache();
 //if( tempString in data1)  {
 // console.log("match match match match match match match");
 //}
@@ -160,11 +200,11 @@ module game {
   }
   ///
   export function startTimer() {
-    let timerCount = 60;
-
+    let timerCount = 5;//60;
+ isModalShown = true;
     let countDown = function () {
       if (timerCount < 0) {
-        // window.alert("done");
+       showModal(modalTitle, modalBody);
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -213,10 +253,14 @@ module game {
     //  if (!isHumanTurn() || passes == 2) {
     ///   return; // if the game is over, do not display dragging effect
     //}
+    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
+    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     let cellSize: CellSize = getCellSize();
-
+      
      if (type === "touchstart" ) {
-       clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
+
+
+       //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
        console.log(clickToDragPiece.id);
         let style: any = clickToDragPiece.style;
         clickToDragPiece.style.visibility='visible';
@@ -224,37 +268,41 @@ module game {
         updateUI(currentUpdateUI);
     }
     // Center point in boardArea
-    let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
-    let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
-    // Is outside boardArea?
-//center x = 
-//x + 1/2 of width 
-//Center y = 
-//y + 1/2 of height 
+
+
 
     let button = document.getElementById("img_" + row + "_" + col);
 
-
+    
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       // clearClickToDrag();
       var col = Math.floor(x * 4 / boardArea.clientWidth);
       var row = Math.floor(y * 4 / boardArea.clientHeight);
       console.log("row=" + row + " col=" + col);
-     // game.tempString = game.tempString.concat(game.state.board[col][row]);
+      
       return;
     }
 
-    
+
 
     // Inside boardArea. Let's find the containing square's row and col
+    //(coord.x * tileSize) + (tileSize / 2)
+    var voidAreacol:number =  Math.floor(x * 8 / game.boardArea.clientWidth);
+    var voidAreaRow:number = Math.floor(y * 8 / game.boardArea.clientHeight);
+
+  //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
     var col = Math.floor(x * 4 / game.boardArea.clientWidth);
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-    // window.alert(col+" "+row);
-
-    //game.tempString = game.tempString.concat(game.state.board[row][col]);
-    console.log("row of =" + row + " colof =" + col);
-//if (dragArr.indexOf(row+''+col) === 1){
-     checkIf(row, col);
+   // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+    curRow = row; curCol=col;
+    updateCache();
+    console.log("row of =" + row +"cur row"+curRow+ " colof =" + col);
+    console.log(cellSize.height+" cell size "+ cellSize.width)
+     console.log(gameArea.clientWidth+" clientWidth size ");
+     console.log(gameArea.clientHeight+" clientHeight size ");
+    console.log("voidAreaRow of =" + voidAreaRow + " voidAreacol =" + voidAreacol);
+    checkIf(row, col);
+     //   }
 
 
     buttonBg = true;
@@ -265,13 +313,11 @@ module game {
     // clearClickToDrag();
     //  return;
     //  }
-    // clickToDragPiece.style.display = deadBoard == null ?  tempString = tempString.concat(state.board[row][col]) : "none";
     // draggingLines.style.display = "inline";
 
     //if (type === "touchend") {tempString=null}
     if (type === "touchend"|| type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
-      // tempString = tempString.concat(state.board[x][y]);  
       dragDone(tempString);
        tempString='';
        dragArr=[];
@@ -285,17 +331,11 @@ module game {
   ///******** *
   ///******** *
 
-export function grow(row: number, col: number) {
-
-    // scale will be between 0.6 and 0.8.
-    let scale = 0.6 + 0.2 ;
-    // opacity between 0.5 and 0.7
-    let opacity = 0.5 + 0.2 ;
-
-    return {
-      transform: 'scale(${scale}, ${scale})'
-    };
-}
+  export function grow(rrow: number, ccol: number) {
+    return delta &&
+      delta.row === rrow &&
+      delta.col === ccol;
+  }
   function getSquareTopLeft(row: number, col: number) {
     let size = getSquareWidthHeight();
     return { top: row * size.height, left: col * size.width }
@@ -390,6 +430,7 @@ for (var v=0;v<dic.length;v++) {
     currentUpdateUI = params;
     startTimer();
     showGuess();
+    updateCache();
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
@@ -400,6 +441,7 @@ for (var v=0;v<dic.length;v++) {
     // because if we call aiService now
     // then the animation will be paused until the javascript finishes.
     animationEndedTimeout = $timeout(animationEndedCallback, 500);
+  
   }
 
   function animationEndedCallback() {
@@ -450,7 +492,7 @@ for (var v=0;v<dic.length;v++) {
   }
 
   function isFirstMove() {
-    return !currentUpdateUI.state;
+    return ! currentUpdateUI.state;
   }
 
   function yourPlayerIndex() {
