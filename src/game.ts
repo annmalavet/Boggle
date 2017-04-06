@@ -54,12 +54,14 @@ module game {
   export function rowsPercent() {
     return 100 / dim;
   }
-
+export function  clearClickToDrag(row: number, col: number){
+   return "";
+}
 export function getAnimationClass(row: number, col: number) {
-      return "grow";
+    
 }
   export function getPieceContainerClass(row: number, col: number) {
-    return getAnimationClass(row, col);
+      return "explodePiece";
   }
   export let cachedPieceClass: string[][] = getEmpty8Arrays();
   export let cachedPieceSrc: string[][] = getEmpty8Arrays();
@@ -70,14 +72,7 @@ export function getAnimationClass(row: number, col: number) {
     return res;
   }
   export function updateCache() {
-    //cachedBoardAvatar0 = getBoardAvatar(0);
-    //cachedBoardAvatar1 = getBoardAvatar(1);
-    //cachedBoardClass = getBoardClass();
 
-        cachedPieceSrc[curRow][curCol] = getPieceContainerClass(curRow, curCol);
-      
-    
-  
 }
 
   function showModal(titleId: string, bodyId: string) {
@@ -165,7 +160,9 @@ export function getAnimationClass(row: number, col: number) {
         if(dragArr.indexOf(row+''+col)===-1) {
            game.tempString = game.tempString.concat(game.state.board[row][col]);
             dragArr.push(row+''+col);
+ cachedPieceSrc[curRow][curCol] = clearClickToDrag(curRow, curCol);
 updateCache();
+
 //if( tempString in data1)  {
 // console.log("match match match match match match match");
 //}
@@ -199,6 +196,9 @@ updateCache();
     return proposals && proposals[row][col] > 0;
   }
   ///
+
+
+
   export function startTimer() {
     let timerCount = 5;//60;
  isModalShown = true;
@@ -256,10 +256,8 @@ updateCache();
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     let cellSize: CellSize = getCellSize();
-      
+    cachedPieceSrc[curRow][curCol] = getPieceContainerClass(curRow, curCol);
      if (type === "touchstart" ) {
-
-
        //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
        console.log(clickToDragPiece.id);
         let style: any = clickToDragPiece.style;
@@ -272,8 +270,6 @@ updateCache();
 
 
     let button = document.getElementById("img_" + row + "_" + col);
-
-    
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       // clearClickToDrag();
       var col = Math.floor(x * 4 / boardArea.clientWidth);
@@ -295,7 +291,6 @@ updateCache();
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
    // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
     curRow = row; curCol=col;
-    updateCache();
     console.log("row of =" + row +"cur row"+curRow+ " colof =" + col);
     console.log(cellSize.height+" cell size "+ cellSize.width)
      console.log(gameArea.clientWidth+" clientWidth size ");
@@ -318,10 +313,11 @@ updateCache();
     //if (type === "touchend") {tempString=null}
     if (type === "touchend"|| type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
-      dragDone(tempString);
+      dragDone(tempString, row, col);
        tempString='';
        dragArr=[];
       dragArr.push(4+''+4);
+
       // window.alert("touchEnd");
     }
   }
@@ -355,10 +351,11 @@ updateCache();
     };
   }
 
-  function dragDone(tempString:any) {
+  function dragDone(tempString:any, row:number, col:number) {
     $rootScope.$apply(function () {
       let dic = gameLogic.myDictionary;
       var res = tempString.toLowerCase();
+   
 for (var v=0;v<dic.length;v++) {
     if (dic[v]===res) {
       guessList.push(tempString);
@@ -374,6 +371,7 @@ for (var v=0;v<dic.length;v++) {
       dragArr.push(4+''+4);
       }
       console.log(guessList);
+   
      // if (deadBoard == null) {
         ///window.alert("something deadboard")
        // game.tempString = game.tempString.concat(game.state.board[row][col]);

@@ -62,7 +62,7 @@ body {
 }
 
 .grow {
-  animation: grow  0.8s ease-out;
+  animation: grow  0.3s ease-out;
 }
 
 @keyframes grow {

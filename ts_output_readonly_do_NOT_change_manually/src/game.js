@@ -38,12 +38,15 @@ var game;
         return 100 / game.dim;
     }
     game.rowsPercent = rowsPercent;
+    function clearClickToDrag(row, col) {
+        return "";
+    }
+    game.clearClickToDrag = clearClickToDrag;
     function getAnimationClass(row, col) {
-        return "grow";
     }
     game.getAnimationClass = getAnimationClass;
     function getPieceContainerClass(row, col) {
-        return getAnimationClass(row, col);
+        return "explodePiece";
     }
     game.getPieceContainerClass = getPieceContainerClass;
     game.cachedPieceClass = getEmpty8Arrays();
@@ -56,10 +59,6 @@ var game;
         return res;
     }
     function updateCache() {
-        //cachedBoardAvatar0 = getBoardAvatar(0);
-        //cachedBoardAvatar1 = getBoardAvatar(1);
-        //cachedBoardClass = getBoardClass();
-        game.cachedPieceSrc[game.curRow][game.curCol] = getPieceContainerClass(game.curRow, game.curCol);
     }
     game.updateCache = updateCache;
     function showModal(titleId, bodyId) {
@@ -146,6 +145,7 @@ var game;
             if (game.dragArr.indexOf(row + '' + col) === -1) {
                 game.tempString = game.tempString.concat(game.state.board[row][col]);
                 game.dragArr.push(row + '' + col);
+                game.cachedPieceSrc[game.curRow][game.curCol] = clearClickToDrag(game.curRow, game.curCol);
                 updateCache();
                 //if( tempString in data1)  {
                 // console.log("match match match match match match match");
@@ -234,6 +234,7 @@ var game;
         var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
         var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
         var cellSize = getCellSize();
+        game.cachedPieceSrc[game.curRow][game.curCol] = getPieceContainerClass(game.curRow, game.curCol);
         if (type === "touchstart") {
             //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
             console.log(clickToDragPiece.id);
@@ -261,7 +262,6 @@ var game;
         // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
         game.curRow = row;
         game.curCol = col;
-        updateCache();
         console.log("row of =" + row + "cur row" + game.curRow + " colof =" + col);
         console.log(cellSize.height + " cell size " + cellSize.width);
         console.log(game.gameArea.clientWidth + " clientWidth size ");
@@ -281,7 +281,7 @@ var game;
         //if (type === "touchend") {tempString=null}
         if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
-            dragDone(game.tempString);
+            dragDone(game.tempString, row, col);
             game.tempString = '';
             game.dragArr = [];
             game.dragArr.push(4 + '' + 4);
@@ -317,7 +317,7 @@ var game;
             y: row // * size.height + size.height / 2
         };
     }
-    function dragDone(tempString) {
+    function dragDone(tempString, row, col) {
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDictionary;
             var res = tempString.toLowerCase();
