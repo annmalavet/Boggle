@@ -23,6 +23,7 @@ var game;
     game.tempString = '';
     game.guessList = [];
     game.arrAnswer = null;
+    game.toClearRC = null;
     game.g = '';
     game.buttonBg = false;
     game.counter = 100;
@@ -46,7 +47,9 @@ var game;
     }
     game.getAnimationClass = getAnimationClass;
     function getPieceContainerClass(row, col) {
-        return "explodePiece";
+        // toClearRC.push([[row][col]]);
+        game.toClearRC.push({ roww: row, coll: col });
+        return "grow";
     }
     game.getPieceContainerClass = getPieceContainerClass;
     game.cachedPieceClass = getEmpty8Arrays();
@@ -54,7 +57,7 @@ var game;
     game.cachedAvatarPieceCrown = getEmpty8Arrays();
     function getEmpty8Arrays() {
         var res = [];
-        for (var i = 0; i < 8; i++)
+        for (var i = 0; i < 4; i++)
             res.push([]);
         return res;
     }
@@ -129,6 +132,7 @@ var game;
         dragAndDropService.addDragListener("gameArea", handleDragEvent);
         game.dragArr = [];
         game.dragArr.push(4 + '' + 4);
+        game.toClearRC = [];
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
@@ -145,15 +149,35 @@ var game;
             if (game.dragArr.indexOf(row + '' + col) === -1) {
                 game.tempString = game.tempString.concat(game.state.board[row][col]);
                 game.dragArr.push(row + '' + col);
-                game.cachedPieceSrc[game.curRow][game.curCol] = clearClickToDrag(game.curRow, game.curCol);
-                updateCache();
-                //if( tempString in data1)  {
-                // console.log("match match match match match match match");
-                //}
             }
         }
+        // console.log(toClearRC[i].roww + " and cct " + toClearRC[i].coll);
+        var timerCount = .5; //60;
+        var countDown = function () {
+            if (timerCount < 0) {
+                for (var i = 0; i < game.toClearRC.length; i++) {
+                    return game.cachedPieceSrc[game.toClearRC[i].roww][game.toClearRC[i].coll] = clearClickToDrag(game.toClearRC[i].roww, game.toClearRC[i].coll);
+                }
+            }
+            else {
+                game.countDownLeft = timerCount;
+                timerCount--;
+                game.$timeout(countDown, 1000);
+            }
+        };
+        game.countDownLeft = timerCount;
+        countDown();
+        game.toClearRC = [];
         console.log(game.dragArr.length);
     }
+    function grow() {
+        return "grow1";
+    }
+    game.grow = grow;
+    function grow1() {
+        return "";
+    }
+    game.grow1 = grow1;
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
         // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -234,28 +258,21 @@ var game;
         var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
         var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
         var cellSize = getCellSize();
-        game.cachedPieceSrc[game.curRow][game.curCol] = getPieceContainerClass(game.curRow, game.curCol);
-        if (type === "touchstart") {
+        var col = Math.floor(x * 4 / game.boardArea.clientWidth);
+        var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+        if (type === "touchstart" || type === "touchmove" || type === "mouseup") {
             //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
-            console.log(clickToDragPiece.id);
-            var style = clickToDragPiece.style;
-            clickToDragPiece.style.visibility = 'visible';
-            style['transform'] = 1.3;
-            updateUI(game.currentUpdateUI);
+            game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+            // updateUI(currentUpdateUI);
         }
         // Center point in boardArea
         var button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
-            // clearClickToDrag();
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
             console.log("row=" + row + " col=" + col);
             return;
         }
-        // Inside boardArea. Let's find the containing square's row and col
-        //(coord.x * tileSize) + (tileSize / 2)
-        var voidAreacol = Math.floor(x * 8 / game.boardArea.clientWidth);
-        var voidAreaRow = Math.floor(y * 8 / game.boardArea.clientHeight);
         //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
@@ -266,7 +283,6 @@ var game;
         console.log(cellSize.height + " cell size " + cellSize.width);
         console.log(game.gameArea.clientWidth + " clientWidth size ");
         console.log(game.gameArea.clientHeight + " clientHeight size ");
-        console.log("voidAreaRow of =" + voidAreaRow + " voidAreacol =" + voidAreacol);
         checkIf(row, col);
         //   }
         game.buttonBg = true;
@@ -274,7 +290,6 @@ var game;
         var topLeft = getSquareTopLeft(row, col);
         console.log(game.tempString);
         // if the cell is not empty, don't preview the piece, but still show the dragging lines
-        // clearClickToDrag();
         //  return;
         //  }
         // draggingLines.style.display = "inline";
@@ -293,12 +308,6 @@ var game;
     ///******** *
     ///******** *
     ///******** *
-    function grow(rrow, ccol) {
-        return game.delta &&
-            game.delta.row === rrow &&
-            game.delta.col === ccol;
-    }
-    game.grow = grow;
     function getSquareTopLeft(row, col) {
         var size = getSquareWidthHeight();
         return { top: row * size.height, left: col * size.width };

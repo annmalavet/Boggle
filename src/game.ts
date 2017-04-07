@@ -9,6 +9,11 @@ interface CellSize {
   width: number;
   height: number;
 }
+interface RowCol {
+  roww: number;
+  coll: number;
+}
+
 
 
 module game {
@@ -37,8 +42,9 @@ module game {
   export let tempString: string = '';
   export let guessList: string[] = [];
   export let arrAnswer: string[] = null;
-  export let dragArr:string[];
-  export let g:string ='';
+  export let dragArr: string[];
+  export let toClearRC: RowCol[] = null;
+  export let g: string = '';
   export let buttonBg = false;
   export let counter = 100;
   export let countDownLeft = 100;
@@ -47,36 +53,39 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let deadBoard: boolean[][] = null;
-  export let curRow:number = 5;
-  export let curCol:number = 5;
+  export let curRow: number = 5;
+  export let curCol: number = 5;
   export let hasDim = false;
   export let dim = 4;
   export function rowsPercent() {
     return 100 / dim;
   }
-export function  clearClickToDrag(row: number, col: number){
-   return "";
-}
-export function getAnimationClass(row: number, col: number) {
-    
-}
+  export function clearClickToDrag(row: number, col: number) {
+
+return "";
+  }
+  export function getAnimationClass(row: number, col: number) {
+
+  }
   export function getPieceContainerClass(row: number, col: number) {
-      return "explodePiece";
+    // toClearRC.push([[row][col]]);
+    toClearRC.push({ roww: row, coll: col });
+    return "grow";
   }
   export let cachedPieceClass: string[][] = getEmpty8Arrays();
   export let cachedPieceSrc: string[][] = getEmpty8Arrays();
   export let cachedAvatarPieceCrown: string[][] = getEmpty8Arrays();
   function getEmpty8Arrays(): string[][] {
     let res: string[][] = [];
-    for (let i = 0; i < 8; i++) res.push([]);
+    for (let i = 0; i < 4; i++) res.push([]);
     return res;
   }
   export function updateCache() {
 
-}
+  }
 
   function showModal(titleId: string, bodyId: string) {
-   // if (!isMyTurn()) return;
+    // if (!isMyTurn()) return;
     log.info("showModal: ", titleId);
     isModalShown = true;
     modalTitle = translate(titleId);
@@ -140,9 +149,9 @@ export function getAnimationClass(row: number, col: number) {
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("gameArea", handleDragEvent);
-    dragArr=[];
-    dragArr.push(4+''+4);
- 
+    dragArr = [];
+    dragArr.push(4 + '' + 4);
+    toClearRC = [];
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
@@ -152,27 +161,45 @@ export function getAnimationClass(row: number, col: number) {
       getStateForOgImage: null,
     });
 
-//window.alert(data);
+    //window.alert(data);
+
+  }
+  function checkIf(row: number, col: number) {
+    for (let i = 0; i < dragArr.length; i++) {
+      if (dragArr.indexOf(row + '' + col) === -1) {
+        game.tempString = game.tempString.concat(game.state.board[row][col]);
+        dragArr.push(row + '' + col);
+       
+      }
+    }
+    
+     // console.log(toClearRC[i].roww + " and cct " + toClearRC[i].coll);
+          let timerCount = .5;//60;
+    let countDown = function () {
+      if (timerCount < 0) {
+        for (let i = 0; i < toClearRC.length; i++) {
+          return cachedPieceSrc[toClearRC[i].roww][toClearRC[i].coll] = clearClickToDrag(toClearRC[i].roww, toClearRC[i].coll);
+        }  
+    } else {
+        countDownLeft = timerCount;
+        timerCount--;
+        $timeout(countDown, 1000);
+      }
+    };
+    countDownLeft = timerCount;
+    countDown();
      
+    
+    toClearRC = [];
+    console.log(dragArr.length);
   }
-  function checkIf(row:number, col:number){
-    for(let i=0; i<dragArr.length; i++) {
-        if(dragArr.indexOf(row+''+col)===-1) {
-           game.tempString = game.tempString.concat(game.state.board[row][col]);
-            dragArr.push(row+''+col);
- cachedPieceSrc[curRow][curCol] = clearClickToDrag(curRow, curCol);
-updateCache();
 
-//if( tempString in data1)  {
-// console.log("match match match match match match match");
-//}
-
-        }    
+export function grow(){
+  return "grow1";
 }
- console.log(dragArr.length);
-  }
-  
-
+export function grow1(){
+  return "";
+}
   function registerServiceWorker() {
     // I prefer to use appCache over serviceWorker
     // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -201,10 +228,10 @@ updateCache();
 
   export function startTimer() {
     let timerCount = 5;//60;
- isModalShown = true;
+    isModalShown = true;
     let countDown = function () {
       if (timerCount < 0) {
-       showModal(modalTitle, modalBody);
+        showModal(modalTitle, modalBody);
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -213,7 +240,6 @@ updateCache();
     };
     countDownLeft = timerCount;
     countDown();
-
   }
   export function listOf(row: number, col: number) {
     let arr = [];
@@ -231,7 +257,7 @@ updateCache();
     return board;
   }
 
-  export function addText(guessList:string[]) {
+  export function addText(guessList: string[]) {
     //window.alert(tempString);
     let s = guessList;
     let a = 'A';
@@ -256,14 +282,13 @@ updateCache();
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     let cellSize: CellSize = getCellSize();
-    cachedPieceSrc[curRow][curCol] = getPieceContainerClass(curRow, curCol);
-     if (type === "touchstart" ) {
-       //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
-       console.log(clickToDragPiece.id);
-        let style: any = clickToDragPiece.style;
-        clickToDragPiece.style.visibility='visible';
-        style['transform']=1.3;
-        updateUI(currentUpdateUI);
+    var col = Math.floor(x * 4 / boardArea.clientWidth);
+    var row = Math.floor(y * 4 / boardArea.clientHeight);
+    if (type === "touchstart" || type === "touchmove" || type === "mouseup") {
+
+      //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
+      cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+      // updateUI(currentUpdateUI);
     }
     // Center point in boardArea
 
@@ -271,33 +296,27 @@ updateCache();
 
     let button = document.getElementById("img_" + row + "_" + col);
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
-      // clearClickToDrag();
-      var col = Math.floor(x * 4 / boardArea.clientWidth);
-      var row = Math.floor(y * 4 / boardArea.clientHeight);
+      var col = Math.floor(x * 4 / game.boardArea.clientWidth);
+      var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+
       console.log("row=" + row + " col=" + col);
-      
+
       return;
     }
 
 
-
-    // Inside boardArea. Let's find the containing square's row and col
-    //(coord.x * tileSize) + (tileSize / 2)
-    var voidAreacol:number =  Math.floor(x * 8 / game.boardArea.clientWidth);
-    var voidAreaRow:number = Math.floor(y * 8 / game.boardArea.clientHeight);
-
-  //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
+    //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
     var col = Math.floor(x * 4 / game.boardArea.clientWidth);
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-   // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
-    curRow = row; curCol=col;
-    console.log("row of =" + row +"cur row"+curRow+ " colof =" + col);
-    console.log(cellSize.height+" cell size "+ cellSize.width)
-     console.log(gameArea.clientWidth+" clientWidth size ");
-     console.log(gameArea.clientHeight+" clientHeight size ");
-    console.log("voidAreaRow of =" + voidAreaRow + " voidAreacol =" + voidAreacol);
+
+    // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+    curRow = row; curCol = col;
+    console.log("row of =" + row + "cur row" + curRow + " colof =" + col);
+    console.log(cellSize.height + " cell size " + cellSize.width)
+    console.log(gameArea.clientWidth + " clientWidth size ");
+    console.log(gameArea.clientHeight + " clientHeight size ");
     checkIf(row, col);
-     //   }
+    //   }
 
 
     buttonBg = true;
@@ -305,18 +324,18 @@ updateCache();
     let topLeft = getSquareTopLeft(row, col);
     console.log(tempString);
     // if the cell is not empty, don't preview the piece, but still show the dragging lines
-    // clearClickToDrag();
     //  return;
     //  }
     // draggingLines.style.display = "inline";
 
     //if (type === "touchend") {tempString=null}
-    if (type === "touchend"|| type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
       dragDone(tempString, row, col);
-       tempString='';
-       dragArr=[];
-      dragArr.push(4+''+4);
+      tempString = '';
+      dragArr = [];
+
+      dragArr.push(4 + '' + 4);
 
       // window.alert("touchEnd");
     }
@@ -327,11 +346,7 @@ updateCache();
   ///******** *
   ///******** *
 
-  export function grow(rrow: number, ccol: number) {
-    return delta &&
-      delta.row === rrow &&
-      delta.col === ccol;
-  }
+
   function getSquareTopLeft(row: number, col: number) {
     let size = getSquareWidthHeight();
     return { top: row * size.height, left: col * size.width }
@@ -351,43 +366,43 @@ updateCache();
     };
   }
 
-  function dragDone(tempString:any, row:number, col:number) {
+  function dragDone(tempString: any, row: number, col: number) {
     $rootScope.$apply(function () {
       let dic = gameLogic.myDictionary;
       var res = tempString.toLowerCase();
-   
-for (var v=0;v<dic.length;v++) {
-    if (dic[v]===res) {
-      guessList.push(tempString);
-      showGuess();
-      console.log("yes in dictionary");
-      return;
-    }else {
-      console.log("not in dictionary "+res);
-}
-}
-      tempString=null;
-      if (dragArr.length===0){
-      dragArr.push(4+''+4);
+
+      for (var v = 0; v < dic.length; v++) {
+        if (dic[v] === res) {
+          guessList.push(tempString);
+          showGuess();
+          console.log("yes in dictionary");
+          return;
+        } else {
+          console.log("not in dictionary " + res);
+        }
+      }
+      tempString = null;
+      if (dragArr.length === 0) {
+        dragArr.push(4 + '' + 4);
       }
       console.log(guessList);
-   
-     // if (deadBoard == null) {
-        ///window.alert("something deadboard")
-       // game.tempString = game.tempString.concat(game.state.board[row][col]);
-        //  moveToConfirm = {row: row, col: col};
-       // alert(board[row][col]);
-     // } else {
-        //window.alert("something deadboard")
-        //game.tempString = game.tempString.concat(game.state.board[row][col]);
-        // clearClickToDrag();
+
+      // if (deadBoard == null) {
+      ///window.alert("something deadboard")
+      // game.tempString = game.tempString.concat(game.state.board[row][col]);
+      //  moveToConfirm = {row: row, col: col};
+      // alert(board[row][col]);
+      // } else {
+      //window.alert("something deadboard")
+      //game.tempString = game.tempString.concat(game.state.board[row][col]);
+      // clearClickToDrag();
       //}
     });
   }
- export function  showGuess(){
-   g = guessList.join(", "); 
-  return g; 
-}
+  export function showGuess() {
+    g = guessList.join(", ");
+    return g;
+  }
 
   //********* *
   ///******** *
@@ -439,7 +454,7 @@ for (var v=0;v<dic.length;v++) {
     // because if we call aiService now
     // then the animation will be paused until the javascript finishes.
     animationEndedTimeout = $timeout(animationEndedCallback, 500);
-  
+
   }
 
   function animationEndedCallback() {
@@ -490,7 +505,7 @@ for (var v=0;v<dic.length;v++) {
   }
 
   function isFirstMove() {
-    return ! currentUpdateUI.state;
+    return !currentUpdateUI.state;
   }
 
   function yourPlayerIndex() {
