@@ -290,11 +290,8 @@ export function grow1(){
     let cellSize: CellSize = getCellSize();
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
-    if (type === "touchstart" || type === "touchmove" || type==="mousedown") {
-
-      //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
+    if (type === "touchstart" || type === "touchmove" ) {
       cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
-      // updateUI(currentUpdateUI);
     }
     // Center point in boardArea
 
@@ -382,6 +379,7 @@ export function grow1(){
           guessList.push(tempString);
           showGuess();
           console.log("yes in dictionary");
+          reset();
           return;
         } else {
           console.log("not in dictionary " + res);
@@ -419,7 +417,7 @@ export function grow1(){
     for (let i = 0; i < gameLogic.ROWS; i++) {
       proposals[i] = [];
       for (let j = 0; j < gameLogic.COLS; j++) {
-        proposals[i][j] = 0;
+       // proposals[i][j] = gameLogic.getInitialBoard[i][j];
       }
     }
     for (let playerId in playerIdToProposal) {

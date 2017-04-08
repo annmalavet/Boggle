@@ -268,10 +268,8 @@ var game;
         var cellSize = getCellSize();
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
-            //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
+        if (type === "touchstart" || type === "touchmove") {
             game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
-            // updateUI(currentUpdateUI);
         }
         // Center point in boardArea
         var button = document.getElementById("img_" + row + "_" + col);
@@ -344,6 +342,7 @@ var game;
                     game.guessList.push(tempString);
                     showGuess();
                     console.log("yes in dictionary");
+                    reset();
                     return;
                 }
                 else {
@@ -381,7 +380,7 @@ var game;
         for (var i = 0; i < gameLogic.ROWS; i++) {
             proposals[i] = [];
             for (var j = 0; j < gameLogic.COLS; j++) {
-                proposals[i][j] = 0;
+                // proposals[i][j] = gameLogic.getInitialBoard[i][j];
             }
         }
         for (var playerId in playerIdToProposal) {
