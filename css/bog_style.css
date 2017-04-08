@@ -27,6 +27,24 @@ body {
   background-color:rgba(0,0,0,0);;
   z-index: 1;
 }
+
+.animate-show {
+    -webkit-transition: all linear 0.5s;
+    transition: all linear 0.5s;
+    opacity: 1;
+}
+
+.animate-show.ng-hide-add,
+.animate-show.ng-hide-remove {
+    display: inline-block !important;
+}
+.animate-show.ng-hide {
+    opacity: 0;
+}
+.rotate {
+  transition: all 1s ease-in-out;
+}
+
 .overlayModal {
   background: rgba(0,0,0,0.5);
   text-align:center;
@@ -69,13 +87,8 @@ body {
   from {transform: scale(1, 1);}
   to {transform: scale(1.3, 1.3);}
 }
-.grow1 {
-  animation: grow  0.3s ease-out;
-}
-
-@keyframes grow1 {
-  from {transform: scale(1, 1);}
-  to {transform: scale(1.3, 1.3);}
+.grow.ng-enter {
+  animation: grow  0.3s ease-in;
 }
 
 

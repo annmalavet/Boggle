@@ -64,6 +64,14 @@ var game;
     function updateCache() {
     }
     game.updateCache = updateCache;
+    function reset() {
+        for (var i = 0; i < 4; i++) {
+            for (var j = 0; j < 4; j++) {
+                game.cachedPieceSrc[i][j] = clearClickToDrag(i, j);
+            }
+        }
+    }
+    game.reset = reset;
     function showModal(titleId, bodyId) {
         // if (!isMyTurn()) return;
         log.info("showModal: ", titleId);
@@ -170,10 +178,10 @@ var game;
         game.toClearRC = [];
         console.log(game.dragArr.length);
     }
-    function grow() {
+    function getGrow() {
         return "grow1";
     }
-    game.grow = grow;
+    game.getGrow = getGrow;
     function grow1() {
         return "";
     }
@@ -205,7 +213,7 @@ var game;
         game.isModalShown = true;
         var countDown = function () {
             if (timerCount < 0) {
-                showModal(game.modalTitle, game.modalBody);
+                alert("game over");
             }
             else {
                 game.countDownLeft = timerCount;
@@ -260,7 +268,7 @@ var game;
         var cellSize = getCellSize();
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        if (type === "touchstart" || type === "touchmove" || type === "mouseup") {
+        if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
             //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
             game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
             // updateUI(currentUpdateUI);
@@ -330,6 +338,7 @@ var game;
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDictionary;
             var res = tempString.toLowerCase();
+            game.$rootScope.boxClass = false;
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
                     game.guessList.push(tempString);
@@ -342,6 +351,7 @@ var game;
                 }
             }
             tempString = null;
+            reset();
             if (game.dragArr.length === 0) {
                 game.dragArr.push(4 + '' + 4);
             }
@@ -354,7 +364,6 @@ var game;
             // } else {
             //window.alert("something deadboard")
             //game.tempString = game.tempString.concat(game.state.board[row][col]);
-            // clearClickToDrag();
             //}
         });
     }
@@ -501,10 +510,13 @@ var game;
     }
     game.shouldSlowlyAppear = shouldSlowlyAppear;
 })(game || (game = {}));
-angular.module('myApp', ['gameServices'])
-    .run(['$rootScope', '$timeout',
+var app = angular.module('myApp', ['gameServices', 'ngAnimate']);
+app.run(['$rootScope', '$timeout',
     function ($rootScope, $timeout) {
         $rootScope['game'] = game;
         game.init($rootScope, $timeout);
+    }]);
+app.controller('MainController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+        $scope.animateToggle = false;
     }]);
 //# sourceMappingURL=game.js.map

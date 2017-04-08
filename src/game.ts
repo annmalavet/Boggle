@@ -83,7 +83,13 @@ return "";
   export function updateCache() {
 
   }
-
+export function reset(){
+      for (let i = 0; i < 4; i++) {
+      for (let j = 0; j < 4; j++) {
+      
+        cachedPieceSrc[i][j] = clearClickToDrag(i,j);
+      }}
+}
   function showModal(titleId: string, bodyId: string) {
     // if (!isMyTurn()) return;
     log.info("showModal: ", titleId);
@@ -194,7 +200,7 @@ return "";
     console.log(dragArr.length);
   }
 
-export function grow(){
+export function getGrow(){
   return "grow1";
 }
 export function grow1(){
@@ -231,7 +237,7 @@ export function grow1(){
     isModalShown = true;
     let countDown = function () {
       if (timerCount < 0) {
-        showModal(modalTitle, modalBody);
+        alert("game over")
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -284,7 +290,7 @@ export function grow1(){
     let cellSize: CellSize = getCellSize();
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
-    if (type === "touchstart" || type === "touchmove" || type === "mouseup") {
+    if (type === "touchstart" || type === "touchmove" || type==="mousedown") {
 
       //clickToDragPiece = document.getElementById("img_" + row + "_" + col);//"img_" + row + "_" + col);
       cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
@@ -370,7 +376,7 @@ export function grow1(){
     $rootScope.$apply(function () {
       let dic = gameLogic.myDictionary;
       var res = tempString.toLowerCase();
-
+        $rootScope.boxClass = false;
       for (var v = 0; v < dic.length; v++) {
         if (dic[v] === res) {
           guessList.push(tempString);
@@ -382,6 +388,7 @@ export function grow1(){
         }
       }
       tempString = null;
+      reset();
       if (dragArr.length === 0) {
         dragArr.push(4 + '' + 4);
       }
@@ -395,7 +402,6 @@ export function grow1(){
       // } else {
       //window.alert("something deadboard")
       //game.tempString = game.tempString.concat(game.state.board[row][col]);
-      // clearClickToDrag();
       //}
     });
   }
@@ -558,9 +564,21 @@ export function grow1(){
 
   }
 }
-angular.module('myApp', ['gameServices'])
-  .run(['$rootScope', '$timeout',
+
+
+var app =  angular.module('myApp', ['gameServices', 'ngAnimate']);
+  app.run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
       $rootScope['game'] = game;
       game.init($rootScope, $timeout);
     }]);
+
+   
+
+app.controller('MainController', ['$scope', '$rootScope', function($scope: any, $rootScope: any) {
+
+
+    $scope.animateToggle = false;
+
+  }]);
+
