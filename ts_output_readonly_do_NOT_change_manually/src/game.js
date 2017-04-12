@@ -94,7 +94,7 @@ var game;
     function getCellStyle(row, col) {
         if (!game.proposals)
             return {};
-        var count = game.proposals[row][col];
+        var count = game.proposals[row][col].length;
         if (count == 0)
             return {};
         // proposals[row][col] is > 0
@@ -114,18 +114,17 @@ var game;
     function getBoardPiece(row, col) {
         var piece = game.board[row][col];
         var pieceBefore = game.boardBeforeMove[row][col];
-        var isProposal = game.proposals && game.proposals[row][col] > 0;
+        var isProposal = game.proposals && game.proposals[row][col].length > 0;
         //
         return isProposal ? (game.currentUpdateUI.turnIndex == 0 ? '1' : '2') :
             !piece && !pieceBefore ? '' : (piece == 'A' || pieceBefore == 'B' ? 'B' : 'C');
     }
     game.getBoardPiece = getBoardPiece;
-    function shouldSlowlyDrop(rrow, ccol) {
-        return game.delta &&
-            game.delta.row === rrow &&
-            game.delta.col === ccol;
-    }
-    game.shouldSlowlyDrop = shouldSlowlyDrop;
+    // export function shouldSlowlyDrop(rrow: number, ccol: number) {
+    // return delta &&
+    //    delta.row === rrow &&
+    //    delta.col === ccol;
+    // }
     //
     ///
     ///
@@ -159,24 +158,6 @@ var game;
                 game.dragArr.push(row + '' + col);
             }
         }
-        // console.log(toClearRC[i].roww + " and cct " + toClearRC[i].coll);
-        var timerCount = .5; //60;
-        var countDown = function () {
-            if (timerCount < 0) {
-                for (var i = 0; i < game.toClearRC.length; i++) {
-                    return game.cachedPieceSrc[game.toClearRC[i].roww][game.toClearRC[i].coll] = clearClickToDrag(game.toClearRC[i].roww, game.toClearRC[i].coll);
-                }
-            }
-            else {
-                game.countDownLeft = timerCount;
-                timerCount--;
-                game.$timeout(countDown, 1000);
-            }
-        };
-        game.countDownLeft = timerCount;
-        countDown();
-        game.toClearRC = [];
-        console.log(game.dragArr.length);
     }
     function getGrow() {
         return "grow1";
@@ -204,12 +185,12 @@ var game;
         return {};
     }
     function isProposal(row, col) {
-        return game.proposals && game.proposals[row][col] > 0;
+        return game.proposals && game.proposals[row][col].length > 0;
     }
     game.isProposal = isProposal;
     ///
     function startTimer() {
-        var timerCount = 5; //60;
+        var timerCount = 60;
         game.isModalShown = true;
         var countDown = function () {
             if (timerCount < 0) {
@@ -227,7 +208,6 @@ var game;
     game.startTimer = startTimer;
     function listOf(row, col) {
         var arr = [];
-        //tempString = tempString.concat(state.board[row][col]);
         arr.push(game.state.board[row][col]);
         console.log(game.tempString);
         return game.tempString;
@@ -269,7 +249,6 @@ var game;
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
         if (type === "touchstart" || type === "touchmove") {
-            game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
         }
         // Center point in boardArea
         var button = document.getElementById("img_" + row + "_" + col);
@@ -282,13 +261,13 @@ var game;
         //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
         game.curRow = row;
         game.curCol = col;
         console.log("row of =" + row + "cur row" + game.curRow + " colof =" + col);
         console.log(cellSize.height + " cell size " + cellSize.width);
         console.log(game.gameArea.clientWidth + " clientWidth size ");
         console.log(game.gameArea.clientHeight + " clientHeight size ");
+        game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
         checkIf(row, col);
         //   }
         game.buttonBg = true;
@@ -306,7 +285,6 @@ var game;
             game.tempString = '';
             game.dragArr = [];
             game.dragArr.push(4 + '' + 4);
-            // window.alert("touchEnd");
         }
     }
     ///******** *
@@ -357,7 +335,6 @@ var game;
             console.log(game.guessList);
             // if (deadBoard == null) {
             ///window.alert("something deadboard")
-            // game.tempString = game.tempString.concat(game.state.board[row][col]);
             //  moveToConfirm = {row: row, col: col};
             // alert(board[row][col]);
             // } else {
@@ -380,13 +357,13 @@ var game;
         for (var i = 0; i < gameLogic.ROWS; i++) {
             proposals[i] = [];
             for (var j = 0; j < gameLogic.COLS; j++) {
-                // proposals[i][j] = gameLogic.getInitialBoard[i][j];
+                proposals[i][j] = game.state.board[i][j];
             }
         }
         for (var playerId in playerIdToProposal) {
             var proposal = playerIdToProposal[playerId];
             var delta_1 = proposal.data;
-            proposals[delta_1.row][delta_1.col]++;
+            //proposals[delta.board][delta.guessList]++;?????????????????????????
         }
         return proposals;
     }
@@ -440,9 +417,9 @@ var game;
             state: game.currentUpdateUI.state,
             turnIndex: game.currentUpdateUI.turnIndex,
         };
-        var move = aiService.findComputerMove(currentMove);
-        log.info("Computer move: ", move);
-        makeMove(move);
+        //let move = aiService.findComputerMove(currentMove);
+        //   log.info("Computer move: ", move);
+        // makeMove(move);
     }
     function makeMove(move) {
         if (game.didMakeMove) {
@@ -453,17 +430,17 @@ var game;
             gameService.makeMove(move, null);
         }
         else {
-            var delta_2 = move.state.delta;
-            var myProposal = {
-                data: delta_2,
-                chatDescription: '' + (delta_2.row + 1) + 'x' + (delta_2.col + 1),
-                playerInfo: game.yourPlayerInfo,
-            };
+            var delta_2 = move.state.board;
+            // let myProposal: IProposal = {
+            //  data: delta,
+            //  chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
+            //   playerInfo: yourPlayerInfo,
+            // };
             // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-            if (game.proposals[delta_2.row][delta_2.col] < game.currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
-                move = null;
-            }
-            gameService.makeMove(move, myProposal);
+            // if (proposals[delta.row][delta.col] < currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
+            //  move = null;
+            //}
+            // gameService.makeMove(move, myProposal);
         }
     }
     function isFirstMove() {
@@ -495,19 +472,16 @@ var game;
     function isPiece(row, col, turnIndex, pieceKind) {
         return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
     }
-    function isPieceX(row, col) {
-        return isPiece(row, col, 0, 'X');
-    }
-    game.isPieceX = isPieceX;
-    function isPieceO(row, col) {
-        return isPiece(row, col, 1, 'O');
-    }
-    game.isPieceO = isPieceO;
-    function shouldSlowlyAppear(row, col) {
-        return game.state.delta &&
-            game.state.delta.row === row && game.state.delta.col === col;
-    }
-    game.shouldSlowlyAppear = shouldSlowlyAppear;
+    // export function isPieceX(row: number, col: number): boolean {
+    //  return isPiece(row, col, 0, 'X');
+    //}
+    // export function isPieceO(row: number, col: number): boolean {
+    //   return isPiece(row, col, 1, 'O');
+    //}
+    //  export function shouldSlowlyAppear(row: number, col: number): boolean {
+    //   return state.delta &&
+    //    state.delta.row === row && state.delta.col === col;
+    // }
 })(game || (game = {}));
 var app = angular.module('myApp', ['gameServices', 'ngAnimate']);
 app.run(['$rootScope', '$timeout',

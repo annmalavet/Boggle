@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="myApp"  manifest="index.min.appcache">
+<html lang="en" ng-app="myApp" manifest="index.min.appcache">
+
 <head>
-   <meta http-equiv="Content-Type" content="text/html, charset=UTF-8">
+  <meta http-equiv="Content-Type" content="text/html, charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Boggle Game</title>
   <meta name="description" content="Boggle game">
-  <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,"><!-- Suppress browser request for favicon.ico -->
+  <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,">
+  <!-- Suppress browser request for favicon.ico -->
 
   <!-- To ensure CSS files are downloaded in parallel, always include external CSS before external JavaScript. -->
   <link rel="stylesheet" type="text/css" href="css/everything.min.css">
@@ -13,89 +15,50 @@
   <script src="undefined"></script>
 
 </head>
-<body ng-cloak id="gameArea">
 
-    <div >
+<body ng-cloak ng-app="myApp" ontouchstart>
+  <div class="overlayModal oneOpacity" ng-hide="game.isModalShown" ng-class="{zeroOpacity: game.isModalShown, oneOpacity: game.isModalShown}"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{game.modalTitle}}
+          </h4>
+        </div>
+        <div class="modal-body">
+          {{game.modalBody}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-primary" ng-click="game.isModalShown = false">
+          </button>
+        </div>
+      </div>
     </div>
-<div>
-   <a id="img0" ng-click="{{game.addText(0,0)}}" >
-      <div>  <img ng-src="{{game.onClick(0,0)}}"></div>
+  </div>
 
-   </a>
- <a id="img1">
- <div>  <img ng-src="{{game.onClick(0,1)}}"></div>
-  </a>
 
-  </a>
-  <a id="img2">
-    <figure>
-      <img ng-src="{{game.onClick(0,2)}}">
-
-    </figure>
-  </a>
-  <a id="img3">
-    <figure>
-      <img ng-src="{{game.onClick(0,3)}}">
-
-    </figure>
-  </a>
- <a id="img4">
-    <figure>
-      <img ng-src="{{game.onClick(1,0)}}">
-    </figure>
-  </a>
-  <a id="img5">
-    <figure>
-  <img ng-src="{{game.onClick(1,1)}}">
-
-    </figure>
-  </a>
-  <a id="img6">
-    <figure>
-       <img ng-src="{{game.onClick(1,2)}}">
-
-    </figure>
-  </a>
-  <a id="img7">
-    <figure>
-        <img ng-src="{{game.onClick(1,3)}}">
-
-    </figure>
-  </a>
-  <a id="img8">
-    <figure>
-        <img ng-src="{{game.onClick(2,0)}}">
-
-    </figure>
-  </a>
-  <a id="img9">
-    <figure>
-         <img ng-src="{{game.onClick(2,1)}}">
-
-    </figure>
-  </a>
-    <a id="img10">
-    <figure>
-      <img ng-src="{{game.onClick(2,2)}}">
-
-    </figure>
-  </a>
-   <a id="img11">
-    <figure>
-        <img ng-src="{{game.onClick(2,3)}}">
-
-    </figure>
-  </a>
-
+  <div id="gameArea">
+    <div>
+      <textarea id="inputarea"> {{game.showGuess()}}</textarea>
     </div>
 
-<form>
+    <div id="boardArea">
+      <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row * 110 / game.dim}}%; left:0; width:100%; height:100%;">
+        <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 100 / game.dim}}%; width:100%; height:100%;">
+          <div id="{{'img_container_' + row + '_' + col}}" class="img_container" ng-class="game.cachedPieceContainerClass[row][col]">
+            <button id="img_0" class="button" style="z-index: 30; width: 25%; height: 25%; " ng-class="game.cachedPieceSrc[row][col]" ng-style="{ 'background-image': 'url(' + game.getBgImg(row, col) + ')'}"
+              ng-click="game.listOf(row, col)"></button>
+          </div>
 
-		<div>
-		
-			<input id="box" type="text" ng-model="alphabet" ng-bind="word" > </input>
-		
-	</form>
-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h2>Time remaining: {{game.countDownLeft}}</h2>
+  </div>
+  </div>
 </body>
+
 </html>

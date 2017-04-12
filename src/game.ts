@@ -37,7 +37,7 @@ module game {
   export let state: IState = null;
   // For community games.
   export let buttonNums = 16;
-  export let proposals: number[][] = null;
+  export let proposals: string[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
   export let tempString: string = '';
   export let guessList: string[] = [];
@@ -110,7 +110,7 @@ export function reset(){
   }
   export function getCellStyle(row: number, col: number): Object {
     if (!proposals) return {};
-    let count = proposals[row][col];
+    let count = proposals[row][col].length;
     if (count == 0) return {};
     // proposals[row][col] is > 0
     let countZeroBased = count - 1;
@@ -131,17 +131,17 @@ export function reset(){
   export function getBoardPiece(row: number, col: number): string {
     let piece = game.board[row][col];
     let pieceBefore = game.boardBeforeMove[row][col];
-    let isProposal = proposals && proposals[row][col] > 0;
+    let isProposal = proposals && proposals[row][col].length > 0;
     //
 
     return isProposal ? (currentUpdateUI.turnIndex == 0 ? '1' : '2') :
       !piece && !pieceBefore ? '' : (piece == 'A' || pieceBefore == 'B' ? 'B' : 'C');
   }
-  export function shouldSlowlyDrop(rrow: number, ccol: number) {
-    return delta &&
-      delta.row === rrow &&
-      delta.col === ccol;
-  }
+ // export function shouldSlowlyDrop(rrow: number, ccol: number) {
+   // return delta &&
+  //    delta.row === rrow &&
+  //    delta.col === ccol;
+ // }
 
   //
   ///
@@ -175,29 +175,8 @@ export function reset(){
       if (dragArr.indexOf(row + '' + col) === -1) {
         game.tempString = game.tempString.concat(game.state.board[row][col]);
         dragArr.push(row + '' + col);
-       
       }
     }
-    
-     // console.log(toClearRC[i].roww + " and cct " + toClearRC[i].coll);
-          let timerCount = .5;//60;
-    let countDown = function () {
-      if (timerCount < 0) {
-        for (let i = 0; i < toClearRC.length; i++) {
-          return cachedPieceSrc[toClearRC[i].roww][toClearRC[i].coll] = clearClickToDrag(toClearRC[i].roww, toClearRC[i].coll);
-        }  
-    } else {
-        countDownLeft = timerCount;
-        timerCount--;
-        $timeout(countDown, 1000);
-      }
-    };
-    countDownLeft = timerCount;
-    countDown();
-     
-    
-    toClearRC = [];
-    console.log(dragArr.length);
   }
 
 export function getGrow(){
@@ -226,14 +205,14 @@ export function grow1(){
   }
 
   export function isProposal(row: number, col: number) {
-    return proposals && proposals[row][col] > 0;
+    return proposals && proposals[row][col].length > 0;
   }
   ///
 
 
 
   export function startTimer() {
-    let timerCount = 5;//60;
+    let timerCount = 60;
     isModalShown = true;
     let countDown = function () {
       if (timerCount < 0) {
@@ -249,7 +228,6 @@ export function grow1(){
   }
   export function listOf(row: number, col: number) {
     let arr = [];
-    //tempString = tempString.concat(state.board[row][col]);
     arr.push(state.board[row][col]);
     console.log(tempString);
     return tempString;
@@ -291,7 +269,7 @@ export function grow1(){
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
     if (type === "touchstart" || type === "touchmove" ) {
-      cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+      
     }
     // Center point in boardArea
 
@@ -311,17 +289,14 @@ export function grow1(){
     //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
     var col = Math.floor(x * 4 / game.boardArea.clientWidth);
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-
-    // cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
     curRow = row; curCol = col;
     console.log("row of =" + row + "cur row" + curRow + " colof =" + col);
     console.log(cellSize.height + " cell size " + cellSize.width)
     console.log(gameArea.clientWidth + " clientWidth size ");
     console.log(gameArea.clientHeight + " clientHeight size ");
+    cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
     checkIf(row, col);
     //   }
-
-
     buttonBg = true;
     let centerXY = getSquareCenterXY(row, col);
     let topLeft = getSquareTopLeft(row, col);
@@ -330,17 +305,13 @@ export function grow1(){
     //  return;
     //  }
     // draggingLines.style.display = "inline";
-
     //if (type === "touchend") {tempString=null}
     if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
       dragDone(tempString, row, col);
       tempString = '';
       dragArr = [];
-
       dragArr.push(4 + '' + 4);
-
-      // window.alert("touchEnd");
     }
   }
   ///******** *
@@ -394,7 +365,7 @@ export function grow1(){
 
       // if (deadBoard == null) {
       ///window.alert("something deadboard")
-      // game.tempString = game.tempString.concat(game.state.board[row][col]);
+   
       //  moveToConfirm = {row: row, col: col};
       // alert(board[row][col]);
       // } else {
@@ -412,18 +383,18 @@ export function grow1(){
   ///******** *
   ///******** *
   ///******** *
-  function getProposalsBoard(playerIdToProposal: IProposals): number[][] {
-    let proposals: number[][] = [];
+  function getProposalsBoard(playerIdToProposal: IProposals): string[][] {
+    let proposals: string[][] = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
       proposals[i] = [];
       for (let j = 0; j < gameLogic.COLS; j++) {
-       // proposals[i][j] = gameLogic.getInitialBoard[i][j];
+        proposals[i][j] = state.board[i][j];
       }
     }
     for (let playerId in playerIdToProposal) {
       let proposal = playerIdToProposal[playerId];
       let delta = proposal.data;
-      proposals[delta.row][delta.col]++;
+      //proposals[delta.board][delta.guessList]++;?????????????????????????
     }
     return proposals;
   }
@@ -480,9 +451,9 @@ export function grow1(){
       state: currentUpdateUI.state,
       turnIndex: currentUpdateUI.turnIndex,
     }
-    let move = aiService.findComputerMove(currentMove);
-    log.info("Computer move: ", move);
-    makeMove(move);
+    //let move = aiService.findComputerMove(currentMove);
+ //   log.info("Computer move: ", move);
+   // makeMove(move);
   }
 
   function makeMove(move: IMove) {
@@ -494,17 +465,17 @@ export function grow1(){
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
-      let delta = move.state.delta;
+      let delta = move.state.board;
       let myProposal: IProposal = {
         data: delta,
-        chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
-        playerInfo: yourPlayerInfo,
+      chatDescription: ''+delta.length,
+      playerInfo: yourPlayerInfo,
       };
       // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-      if (proposals[delta.row][delta.col] < currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
+      if (proposals[delta.indexOf.arguments].length < currentUpdateUI.numberOfPlayersRequiredToMove - 1) { /////?????
         move = null;
       }
-      gameService.makeMove(move, myProposal);
+     gameService.makeMove(move, myProposal);
     }
   }
 
@@ -548,19 +519,19 @@ export function grow1(){
     return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
   }
 
-  export function isPieceX(row: number, col: number): boolean {
-    return isPiece(row, col, 0, 'X');
-  }
+ // export function isPieceX(row: number, col: number): boolean {
+  //  return isPiece(row, col, 0, 'X');
+  //}
 
-  export function isPieceO(row: number, col: number): boolean {
-    return isPiece(row, col, 1, 'O');
-  }
+ // export function isPieceO(row: number, col: number): boolean {
+ //   return isPiece(row, col, 1, 'O');
+  //}
 
-  export function shouldSlowlyAppear(row: number, col: number): boolean {
-    return state.delta &&
-      state.delta.row === row && state.delta.col === col;
+//  export function shouldSlowlyAppear(row: number, col: number): boolean {
+ //   return state.delta &&
+  //    state.delta.row === row && state.delta.col === col;
 
-  }
+ // }
 }
 
 
