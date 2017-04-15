@@ -90,12 +90,10 @@ export function reset(){
         cachedPieceSrc[i][j] = clearClickToDrag(i,j);
       }}
 }
-  function showModal(titleId: string, bodyId: string) {
+  function showModal() {
     // if (!isMyTurn()) return;
-    log.info("showModal: ", titleId);
+
     isModalShown = true;
-    modalTitle = translate(titleId);
-    modalBody = translate(bodyId);
   }
 
   let cacheIntegersTill: number[][] = [];
@@ -156,6 +154,7 @@ export function reset(){
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("gameArea", handleDragEvent);
     dragArr = [];
+    isModalShown=false;
     dragArr.push(4 + '' + 4);
     toClearRC = [];
     registerServiceWorker();
@@ -173,8 +172,12 @@ export function reset(){
   function checkIf(row: number, col: number) {
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
+      
+       // let topLeft = getSquareTopLeft(row, col);
         game.tempString = game.tempString.concat(game.state.board[row][col]);
+        console.log(game.tempString);
         dragArr.push(row + '' + col);
+        // console.log(centerXY.y+" and center x: "+centerXY.x);
       }
     }
   }
@@ -213,10 +216,10 @@ export function grow1(){
 
   export function startTimer() {
     let timerCount = 60;
-    isModalShown = true;
     let countDown = function () {
       if (timerCount < 0) {
-        alert("game over")
+         isModalShown = true;
+        //alert("game over")
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -259,7 +262,6 @@ export function grow1(){
   }
 
   function handleDragEvent(type: any, clientX: any, clientY: any) {
-
     //  if (!isHumanTurn() || passes == 2) {
     ///   return; // if the game is over, do not display dragging effect
     //}
@@ -269,7 +271,7 @@ export function grow1(){
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
     if (type === "touchstart" || type === "touchmove" ) {
-      
+ 
     }
     // Center point in boardArea
 
@@ -279,28 +281,31 @@ export function grow1(){
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-
-      console.log("row=" + row + " col=" + col);
-
+      //console.log("row=" + row + " col=" + col);
       return;
     }
-
-
     //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
     var col = Math.floor(x * 4 / game.boardArea.clientWidth);
     var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-    curRow = row; curCol = col;
-    console.log("row of =" + row + "cur row" + curRow + " colof =" + col);
-    console.log(cellSize.height + " cell size " + cellSize.width)
-    console.log(gameArea.clientWidth + " clientWidth size ");
-    console.log(gameArea.clientHeight + " clientHeight size ");
-    cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
-    checkIf(row, col);
-    //   }
-    buttonBg = true;
     let centerXY = getSquareCenterXY(row, col);
     let topLeft = getSquareTopLeft(row, col);
-    console.log(tempString);
+    curRow = row; curCol = col;
+    //console.log(centerXY.x+" "+centerXY.y+"get center x y");
+    //console.log(cellSize.height + " cell size " + cellSize.width)
+    //console.log(gameArea.clientWidth + " clientWidth size ");
+    //console.log(gameArea.clientHeight + " clientHeight size ");
+    cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+
+console.log(clientX+" row to height * col -10 "+(cellSize.height * (col+1) -10));
+console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
+//console.log(row+" row to checkif then col"+col);
+    if (clientY < (cellSize.height * (row+1) -15 )&& (clientX > (cellSize.width * (col+1) -10 ))) {
+      console.log((cellSize.height * (row+1) -10 )+" vs " + clientY+" and clientX: "+clientX+" vs "+(clientX < (cellSize.width * (col+1) -10 )));
+    checkIf(row, col);
+    }
+    buttonBg = true;
+
+   
     // if the cell is not empty, don't preview the piece, but still show the dragging lines
     //  return;
     //  }
@@ -345,6 +350,7 @@ export function grow1(){
       let dic = gameLogic.myDictionary;
       var res = tempString.toLowerCase();
         $rootScope.boxClass = false;
+        console.log (tempString);
       for (var v = 0; v < dic.length; v++) {
         if (dic[v] === res) {
           guessList.push(tempString);
@@ -465,16 +471,19 @@ export function grow1(){
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
-      let delta = move.state.board;
+      let delta = {board,guessList };
       let myProposal: IProposal = {
-        data: delta,
-      chatDescription: ''+delta.length,
+          //playerInfo: IPlayerInfo; // the player making the proposal.
+          //chatDescription: string; // string representation of the proposal that will be shown in the community game chat.
+         // data: IProposalData; 
+      data: delta,
+      chatDescription: 'player guessed '+delta.guessList.length,
       playerInfo: yourPlayerInfo,
       };
       // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-      if (proposals[delta.indexOf.arguments].length < currentUpdateUI.numberOfPlayersRequiredToMove - 1) { /////?????
-        move = null;
-      }
+ ////?????????     if (proposals[delta.indexOf.arguments].length < currentUpdateUI.numberOfPlayersRequiredToMove - 1) { /////?????
+      //  move = null;
+     //??????? }
      gameService.makeMove(move, myProposal);
     }
   }

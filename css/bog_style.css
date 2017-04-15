@@ -27,22 +27,23 @@ body {
   background-color:rgba(0,0,0,0);;
   z-index: 1;
 }
-
-.animate-show {
-    -webkit-transition: all linear 0.5s;
-    transition: all linear 0.5s;
-    opacity: 1;
+.timer {
+    display: inline-block;
+    position: relative;
+    width:25%;
+    border: 3px solid #9BDB40;
+    padding: 7px;
 }
-
-.animate-show.ng-hide-add,
-.animate-show.ng-hide-remove {
-    display: inline-block !important;
+.wordBox {
+    display: inline-block;
+    position: relative;
+    width:55%;
+    border: 3px solid #9BDB40;
+    padding: 7px;
 }
-.animate-show.ng-hide {
-    opacity: 0;
-}
-.rotate {
-  transition: all 1s ease-in-out;
+.top{
+    text-align: justify;
+    border: 1px solid #ccc;
 }
 
 .overlayModal {
@@ -62,21 +63,6 @@ body {
   visibility:visible;
   opacity:1;
   transition-delay:0s;
-}
-
-.explodePiece {
-  z-index: 5;
-  animation: explodePiece 0.5s cubic-bezier(0.420, 0.000, 1.000, 0.830) forwards;
-}
-
-@keyframes explodePiece {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    transform: scale(3) rotate(10deg);
-  }
 }
 
 .grow {
@@ -113,8 +99,6 @@ body {
   and (max-device-width: 568px)
   and (-webkit-min-device-pixel-ratio: 2) {
 
-
-/* This is the animationd definition, this class is added when the animationClass is about to be appended to element classes*/
 .growI.grow-add {
     -webkit-animation: 1s ng-class-animation;
     -moz-animation: 1s ng-class-animation;
@@ -161,20 +145,6 @@ transform:scale(.9);
 
 }
 
-#inputarea {
-position: absolute;
-display: inline-block;
-z-index: 50;
-width: 80%;
-height:20%;
-top: 0%;
-left: 0%;
-right:0%;
-left: 0; 
-vertical-align: top;
-font-size: 10px;
-background-color:rgba(0,0,0,0);
-border-radius: 3%;
 
 
 }
@@ -262,17 +232,7 @@ background-position: center;
 
 
 
-#inputarea {
-position: absolute; top: 0px; left: 0px;
-display: inline-block;
-vertical-align: top;
-border: 1px solid transparent;
-top: 0%;
-left: 0%;
-right:0%;
-z-index:21;
-background-color: rgba(234,255,0);
-}
+
 
 
 

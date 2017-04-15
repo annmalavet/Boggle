@@ -33,7 +33,7 @@
 </head>
 
 <body ng-cloak ng-app="myApp" ontouchstart>
-  <div class="overlayModal oneOpacity" ng-hide="game.isModalShown" ng-class="{zeroOpacity: game.isModalShown, oneOpacity: game.isModalShown}"
+  <div class="overlayModal oneOpacity" ng-hide="!game.isModalShown" ng-class="{zeroOpacity: !game.isModalShown, oneOpacity: game.isModalShown}"aria-hidden="true"
     aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -45,18 +45,15 @@
         <div class="modal-body">
           {{game.modalBody}}
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-primary" ng-click="game.isModalShown = false">
-          </button>
-        </div>
       </div>
     </div>
   </div>
 
 
   <div id="gameArea">
-    <div>
-      <textarea id="inputarea"> {{game.showGuess()}}</textarea>
+    <div class="top">
+    <h2 class="timer">Time remaining: {{game.countDownLeft}}</h2>
+   <textarea class="wordBox" id="inputarea"> {{game.showGuess()}}</textarea>
     </div>
 
     <div id="boardArea">
@@ -71,9 +68,7 @@
       </div>
     </div>
   </div>
-  <div>
-    <h2>Time remaining: {{game.countDownLeft}}</h2>
-  </div>
+
   </div>
 </body>
 

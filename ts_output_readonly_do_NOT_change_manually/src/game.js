@@ -72,12 +72,9 @@ var game;
         }
     }
     game.reset = reset;
-    function showModal(titleId, bodyId) {
+    function showModal() {
         // if (!isMyTurn()) return;
-        log.info("showModal: ", titleId);
         game.isModalShown = true;
-        game.modalTitle = translate(titleId);
-        game.modalBody = translate(bodyId);
     }
     var cacheIntegersTill = [];
     function getIntegersTill(number) {
@@ -138,6 +135,7 @@ var game;
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("gameArea", handleDragEvent);
         game.dragArr = [];
+        game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
         game.toClearRC = [];
         registerServiceWorker();
@@ -154,8 +152,11 @@ var game;
     function checkIf(row, col) {
         for (var i = 0; i < game.dragArr.length; i++) {
             if (game.dragArr.indexOf(row + '' + col) === -1) {
+                // let topLeft = getSquareTopLeft(row, col);
                 game.tempString = game.tempString.concat(game.state.board[row][col]);
+                console.log(game.tempString);
                 game.dragArr.push(row + '' + col);
+                // console.log(centerXY.y+" and center x: "+centerXY.x);
             }
         }
     }
@@ -191,10 +192,10 @@ var game;
     ///
     function startTimer() {
         var timerCount = 60;
-        game.isModalShown = true;
         var countDown = function () {
             if (timerCount < 0) {
-                alert("game over");
+                game.isModalShown = true;
+                //alert("game over")
             }
             else {
                 game.countDownLeft = timerCount;
@@ -255,25 +256,29 @@ var game;
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-            console.log("row=" + row + " col=" + col);
+            //console.log("row=" + row + " col=" + col);
             return;
         }
         //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        game.curRow = row;
-        game.curCol = col;
-        console.log("row of =" + row + "cur row" + game.curRow + " colof =" + col);
-        console.log(cellSize.height + " cell size " + cellSize.width);
-        console.log(game.gameArea.clientWidth + " clientWidth size ");
-        console.log(game.gameArea.clientHeight + " clientHeight size ");
-        game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
-        checkIf(row, col);
-        //   }
-        game.buttonBg = true;
         var centerXY = getSquareCenterXY(row, col);
         var topLeft = getSquareTopLeft(row, col);
-        console.log(game.tempString);
+        game.curRow = row;
+        game.curCol = col;
+        //console.log(centerXY.x+" "+centerXY.y+"get center x y");
+        //console.log(cellSize.height + " cell size " + cellSize.width)
+        //console.log(gameArea.clientWidth + " clientWidth size ");
+        //console.log(gameArea.clientHeight + " clientHeight size ");
+        game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+        console.log(clientX + " row to height * col -10 " + (cellSize.height * (col + 1) - 10));
+        console.log(clientY + " row to width times row" + (cellSize.width * (row + 1) - 10));
+        //console.log(row+" row to checkif then col"+col);
+        if (clientY < (cellSize.height * (row + 1) - 15) && (clientX > (cellSize.width * (col + 1) - 10))) {
+            console.log((cellSize.height * (row + 1) - 10) + " vs " + clientY + " and clientX: " + clientX + " vs " + (clientX < (cellSize.width * (col + 1) - 10)));
+            checkIf(row, col);
+        }
+        game.buttonBg = true;
         // if the cell is not empty, don't preview the piece, but still show the dragging lines
         //  return;
         //  }
@@ -315,6 +320,7 @@ var game;
             var dic = gameLogic.myDictionary;
             var res = tempString.toLowerCase();
             game.$rootScope.boxClass = false;
+            console.log(tempString);
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
                     game.guessList.push(tempString);
@@ -430,17 +436,20 @@ var game;
             gameService.makeMove(move, null);
         }
         else {
-            var delta_2 = move.state.board;
-            // let myProposal: IProposal = {
-            //  data: delta,
-            //  chatDescription: '' + (delta.row + 1) + 'x' + (delta.col + 1),
-            //   playerInfo: yourPlayerInfo,
-            // };
+            var delta_2 = { board: game.board, guessList: game.guessList };
+            var myProposal = {
+                //playerInfo: IPlayerInfo; // the player making the proposal.
+                //chatDescription: string; // string representation of the proposal that will be shown in the community game chat.
+                // data: IProposalData; 
+                data: delta_2,
+                chatDescription: 'player guessed ' + delta_2.guessList.length,
+                playerInfo: game.yourPlayerInfo,
+            };
             // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
-            // if (proposals[delta.row][delta.col] < currentUpdateUI.numberOfPlayersRequiredToMove - 1) {
+            ////?????????     if (proposals[delta.indexOf.arguments].length < currentUpdateUI.numberOfPlayersRequiredToMove - 1) { /////?????
             //  move = null;
-            //}
-            // gameService.makeMove(move, myProposal);
+            //??????? }
+            gameService.makeMove(move, myProposal);
         }
     }
     function isFirstMove() {
