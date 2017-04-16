@@ -21,7 +21,6 @@ var game;
     game.proposals = null;
     game.yourPlayerInfo = null;
     game.tempString = '';
-    game.guessList = [];
     game.arrAnswer = null;
     game.toClearRC = null;
     game.g = '';
@@ -39,6 +38,10 @@ var game;
         return 100 / game.dim;
     }
     game.rowsPercent = rowsPercent;
+    function score() {
+        return 0; //state.guessList.length;
+    }
+    game.score = score;
     function clearClickToDrag(row, col) {
         return "";
     }
@@ -67,7 +70,7 @@ var game;
     function reset() {
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 4; j++) {
-                game.cachedPieceSrc[i][j] = clearClickToDrag(i, j);
+                //cachedPieceSrc[i][j] = clearClickToDrag(i,j);
             }
         }
     }
@@ -88,26 +91,25 @@ var game;
         return res;
     }
     game.getIntegersTill = getIntegersTill;
-    function getCellStyle(row, col) {
-        if (!game.proposals)
-            return {};
-        var count = game.proposals[row][col].length;
-        if (count == 0)
-            return {};
-        // proposals[row][col] is > 0
-        var countZeroBased = count - 1;
-        var maxCount = game.currentUpdateUI.numberOfPlayersRequiredToMove - 2;
-        var ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
-        // scale will be between 0.6 and 0.8.
-        var scale = 0.6 + 0.2 * ratio;
-        // opacity between 0.5 and 0.7
-        var opacity = 0.5 + 0.2 * ratio;
-        return {
-            transform: "scale(" + scale + ", " + scale + ")",
-            opacity: "" + opacity,
-        };
+    /*
+    export function getCellStyle(row: number, col: number): Object {
+      if (!proposals) return {};
+      let count = proposals[row][col].length;
+      if (count == 0) return {};
+      // proposals[row][col] is > 0
+      let countZeroBased = count - 1;
+      let maxCount = currentUpdateUI.numberOfPlayersRequiredToMove - 2;
+      let ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
+      // scale will be between 0.6 and 0.8.
+      let scale = 0.6 + 0.2 * ratio;
+      // opacity between 0.5 and 0.7
+      let opacity = 0.5 + 0.2 * ratio;
+      return {
+        transform: `scale(${scale}, ${scale})`,
+        opacity: "" + opacity,
+      };
     }
-    game.getCellStyle = getCellStyle;
+  */
     function getBoardPiece(row, col) {
         var piece = game.board[row][col];
         var pieceBefore = game.boardBeforeMove[row][col];
@@ -130,7 +132,7 @@ var game;
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
         //
-        ///
+        //
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("gameArea", handleDragEvent);
@@ -154,6 +156,7 @@ var game;
             if (game.dragArr.indexOf(row + '' + col) === -1) {
                 // let topLeft = getSquareTopLeft(row, col);
                 game.tempString = game.tempString.concat(game.state.board[row][col]);
+                showGuess();
                 console.log(game.tempString);
                 game.dragArr.push(row + '' + col);
                 // console.log(centerXY.y+" and center x: "+centerXY.x);
@@ -195,6 +198,14 @@ var game;
         var countDown = function () {
             if (timerCount < 0) {
                 game.isModalShown = true;
+                var nextMove = null;
+                try {
+                    nextMove = gameLogic.createMove(game.state, game.currentUpdateUI.turnIndex);
+                }
+                catch (e) {
+                    //log.info(["Cell is already full in position:", row, col]);
+                    return;
+                }
                 //alert("game over")
             }
             else {
@@ -224,7 +235,7 @@ var game;
     game.setDice = setDice;
     function addText(guessList) {
         //window.alert(tempString);
-        var s = guessList;
+        var s = game.state.guessList;
         var a = 'A';
         return s;
     }
@@ -252,6 +263,9 @@ var game;
         if (type === "touchstart" || type === "touchmove") {
         }
         // Center point in boardArea
+        if (type === "mousedown") {
+            game.tempString = null;
+        }
         var button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
@@ -270,12 +284,12 @@ var game;
         //console.log(cellSize.height + " cell size " + cellSize.width)
         //console.log(gameArea.clientWidth + " clientWidth size ");
         //console.log(gameArea.clientHeight + " clientHeight size ");
-        game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
         console.log(clientX + " row to height * col -10 " + (cellSize.height * (col + 1) - 10));
         console.log(clientY + " row to width times row" + (cellSize.width * (row + 1) - 10));
         //console.log(row+" row to checkif then col"+col);
         if (clientY < (cellSize.height * (row + 1) - 15) && (clientX > (cellSize.width * (col + 1) - 10))) {
             console.log((cellSize.height * (row + 1) - 10) + " vs " + clientY + " and clientX: " + clientX + " vs " + (clientX < (cellSize.width * (col + 1) - 10)));
+            game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
             checkIf(row, col);
         }
         game.buttonBg = true;
@@ -323,22 +337,21 @@ var game;
             console.log(tempString);
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
-                    game.guessList.push(tempString);
-                    showGuess();
+                    game.state.guessList.push(tempString);
+                    //showGuess();
                     console.log("yes in dictionary");
                     reset();
                     return;
                 }
                 else {
                     console.log("not in dictionary " + res);
+                    reset();
                 }
             }
-            tempString = null;
-            reset();
             if (game.dragArr.length === 0) {
                 game.dragArr.push(4 + '' + 4);
             }
-            console.log(game.guessList);
+            console.log(game.state.guessList);
             // if (deadBoard == null) {
             ///window.alert("something deadboard")
             //  moveToConfirm = {row: row, col: col};
@@ -350,7 +363,7 @@ var game;
         });
     }
     function showGuess() {
-        game.g = game.guessList.join(", ");
+        game.g = game.tempString;
         return game.g;
     }
     game.showGuess = showGuess;
@@ -390,6 +403,7 @@ var game;
                 return;
         }
         game.currentUpdateUI = params;
+        score();
         startTimer();
         showGuess();
         updateCache();
@@ -428,21 +442,21 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        if (game.didMakeMove) {
-            return;
-        }
-        game.didMakeMove = true;
+        // if (didMakeMove) { // Only one move per updateUI
+        //  return;
+        //}
+        //didMakeMove = true;
         if (!game.proposals) {
             gameService.makeMove(move, null);
         }
         else {
-            var delta_2 = { board: game.board, guessList: game.guessList };
+            var delta_2 = { board: game.state.board, guessList: game.state.guessList };
             var myProposal = {
                 //playerInfo: IPlayerInfo; // the player making the proposal.
                 //chatDescription: string; // string representation of the proposal that will be shown in the community game chat.
                 // data: IProposalData; 
                 data: delta_2,
-                chatDescription: 'player guessed ' + delta_2.guessList.length,
+                chatDescription: 'player guessed ' + game.state.guessList.length,
                 playerInfo: game.yourPlayerInfo,
             };
             // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
@@ -474,13 +488,9 @@ var game;
             game.currentUpdateUI.turnIndex >= 0 &&
             game.currentUpdateUI.yourPlayerIndex === game.currentUpdateUI.turnIndex; // it's my turn
     }
-    function shouldShowImage(row, col) {
-        return game.state.board[row][col] !== "" || isProposal(row, col);
-    }
-    game.shouldShowImage = shouldShowImage;
-    function isPiece(row, col, turnIndex, pieceKind) {
-        return game.state.board[row][col] === pieceKind || (isProposal(row, col) && game.currentUpdateUI.turnIndex == turnIndex);
-    }
+    // export function shouldShowImage(row: number, col: number): boolean {
+    //  return state.board[row][col] !== "" || isProposal(row, col);
+    // }
     // export function isPieceX(row: number, col: number): boolean {
     //  return isPiece(row, col, 0, 'X');
     //}

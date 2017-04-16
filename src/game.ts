@@ -40,7 +40,7 @@ module game {
   export let proposals: string[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
   export let tempString: string = '';
-  export let guessList: string[] = [];
+
   export let arrAnswer: string[] = null;
   export let dragArr: string[];
   export let toClearRC: RowCol[] = null;
@@ -60,9 +60,11 @@ module game {
   export function rowsPercent() {
     return 100 / dim;
   }
+  export function score(){
+  return 0;//state.guessList.length;
+}
   export function clearClickToDrag(row: number, col: number) {
-
-return "";
+  return "";
   }
   export function getAnimationClass(row: number, col: number) {
 
@@ -86,8 +88,7 @@ return "";
 export function reset(){
       for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-      
-        cachedPieceSrc[i][j] = clearClickToDrag(i,j);
+        //cachedPieceSrc[i][j] = clearClickToDrag(i,j);
       }}
 }
   function showModal() {
@@ -106,6 +107,7 @@ export function reset(){
     cacheIntegersTill[number] = res;
     return res;
   }
+  /*
   export function getCellStyle(row: number, col: number): Object {
     if (!proposals) return {};
     let count = proposals[row][col].length;
@@ -123,7 +125,7 @@ export function reset(){
       opacity: "" + opacity,
     };
   }
-
+*/
 
 
   export function getBoardPiece(row: number, col: number): string {
@@ -149,7 +151,7 @@ export function reset(){
     $rootScope = $rootScope_;
     $timeout = $timeout_;
     //
-    ///
+    //
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("gameArea", handleDragEvent);
@@ -175,6 +177,7 @@ export function reset(){
       
        // let topLeft = getSquareTopLeft(row, col);
         game.tempString = game.tempString.concat(game.state.board[row][col]);
+        showGuess();
         console.log(game.tempString);
         dragArr.push(row + '' + col);
         // console.log(centerXY.y+" and center x: "+centerXY.x);
@@ -219,6 +222,14 @@ export function grow1(){
     let countDown = function () {
       if (timerCount < 0) {
          isModalShown = true;
+        let nextMove: IMove = null;
+    try {
+      nextMove = gameLogic.createMove(
+          state,  currentUpdateUI.turnIndex);
+    } catch (e) {
+      //log.info(["Cell is already full in position:", row, col]);
+      return;
+    }
         //alert("game over")
       } else {
         countDownLeft = timerCount;
@@ -246,7 +257,7 @@ export function grow1(){
 
   export function addText(guessList: string[]) {
     //window.alert(tempString);
-    let s = guessList;
+    let s = state.guessList;
     let a = 'A';
     return s;
   }
@@ -274,9 +285,9 @@ export function grow1(){
  
     }
     // Center point in boardArea
-
-
-
+ if (type === "mousedown"){
+  tempString = null;
+  }
     let button = document.getElementById("img_" + row + "_" + col);
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
@@ -294,14 +305,15 @@ export function grow1(){
     //console.log(cellSize.height + " cell size " + cellSize.width)
     //console.log(gameArea.clientWidth + " clientWidth size ");
     //console.log(gameArea.clientHeight + " clientHeight size ");
-    cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+
 
 console.log(clientX+" row to height * col -10 "+(cellSize.height * (col+1) -10));
 console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
 //console.log(row+" row to checkif then col"+col);
     if (clientY < (cellSize.height * (row+1) -15 )&& (clientX > (cellSize.width * (col+1) -10 ))) {
       console.log((cellSize.height * (row+1) -10 )+" vs " + clientY+" and clientX: "+clientX+" vs "+(clientX < (cellSize.width * (col+1) -10 )));
-    checkIf(row, col);
+   cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+   checkIf(row, col);
     }
     buttonBg = true;
 
@@ -353,21 +365,22 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
         console.log (tempString);
       for (var v = 0; v < dic.length; v++) {
         if (dic[v] === res) {
-          guessList.push(tempString);
-          showGuess();
+          state.guessList.push(tempString);
+          //showGuess();
           console.log("yes in dictionary");
           reset();
           return;
         } else {
           console.log("not in dictionary " + res);
+          reset();
         }
       }
-      tempString = null;
-      reset();
+      
+      
       if (dragArr.length === 0) {
         dragArr.push(4 + '' + 4);
       }
-      console.log(guessList);
+      console.log(state.guessList);
 
       // if (deadBoard == null) {
       ///window.alert("something deadboard")
@@ -381,8 +394,10 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
     });
   }
   export function showGuess() {
-    g = guessList.join(", ");
+    g = tempString;
     return g;
+  
+  
   }
 
   //********* *
@@ -422,6 +437,7 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
     }
 
     currentUpdateUI = params;
+    score();
     startTimer();
     showGuess();
     updateCache();
@@ -463,21 +479,21 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
   }
 
   function makeMove(move: IMove) {
-    if (didMakeMove) { // Only one move per updateUI
-      return;
-    }
-    didMakeMove = true;
+   // if (didMakeMove) { // Only one move per updateUI
+    //  return;
+    //}
+    //didMakeMove = true;
 
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
-      let delta = {board,guessList };
+      let delta = {board: state.board, guessList: state.guessList};
       let myProposal: IProposal = {
           //playerInfo: IPlayerInfo; // the player making the proposal.
           //chatDescription: string; // string representation of the proposal that will be shown in the community game chat.
          // data: IProposalData; 
       data: delta,
-      chatDescription: 'player guessed '+delta.guessList.length,
+      chatDescription: 'player guessed '+state.guessList.length,
       playerInfo: yourPlayerInfo,
       };
       // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
@@ -520,13 +536,11 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
 
 
 
-  export function shouldShowImage(row: number, col: number): boolean {
-    return state.board[row][col] !== "" || isProposal(row, col);
-  }
+ // export function shouldShowImage(row: number, col: number): boolean {
+  //  return state.board[row][col] !== "" || isProposal(row, col);
+ // }
 
-  function isPiece(row: number, col: number, turnIndex: number, pieceKind: string): boolean {
-    return state.board[row][col] === pieceKind || (isProposal(row, col) && currentUpdateUI.turnIndex == turnIndex);
-  }
+
 
  // export function isPieceX(row: number, col: number): boolean {
   //  return isPiece(row, col, 0, 'X');
