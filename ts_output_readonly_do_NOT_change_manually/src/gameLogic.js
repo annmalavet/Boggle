@@ -8,7 +8,6 @@ var gameLogic;
 (function (gameLogic) {
     gameLogic.ROWS = 4;
     gameLogic.COLS = 4;
-    /** Returns the initial board, which is a 4x4 matrix containing letters.*/
     function getInitialBoard() {
         var board = [];
         var diceArr = [
@@ -52,7 +51,7 @@ var gameLogic;
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
         return {
-            board: getInitialBoard(), chosenBoard: null, guessList: [""]
+            chosenBoard: getInitialBoard(), guessList: [""]
         };
     }
     gameLogic.getInitialState = getInitialState;
@@ -63,30 +62,18 @@ var gameLogic;
         };
     }
     gameLogic.createInitialMove = createInitialMove;
-    /**
-     * Returns the move that should be performed when player
-     * with index turnIndexBeforeMove makes a move in cell row X col.
-     */
     function createMove(stateBeforeMove, turnIndexBeforeMove) {
         if (!stateBeforeMove) {
             stateBeforeMove = getInitialState();
         }
-        var board = stateBeforeMove.board;
+        var chosenBoard = stateBeforeMove.chosenBoard;
         var guessList = stateBeforeMove.guessList;
         console.log("this is createMove");
-        // if (board[row][col] !== '') {
-        //   throw new Error("One can only make a move in an empty position!");
-        // }
-        // if (getWinner(board) !== '' || isTie(board)) {
-        //    throw new Error("Can only make a move if the game is not over!");
-        // }
-        var boardAfterMove = angular.copy(board);
-        // boardAfterMove[row][col] = turnIndexBeforeMove === 0 ? 'X' : 'O';
-        // let winner = getWinner(boardAfterMove);
+        var boardAfterMove = angular.copy(chosenBoard);
         var endMatchScores;
         var turnIndex;
-        var delta = { board: board, guessList: guessList }; // { row: row, col: col };
-        var state = { chosenBoard: board, board: boardAfterMove, guessList: guessList };
+        var delta = { board: chosenBoard, guessList: guessList }; // { row: row, col: col };
+        var state = { chosenBoard: chosenBoard, guessList: guessList };
         return {
             endMatchScores: endMatchScores,
             turnIndex: turnIndex,

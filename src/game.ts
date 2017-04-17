@@ -27,7 +27,6 @@ module game {
   // Global variables are cleared when getting updateUI.
   // I export all variables to make it easy to debug in the browser by
   // simply typing in the console, e.g.,
-  // game.currentUpdateUI
   export let board: Board = null;
   export let boardBeforeMove: Board = null;
   export let delta: BoardDelta = null;
@@ -127,16 +126,17 @@ export function reset(){
   }
 */
 
-
+/*
   export function getBoardPiece(row: number, col: number): string {
     let piece = game.board[row][col];
     let pieceBefore = game.boardBeforeMove[row][col];
     let isProposal = proposals && proposals[row][col].length > 0;
     //
 
-    return isProposal ? (currentUpdateUI.turnIndex == 0 ? '1' : '2') :
-      !piece && !pieceBefore ? '' : (piece == 'A' || pieceBefore == 'B' ? 'B' : 'C');
+ //   return isProposal ? (currentUpdateUI.turnIndex == 0 ? '1' : '2') :
+    //  !piece && !pieceBefore ? '' : (piece == 'A' || pieceBefore == 'B' ? 'B' : 'C');
   }
+  */
  // export function shouldSlowlyDrop(rrow: number, ccol: number) {
    // return delta &&
   //    delta.row === rrow &&
@@ -174,9 +174,8 @@ export function reset(){
   function checkIf(row: number, col: number) {
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
-      
        // let topLeft = getSquareTopLeft(row, col);
-        game.tempString = game.tempString.concat(game.state.board[row][col]);
+        game.tempString = game.tempString.concat(game.state.chosenBoard[row][col]);
         showGuess();
         console.log(game.tempString);
         dragArr.push(row + '' + col);
@@ -223,6 +222,7 @@ export function grow1(){
       if (timerCount < 0) {
          isModalShown = true;
         let nextMove: IMove = null;
+        // makeMove(gameLogic.createEndMove(currentUpdateUI.state, gameLogic.endMatchScores));
     try {
       nextMove = gameLogic.createMove(
           state,  currentUpdateUI.turnIndex);
@@ -242,7 +242,7 @@ export function grow1(){
   }
   export function listOf(row: number, col: number) {
     let arr = [];
-    arr.push(state.board[row][col]);
+    arr.push(state.chosenBoard[row][col]);
     console.log(tempString);
     return tempString;
   }
@@ -268,7 +268,7 @@ export function grow1(){
     };
   }
   export function getBgImg(row: number, col: number) {
-    let oka = 'alphabet/img_' + state.board[row][col] + '.png'
+    let oka = 'alphabet/img_' + state.chosenBoard[row][col] + '.png'
     return oka;
   }
 
@@ -307,11 +307,11 @@ export function grow1(){
     //console.log(gameArea.clientHeight + " clientHeight size ");
 
 
-console.log(clientX+" row to height * col -10 "+(cellSize.height * (col+1) -10));
-console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
-//console.log(row+" row to checkif then col"+col);
-    if (clientY < (cellSize.height * (row+1) -15 )&& (clientX > (cellSize.width * (col+1) -10 ))) {
-      console.log((cellSize.height * (row+1) -10 )+" vs " + clientY+" and clientX: "+clientX+" vs "+(clientX < (cellSize.width * (col+1) -10 )));
+    console.log(clientX+" row to height * col -10 "+(cellSize.height * (col+1) -10));
+    console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
+    //console.log(row+" row to checkif then col"+col);
+    if (clientY < (cellSize.height * (row+1) -10 )&& (clientX < (cellSize.width * (col+1) -10 ))) {
+    console.log((cellSize.height * (row+1) -10 )+" vs " + clientY+" and clientX: "+clientX+" vs "+(clientX < (cellSize.width * (col+1) -10 )));
    cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
    checkIf(row, col);
     }
@@ -331,12 +331,6 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
       dragArr.push(4 + '' + 4);
     }
   }
-  ///******** *
-  ///******** *
-  ///******** *
-  ///******** *
-  ///******** *
-
 
   function getSquareTopLeft(row: number, col: number) {
     let size = getSquareWidthHeight();
@@ -400,16 +394,12 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
   
   }
 
-  //********* *
-  ///******** *
-  ///******** *
-  ///******** *
   function getProposalsBoard(playerIdToProposal: IProposals): string[][] {
     let proposals: string[][] = [];
     for (let i = 0; i < gameLogic.ROWS; i++) {
       proposals[i] = [];
       for (let j = 0; j < gameLogic.COLS; j++) {
-        proposals[i][j] = state.board[i][j];
+        proposals[i][j] = state.chosenBoard[i][j];
       }
     }
     for (let playerId in playerIdToProposal) {
@@ -428,6 +418,7 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
     if (playerIdToProposal) {
+      console.log("player id"+ playerIdToProposal);
       // If only proposals changed, then return.
       // I don't want to disrupt the player if he's in the middle of a move.
       // I delete playerIdToProposal field from params (and so it's also not in currentUpdateUI),
@@ -435,21 +426,20 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
       params.playerIdToProposal = null;
       if (currentUpdateUI && angular.equals(currentUpdateUI, params)) return;
     }
-
     currentUpdateUI = params;
     score();
     startTimer();
     showGuess();
     updateCache();
     clearAnimationTimeout();
-    state = params.state;
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
-      //window.alert(state);
+      delta = null;
+      board = state.chosenBoard;
+    } else {
+      state = params.state;
+      board = getProposalsBoard(params.playerIdToProposal);
     }
-    // We calculate the AI move only after the animation finishes,
-    // because if we call aiService now
-    // then the animation will be paused until the javascript finishes.
     animationEndedTimeout = $timeout(animationEndedCallback, 500);
 
   }
@@ -479,33 +469,23 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
   }
 
   function makeMove(move: IMove) {
-   // if (didMakeMove) { // Only one move per updateUI
-    //  return;
-    //}
-    //didMakeMove = true;
-
     if (!proposals) {
       gameService.makeMove(move, null);
     } else {
-      let delta = {board: state.board, guessList: state.guessList};
+      let delta = {board: state.chosenBoard, guessList: state.guessList};
       let myProposal: IProposal = {
-          //playerInfo: IPlayerInfo; // the player making the proposal.
-          //chatDescription: string; // string representation of the proposal that will be shown in the community game chat.
-         // data: IProposalData; 
       data: delta,
       chatDescription: 'player guessed '+state.guessList.length,
       playerInfo: yourPlayerInfo,
       };
-      // Decide whether we make a move or not (if we have <currentCommunityUI.numberOfPlayersRequiredToMove-1> other proposals supporting the same thing).
- ////?????????     if (proposals[delta.indexOf.arguments].length < currentUpdateUI.numberOfPlayersRequiredToMove - 1) { /////?????
-      //  move = null;
-     //??????? }
+      // Decide whether we make a move or not
      gameService.makeMove(move, myProposal);
     }
   }
 
   function isFirstMove() {
-    return !currentUpdateUI.state;
+    console.log("first move ");
+    return currentUpdateUI.state;
   }
 
   function yourPlayerIndex() {
@@ -533,7 +513,18 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
   }
 
 
-
+  export function getStateForOgImage(): string {
+    if (!currentUpdateUI || !currentUpdateUI.state) {
+      log.warn("Got stateForOgImage without currentUpdateUI!");
+      return '';
+    }
+    let state: IState = currentUpdateUI.state;
+    if (!state || !hasDim) return '';
+    let board: string[][] = state.chosenBoard;
+    if (!board) return '';
+    let boardStr: string = '';
+    return boardStr;
+  }  
 
 
  // export function shouldShowImage(row: number, col: number): boolean {
@@ -558,7 +549,7 @@ console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
 }
 
 
-var app =  angular.module('myApp', ['gameServices', 'ngAnimate']);
+var app =  angular.module('myApp', ['gameServices']);
   app.run(['$rootScope', '$timeout',
     function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
       $rootScope['game'] = game;
