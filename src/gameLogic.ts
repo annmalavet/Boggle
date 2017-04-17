@@ -83,10 +83,10 @@ module gameLogic {
 
 
 
-  export function createMove(
+  export function createMove(board: Board,
     stateBeforeMove: IState,  turnIndexBeforeMove: number): IMove {
     if (!stateBeforeMove) {
-      stateBeforeMove = getInitialState();
+      //stateBeforeMove = getInitialState();
     }
     let chosenBoard: Board = stateBeforeMove.chosenBoard;
     let guessList:GuessList = stateBeforeMove.guessList;

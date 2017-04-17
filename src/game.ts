@@ -159,13 +159,14 @@ export function reset(){
     isModalShown=false;
     dragArr.push(4 + '' + 4);
     toClearRC = [];
+    startTimer();
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
     resizeGameAreaService.setWidthToHeight(1);
     gameService.setGame({
       updateUI: updateUI,
-      getStateForOgImage: null,
+      getStateForOgImage: getStateForOgImage,
     });
 
     //window.alert(data);
@@ -217,20 +218,12 @@ export function grow1(){
 
 
   export function startTimer() {
-    let timerCount = 60;
+    let timerCount = 10;
     let countDown = function () {
       if (timerCount < 0) {
-         isModalShown = true;
-        let nextMove: IMove = null;
-        // makeMove(gameLogic.createEndMove(currentUpdateUI.state, gameLogic.endMatchScores));
-    try {
-      nextMove = gameLogic.createMove(
-          state,  currentUpdateUI.turnIndex);
-    } catch (e) {
-      //log.info(["Cell is already full in position:", row, col]);
-      return;
-    }
-        //alert("game over")
+          let move = gameLogic.createMove(state.chosenBoard,
+          state,  2);
+          makeMove(move);
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -428,7 +421,7 @@ export function grow1(){
     }
     currentUpdateUI = params;
     score();
-    startTimer();
+  
     showGuess();
     updateCache();
     clearAnimationTimeout();
@@ -436,10 +429,7 @@ export function grow1(){
       state = gameLogic.getInitialState();
       delta = null;
       board = state.chosenBoard;
-    } else {
-      state = params.state;
-      board = getProposalsBoard(params.playerIdToProposal);
-    }
+    } 
     animationEndedTimeout = $timeout(animationEndedCallback, 500);
 
   }
@@ -485,7 +475,7 @@ export function grow1(){
 
   function isFirstMove() {
     console.log("first move ");
-    return currentUpdateUI.state;
+    return !currentUpdateUI.state;
   }
 
   function yourPlayerIndex() {
@@ -519,10 +509,14 @@ export function grow1(){
       return '';
     }
     let state: IState = currentUpdateUI.state;
-    if (!state || !hasDim) return '';
     let board: string[][] = state.chosenBoard;
     if (!board) return '';
     let boardStr: string = '';
+    for (let row = 0 ; row < 4; row++) {
+      for (let col = 0 ; col < 4; col++) {
+        boardStr += board[row][col];
+      }
+    }
     return boardStr;
   }  
 

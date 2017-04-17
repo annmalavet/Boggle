@@ -62,9 +62,9 @@ var gameLogic;
         };
     }
     gameLogic.createInitialMove = createInitialMove;
-    function createMove(stateBeforeMove, turnIndexBeforeMove) {
+    function createMove(board, stateBeforeMove, turnIndexBeforeMove) {
         if (!stateBeforeMove) {
-            stateBeforeMove = getInitialState();
+            //stateBeforeMove = getInitialState();
         }
         var chosenBoard = stateBeforeMove.chosenBoard;
         var guessList = stateBeforeMove.guessList;

@@ -141,13 +141,14 @@ var game;
         game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
         game.toClearRC = [];
+        startTimer();
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
         resizeGameAreaService.setWidthToHeight(1);
         gameService.setGame({
             updateUI: updateUI,
-            getStateForOgImage: null,
+            getStateForOgImage: getStateForOgImage,
         });
         //window.alert(data);
     }
@@ -195,20 +196,11 @@ var game;
     game.isProposal = isProposal;
     ///
     function startTimer() {
-        var timerCount = 60;
+        var timerCount = 10;
         var countDown = function () {
             if (timerCount < 0) {
-                game.isModalShown = true;
-                var nextMove = null;
-                // makeMove(gameLogic.createEndMove(currentUpdateUI.state, gameLogic.endMatchScores));
-                try {
-                    nextMove = gameLogic.createMove(game.state, game.currentUpdateUI.turnIndex);
-                }
-                catch (e) {
-                    //log.info(["Cell is already full in position:", row, col]);
-                    return;
-                }
-                //alert("game over")
+                var move = gameLogic.createMove(game.state.chosenBoard, game.state, 2);
+                makeMove(move);
             }
             else {
                 game.countDownLeft = timerCount;
@@ -398,7 +390,6 @@ var game;
         }
         game.currentUpdateUI = params;
         score();
-        startTimer();
         showGuess();
         updateCache();
         clearAnimationTimeout();
@@ -406,10 +397,6 @@ var game;
             game.state = gameLogic.getInitialState();
             game.delta = null;
             game.board = game.state.chosenBoard;
-        }
-        else {
-            game.state = params.state;
-            game.board = getProposalsBoard(params.playerIdToProposal);
         }
         game.animationEndedTimeout = game.$timeout(animationEndedCallback, 500);
     }
@@ -453,7 +440,7 @@ var game;
     }
     function isFirstMove() {
         console.log("first move ");
-        return game.currentUpdateUI.state;
+        return !game.currentUpdateUI.state;
     }
     function yourPlayerIndex() {
         return game.currentUpdateUI.yourPlayerIndex;
@@ -480,12 +467,15 @@ var game;
             return '';
         }
         var state = game.currentUpdateUI.state;
-        if (!state || !game.hasDim)
-            return '';
         var board = state.chosenBoard;
         if (!board)
             return '';
         var boardStr = '';
+        for (var row = 0; row < 4; row++) {
+            for (var col = 0; col < 4; col++) {
+                boardStr += board[row][col];
+            }
+        }
         return boardStr;
     }
     game.getStateForOgImage = getStateForOgImage;
