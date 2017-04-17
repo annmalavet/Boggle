@@ -21,7 +21,6 @@ module game {
   export let isModalShown = false;
   export let modalTitle = "Game Over";
   export let modalBody = "Done";
-
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;
   // Global variables are cleared when getting updateUI.
@@ -48,7 +47,8 @@ module game {
   export let counter = 100;
   export let countDownLeft = 100;
   export let moveToConfirm: BoardDelta = null;
-  let clickToDragPiece: HTMLElement;
+  export let clickToDragPiece: HTMLElement;
+  export let time: HTMLElement;
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let deadBoard: boolean[][] = null;
@@ -91,8 +91,6 @@ export function reset(){
       }}
 }
   function showModal() {
-    // if (!isMyTurn()) return;
-
     isModalShown = true;
   }
 
@@ -106,52 +104,11 @@ export function reset(){
     cacheIntegersTill[number] = res;
     return res;
   }
-  /*
-  export function getCellStyle(row: number, col: number): Object {
-    if (!proposals) return {};
-    let count = proposals[row][col].length;
-    if (count == 0) return {};
-    // proposals[row][col] is > 0
-    let countZeroBased = count - 1;
-    let maxCount = currentUpdateUI.numberOfPlayersRequiredToMove - 2;
-    let ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
-    // scale will be between 0.6 and 0.8.
-    let scale = 0.6 + 0.2 * ratio;
-    // opacity between 0.5 and 0.7
-    let opacity = 0.5 + 0.2 * ratio;
-    return {
-      transform: `scale(${scale}, ${scale})`,
-      opacity: "" + opacity,
-    };
-  }
-*/
 
-/*
-  export function getBoardPiece(row: number, col: number): string {
-    let piece = game.board[row][col];
-    let pieceBefore = game.boardBeforeMove[row][col];
-    let isProposal = proposals && proposals[row][col].length > 0;
-    //
-
- //   return isProposal ? (currentUpdateUI.turnIndex == 0 ? '1' : '2') :
-    //  !piece && !pieceBefore ? '' : (piece == 'A' || pieceBefore == 'B' ? 'B' : 'C');
-  }
-  */
- // export function shouldSlowlyDrop(rrow: number, ccol: number) {
-   // return delta &&
-  //    delta.row === rrow &&
-  //    delta.col === ccol;
- // }
-
-  //
-  ///
-  ///
-  //
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
     $rootScope = $rootScope_;
     $timeout = $timeout_;
-    //
-    //
+    time = document.getElementById("timer");
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("gameArea", handleDragEvent);
@@ -169,9 +126,8 @@ export function reset(){
       getStateForOgImage: getStateForOgImage,
     });
 
-    //window.alert(data);
-
   }
+
   function checkIf(row: number, col: number) {
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
@@ -218,11 +174,13 @@ export function grow1(){
 
 
   export function startTimer() {
-    let timerCount = 10;
+    let timerCount = 60;
     let countDown = function () {
       if (timerCount < 0) {
+          didMakeMove = true;
+          isModalShown = true;
           let move = gameLogic.createMove(state.chosenBoard,
-          state,  2);
+          state, yourPlayerIndex() );
           makeMove(move);
       } else {
         countDownLeft = timerCount;
@@ -278,7 +236,7 @@ export function grow1(){
  
     }
     // Center point in boardArea
- if (type === "mousedown"){
+ if (type === "mouseup"){
   tempString = null;
   }
     let button = document.getElementById("img_" + row + "_" + col);
@@ -303,7 +261,7 @@ export function grow1(){
     console.log(clientX+" row to height * col -10 "+(cellSize.height * (col+1) -10));
     console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
     //console.log(row+" row to checkif then col"+col);
-    if (clientY < (cellSize.height * (row+1) -10 )&& (clientX < (cellSize.width * (col+1) -10 ))) {
+    if (clientY < (cellSize.height * (row+1) -10 )&& (clientX > (cellSize.width * (col+1) -10 ))) {
     console.log((cellSize.height * (row+1) -10 )+" vs " + clientY+" and clientX: "+clientX+" vs "+(clientX < (cellSize.width * (col+1) -10 )));
    cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
    checkIf(row, col);
@@ -403,6 +361,9 @@ export function grow1(){
     return proposals;
   }
 
+
+
+
   export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
     let playerIdToProposal = params.playerIdToProposal;
@@ -421,16 +382,19 @@ export function grow1(){
     }
     currentUpdateUI = params;
     score();
-  
     showGuess();
     updateCache();
     clearAnimationTimeout();
+    
     if (isFirstMove()) {
       state = gameLogic.getInitialState();
       delta = null;
       board = state.chosenBoard;
     } 
-    animationEndedTimeout = $timeout(animationEndedCallback, 500);
+    else{
+      state = params.state;
+      board =state.chosenBoard; 
+    } 
 
   }
 
@@ -459,9 +423,10 @@ export function grow1(){
   }
 
   function makeMove(move: IMove) {
-    if (!proposals) {
-      gameService.makeMove(move, null);
-    } else {
+    if (didMakeMove) { // Only one move per updateUI
+      return;
+    }
+     else {
       let delta = {board: state.chosenBoard, guessList: state.guessList};
       let myProposal: IProposal = {
       data: delta,

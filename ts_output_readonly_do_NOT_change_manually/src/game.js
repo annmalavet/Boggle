@@ -27,7 +27,6 @@ var game;
     game.counter = 100;
     game.countDownLeft = 100;
     game.moveToConfirm = null;
-    var clickToDragPiece;
     game.deadBoard = null;
     game.curRow = 5;
     game.curCol = 5;
@@ -75,7 +74,6 @@ var game;
     }
     game.reset = reset;
     function showModal() {
-        // if (!isMyTurn()) return;
         game.isModalShown = true;
     }
     var cacheIntegersTill = [];
@@ -90,50 +88,10 @@ var game;
         return res;
     }
     game.getIntegersTill = getIntegersTill;
-    /*
-    export function getCellStyle(row: number, col: number): Object {
-      if (!proposals) return {};
-      let count = proposals[row][col].length;
-      if (count == 0) return {};
-      // proposals[row][col] is > 0
-      let countZeroBased = count - 1;
-      let maxCount = currentUpdateUI.numberOfPlayersRequiredToMove - 2;
-      let ratio = maxCount == 0 ? 1 : countZeroBased / maxCount; // a number between 0 and 1 (inclusive).
-      // scale will be between 0.6 and 0.8.
-      let scale = 0.6 + 0.2 * ratio;
-      // opacity between 0.5 and 0.7
-      let opacity = 0.5 + 0.2 * ratio;
-      return {
-        transform: `scale(${scale}, ${scale})`,
-        opacity: "" + opacity,
-      };
-    }
-  */
-    /*
-      export function getBoardPiece(row: number, col: number): string {
-        let piece = game.board[row][col];
-        let pieceBefore = game.boardBeforeMove[row][col];
-        let isProposal = proposals && proposals[row][col].length > 0;
-        //
-    
-     //   return isProposal ? (currentUpdateUI.turnIndex == 0 ? '1' : '2') :
-        //  !piece && !pieceBefore ? '' : (piece == 'A' || pieceBefore == 'B' ? 'B' : 'C');
-      }
-      */
-    // export function shouldSlowlyDrop(rrow: number, ccol: number) {
-    // return delta &&
-    //    delta.row === rrow &&
-    //    delta.col === ccol;
-    // }
-    //
-    ///
-    ///
-    //
     function init($rootScope_, $timeout_) {
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
-        //
-        //
+        game.time = document.getElementById("timer");
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("gameArea", handleDragEvent);
@@ -150,7 +108,6 @@ var game;
             updateUI: updateUI,
             getStateForOgImage: getStateForOgImage,
         });
-        //window.alert(data);
     }
     game.init = init;
     function checkIf(row, col) {
@@ -196,10 +153,12 @@ var game;
     game.isProposal = isProposal;
     ///
     function startTimer() {
-        var timerCount = 10;
+        var timerCount = 60;
         var countDown = function () {
             if (timerCount < 0) {
-                var move = gameLogic.createMove(game.state.chosenBoard, game.state, 2);
+                game.didMakeMove = true;
+                game.isModalShown = true;
+                var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
                 makeMove(move);
             }
             else {
@@ -257,7 +216,7 @@ var game;
         if (type === "touchstart" || type === "touchmove") {
         }
         // Center point in boardArea
-        if (type === "mousedown") {
+        if (type === "mouseup") {
             game.tempString = null;
         }
         var button = document.getElementById("img_" + row + "_" + col);
@@ -281,7 +240,7 @@ var game;
         console.log(clientX + " row to height * col -10 " + (cellSize.height * (col + 1) - 10));
         console.log(clientY + " row to width times row" + (cellSize.width * (row + 1) - 10));
         //console.log(row+" row to checkif then col"+col);
-        if (clientY < (cellSize.height * (row + 1) - 10) && (clientX < (cellSize.width * (col + 1) - 10))) {
+        if (clientY < (cellSize.height * (row + 1) - 10) && (clientX > (cellSize.width * (col + 1) - 10))) {
             console.log((cellSize.height * (row + 1) - 10) + " vs " + clientY + " and clientX: " + clientX + " vs " + (clientX < (cellSize.width * (col + 1) - 10)));
             game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
             checkIf(row, col);
@@ -398,7 +357,10 @@ var game;
             game.delta = null;
             game.board = game.state.chosenBoard;
         }
-        game.animationEndedTimeout = game.$timeout(animationEndedCallback, 500);
+        else {
+            game.state = params.state;
+            game.board = game.state.chosenBoard;
+        }
     }
     game.updateUI = updateUI;
     function animationEndedCallback() {
@@ -424,8 +386,8 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        if (!game.proposals) {
-            gameService.makeMove(move, null);
+        if (game.didMakeMove) {
+            return;
         }
         else {
             var delta_2 = { board: game.state.chosenBoard, guessList: game.state.guessList };
