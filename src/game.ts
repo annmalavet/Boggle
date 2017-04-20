@@ -17,7 +17,6 @@ interface RowCol {
 
 
 module game {
-
   export let isModalShown = false;
   export let modalTitle = "Game Over";
   export let modalBody = "Done";
@@ -46,7 +45,6 @@ module game {
   export let buttonBg = false;
   export let counter = 100;
   export let countDownLeft = 100;
-  export let moveToConfirm: BoardDelta = null;
   export let clickToDragPiece: HTMLElement;
   export let time: HTMLElement;
   export let gameArea: HTMLElement;
@@ -56,14 +54,19 @@ module game {
   export let curCol: number = 5;
   export let hasDim = false;
   export let dim = 4;
+
   export function rowsPercent() {
     return 100 / dim;
   }
-  export function score(){
-  return 0;//state.guessList.length;
-}
+  export function score(guessList: string[]) {
+    let s = state.guessList;
+    if (s.length>0){
+    return state.guessList.length;
+     }
+    return 0;
+  }
   export function clearClickToDrag(row: number, col: number) {
-  return "";
+    return "";
   }
   export function getAnimationClass(row: number, col: number) {
 
@@ -84,12 +87,14 @@ module game {
   export function updateCache() {
 
   }
-export function reset(){
-      for (let i = 0; i < 4; i++) {
+  export function reset() {
+    for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
-        //cachedPieceSrc[i][j] = clearClickToDrag(i,j);
-      }}
-}
+        cachedPieceSrc[i][j] = clearClickToDrag(i, j);
+        //cachedPieceSrc[i][j] = 'alphabet/img_' + board[i][j] + '.png'
+      }
+    }
+  }
   function showModal() {
     isModalShown = true;
   }
@@ -113,10 +118,9 @@ export function reset(){
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("gameArea", handleDragEvent);
     dragArr = [];
-    isModalShown=false;
+    isModalShown = false;
     dragArr.push(4 + '' + 4);
     toClearRC = [];
-    startTimer();
     registerServiceWorker();
     translate.setTranslations(getTranslations());
     translate.setLanguage('en');
@@ -131,22 +135,20 @@ export function reset(){
   function checkIf(row: number, col: number) {
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
-       // let topLeft = getSquareTopLeft(row, col);
-        game.tempString = game.tempString.concat(game.state.chosenBoard[row][col]);
+        game.tempString = tempString.concat(state.chosenBoard[row][col]);
         showGuess();
         console.log(game.tempString);
         dragArr.push(row + '' + col);
-        // console.log(centerXY.y+" and center x: "+centerXY.x);
       }
     }
   }
 
-export function getGrow(){
-  return "grow1";
-}
-export function grow1(){
-  return "";
-}
+  export function getGrow() {
+    return "grow1";
+  }
+  export function grow1() {
+    return "";
+  }
   function registerServiceWorker() {
     // I prefer to use appCache over serviceWorker
     // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -172,20 +174,28 @@ export function grow1(){
   ///
 
 
-
+  let timeoutId: any = null;
+  export function isTimerRunning(): boolean {
+    return timeoutId;
+  }
+  function stopTimer() {
+    if (!timeoutId) return;
+    $timeout.cancel(timeoutId);
+  }
   export function startTimer() {
+    stopTimer();
     let timerCount = 60;
     let countDown = function () {
       if (timerCount < 0) {
-          didMakeMove = true;
-          isModalShown = true;
-          let move = gameLogic.createMove(state.chosenBoard,
-          state, yourPlayerIndex() );
-          makeMove(move);
+        didMakeMove = true;
+        isModalShown = true;
+        let move = gameLogic.createMove(game.state.chosenBoard,
+          state, yourPlayerIndex());
+        makeMove(move);
       } else {
         countDownLeft = timerCount;
         timerCount--;
-        $timeout(countDown, 1000);
+        timeoutId = $timeout(countDown, 1000);
       }
     };
     countDownLeft = timerCount;
@@ -193,17 +203,9 @@ export function grow1(){
   }
   export function listOf(row: number, col: number) {
     let arr = [];
-    arr.push(state.chosenBoard[row][col]);
+    arr.push(game.state.chosenBoard[row][col]);
     console.log(tempString);
     return tempString;
-  }
-  ///
-  ///
-  export function setDice(board: Board) {
-
-    let s = 'http://annmalavet.com/Boggle/alphabet/img_A.png';
-    let a = "A";
-    return board;
   }
 
   export function addText(guessList: string[]) {
@@ -219,8 +221,12 @@ export function grow1(){
     };
   }
   export function getBgImg(row: number, col: number) {
-    let oka = 'alphabet/img_' + state.chosenBoard[row][col] + '.png'
+    let oka = 'alphabet/img_' + game.state.chosenBoard[row][col] + '.png';
     return oka;
+  }
+  export function getID(row: number, col: number) {
+    let id = game.state.chosenBoard[row][col];
+    return id;
   }
 
   function handleDragEvent(type: any, clientX: any, clientY: any) {
@@ -232,14 +238,32 @@ export function grow1(){
     let cellSize: CellSize = getCellSize();
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
-    if (type === "touchstart" || type === "touchmove" ) {
- 
+    if (type === "touchstart" || type === "touchmove" || type === "touchstart" || type === "touchleave" || type === "mousedown") {
+      var col = Math.floor(x * 4 / game.boardArea.clientWidth);
+      var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+      let centerXY = getSquareCenterXY(row, col);
+      let topLeft = getSquareTopLeft(row, col);
+      curRow = row; curCol = col;
+
+      var som = document.elementFromPoint(clientX, clientY);
+      console.log("no "+som.id+" somthinet element from py");
+
+      if (som) {
+      
+      let arrId = som.id.split("_");
+      let a = parseInt(arrId[0]);
+      let b = parseInt(arrId[1]);
+      cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
+      checkIf(a, b);
+       }
+
+
     }
     // Center point in boardArea
- if (type === "mouseup"){
-  tempString = null;
-  }
-    let button = document.getElementById("img_" + row + "_" + col);
+    if (type === "mouseup") {
+      tempString = null;
+    }
+    //let button = document.getElementById("img_" + row + "_" + col);
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
@@ -247,34 +271,10 @@ export function grow1(){
       return;
     }
     //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
-    var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-    var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-    let centerXY = getSquareCenterXY(row, col);
-    let topLeft = getSquareTopLeft(row, col);
-    curRow = row; curCol = col;
-    //console.log(centerXY.x+" "+centerXY.y+"get center x y");
-    //console.log(cellSize.height + " cell size " + cellSize.width)
-    //console.log(gameArea.clientWidth + " clientWidth size ");
-    //console.log(gameArea.clientHeight + " clientHeight size ");
 
 
-    console.log(clientX+" row to height * col -10 "+(cellSize.height * (col+1) -10));
-    console.log(clientY+" row to width times row"+(cellSize.width * (row+1) -10 ));
-    //console.log(row+" row to checkif then col"+col);
-    if (clientY < (cellSize.height * (row+1) -10 )&& (clientX > (cellSize.width * (col+1) -10 ))) {
-    console.log((cellSize.height * (row+1) -10 )+" vs " + clientY+" and clientX: "+clientX+" vs "+(clientX < (cellSize.width * (col+1) -10 )));
-   cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
-   checkIf(row, col);
-    }
-    buttonBg = true;
 
-   
-    // if the cell is not empty, don't preview the piece, but still show the dragging lines
-    //  return;
-    //  }
-    // draggingLines.style.display = "inline";
-    //if (type === "touchend") {tempString=null}
-    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+    if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
       // drag ended
       dragDone(tempString, row, col);
       tempString = '';
@@ -306,8 +306,8 @@ export function grow1(){
     $rootScope.$apply(function () {
       let dic = gameLogic.myDictionary;
       var res = tempString.toLowerCase();
-        $rootScope.boxClass = false;
-        console.log (tempString);
+      $rootScope.boxClass = false;
+      console.log(tempString);
       for (var v = 0; v < dic.length; v++) {
         if (dic[v] === res) {
           state.guessList.push(tempString);
@@ -320,29 +320,17 @@ export function grow1(){
           reset();
         }
       }
-      
-      
       if (dragArr.length === 0) {
         dragArr.push(4 + '' + 4);
       }
       console.log(state.guessList);
-
-      // if (deadBoard == null) {
-      ///window.alert("something deadboard")
-   
-      //  moveToConfirm = {row: row, col: col};
-      // alert(board[row][col]);
-      // } else {
-      //window.alert("something deadboard")
-      //game.tempString = game.tempString.concat(game.state.board[row][col]);
-      //}
     });
   }
   export function showGuess() {
     g = tempString;
     return g;
-  
-  
+
+
   }
 
   function getProposalsBoard(playerIdToProposal: IProposals): string[][] {
@@ -350,7 +338,7 @@ export function grow1(){
     for (let i = 0; i < gameLogic.ROWS; i++) {
       proposals[i] = [];
       for (let j = 0; j < gameLogic.COLS; j++) {
-        proposals[i][j] = state.chosenBoard[i][j];
+        proposals[i][j] = game.state.chosenBoard[i][j];
       }
     }
     for (let playerId in playerIdToProposal) {
@@ -370,31 +358,24 @@ export function grow1(){
     // Only one move/proposal per updateUI
     didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
     yourPlayerInfo = params.yourPlayerInfo;
-    proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
-    if (playerIdToProposal) {
-      console.log("player id"+ playerIdToProposal);
-      // If only proposals changed, then return.
-      // I don't want to disrupt the player if he's in the middle of a move.
-      // I delete playerIdToProposal field from params (and so it's also not in currentUpdateUI),
-      // and compare whether the objects are now deep-equal.
-      params.playerIdToProposal = null;
-      if (currentUpdateUI && angular.equals(currentUpdateUI, params)) return;
-    }
+    proposals = null;
+
     currentUpdateUI = params;
-    score();
+   
     showGuess();
     updateCache();
     clearAnimationTimeout();
-    
+    state = params.state;
     if (isFirstMove()) {
-      state = gameLogic.getInitialState();
-      delta = null;
-      board = state.chosenBoard;
-    } 
-    else{
-      state = params.state;
-      board =state.chosenBoard; 
-    } 
+      let move = gameLogic.createInitialMove();
+      state = move.state;
+       score(state.guessList);
+      if (isMyTurn()) makeMove(move);
+    }
+
+    if (isMyTurn()) {
+      startTimer();
+    }
 
   }
 
@@ -418,24 +399,24 @@ export function grow1(){
       turnIndex: currentUpdateUI.turnIndex,
     }
     //let move = aiService.findComputerMove(currentMove);
- //   log.info("Computer move: ", move);
-   // makeMove(move);
+    //   log.info("Computer move: ", move);
+    // makeMove(move);
   }
 
   function makeMove(move: IMove) {
     if (didMakeMove) { // Only one move per updateUI
       return;
     }
-     else {
-      let delta = {board: state.chosenBoard, guessList: state.guessList};
-      let myProposal: IProposal = {
+    didMakeMove = true;
+    let delta = { board: game.state.chosenBoard, guessList: state.guessList };
+    let myProposal: IProposal = {
       data: delta,
-      chatDescription: 'player guessed '+state.guessList.length,
+      chatDescription: 'player guessed ' + game.state.guessList.length,
       playerInfo: yourPlayerInfo,
-      };
-      // Decide whether we make a move or not
-     gameService.makeMove(move, myProposal);
-    }
+    };
+    // Decide whether we make a move or not
+    gameService.makeMove(move, myProposal);
+
   }
 
   function isFirstMove() {
@@ -474,53 +455,52 @@ export function grow1(){
       return '';
     }
     let state: IState = currentUpdateUI.state;
-    let board: string[][] = state.chosenBoard;
+    let board: string[][] = game.state.chosenBoard;
     if (!board) return '';
     let boardStr: string = '';
-    for (let row = 0 ; row < 4; row++) {
-      for (let col = 0 ; col < 4; col++) {
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col < 4; col++) {
         boardStr += board[row][col];
       }
     }
     return boardStr;
-  }  
+  }
 
 
- // export function shouldShowImage(row: number, col: number): boolean {
+  // export function shouldShowImage(row: number, col: number): boolean {
   //  return state.board[row][col] !== "" || isProposal(row, col);
- // }
+  // }
 
 
 
- // export function isPieceX(row: number, col: number): boolean {
+  // export function isPieceX(row: number, col: number): boolean {
   //  return isPiece(row, col, 0, 'X');
   //}
 
- // export function isPieceO(row: number, col: number): boolean {
- //   return isPiece(row, col, 1, 'O');
+  // export function isPieceO(row: number, col: number): boolean {
+  //   return isPiece(row, col, 1, 'O');
   //}
 
-//  export function shouldSlowlyAppear(row: number, col: number): boolean {
- //   return state.delta &&
+  //  export function shouldSlowlyAppear(row: number, col: number): boolean {
+  //   return state.delta &&
   //    state.delta.row === row && state.delta.col === col;
 
- // }
+  // }
 }
 
 
-var app =  angular.module('myApp', ['gameServices']);
-  app.run(['$rootScope', '$timeout',
-    function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
-      $rootScope['game'] = game;
-      game.init($rootScope, $timeout);
-    }]);
-
-   
-
-app.controller('MainController', ['$scope', '$rootScope', function($scope: any, $rootScope: any) {
-
-
-    $scope.animateToggle = false;
-
+var app = angular.module('myApp', ['gameServices']);
+app.run(['$rootScope', '$timeout',
+  function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
+    $rootScope['game'] = game;
+    game.init($rootScope, $timeout);
   }]);
+
+
+
+app.controller('MainController', ['$scope', '$rootScope', function ($scope: any, $rootScope: any) {
+
+
+  $scope.animateToggle = false;
+}]);
 

@@ -26,7 +26,6 @@ var game;
     game.buttonBg = false;
     game.counter = 100;
     game.countDownLeft = 100;
-    game.moveToConfirm = null;
     game.deadBoard = null;
     game.curRow = 5;
     game.curCol = 5;
@@ -36,8 +35,12 @@ var game;
         return 100 / game.dim;
     }
     game.rowsPercent = rowsPercent;
-    function score() {
-        return 0; //state.guessList.length;
+    function score(guessList) {
+        var s = game.state.guessList;
+        if (s.length > 0) {
+            return game.state.guessList.length;
+        }
+        return 0;
     }
     game.score = score;
     function clearClickToDrag(row, col) {
@@ -68,7 +71,8 @@ var game;
     function reset() {
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 4; j++) {
-                //cachedPieceSrc[i][j] = clearClickToDrag(i,j);
+                game.cachedPieceSrc[i][j] = clearClickToDrag(i, j);
+                //cachedPieceSrc[i][j] = 'alphabet/img_' + board[i][j] + '.png'
             }
         }
     }
@@ -99,7 +103,6 @@ var game;
         game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
         game.toClearRC = [];
-        startTimer();
         registerServiceWorker();
         translate.setTranslations(getTranslations());
         translate.setLanguage('en');
@@ -113,12 +116,10 @@ var game;
     function checkIf(row, col) {
         for (var i = 0; i < game.dragArr.length; i++) {
             if (game.dragArr.indexOf(row + '' + col) === -1) {
-                // let topLeft = getSquareTopLeft(row, col);
                 game.tempString = game.tempString.concat(game.state.chosenBoard[row][col]);
                 showGuess();
                 console.log(game.tempString);
                 game.dragArr.push(row + '' + col);
-                // console.log(centerXY.y+" and center x: "+centerXY.x);
             }
         }
     }
@@ -152,7 +153,18 @@ var game;
     }
     game.isProposal = isProposal;
     ///
+    var timeoutId = null;
+    function isTimerRunning() {
+        return timeoutId;
+    }
+    game.isTimerRunning = isTimerRunning;
+    function stopTimer() {
+        if (!timeoutId)
+            return;
+        game.$timeout.cancel(timeoutId);
+    }
     function startTimer() {
+        stopTimer();
         var timerCount = 60;
         var countDown = function () {
             if (timerCount < 0) {
@@ -164,7 +176,7 @@ var game;
             else {
                 game.countDownLeft = timerCount;
                 timerCount--;
-                game.$timeout(countDown, 1000);
+                timeoutId = game.$timeout(countDown, 1000);
             }
         };
         game.countDownLeft = timerCount;
@@ -178,14 +190,6 @@ var game;
         return game.tempString;
     }
     game.listOf = listOf;
-    ///
-    ///
-    function setDice(board) {
-        var s = 'http://annmalavet.com/Boggle/alphabet/img_A.png';
-        var a = "A";
-        return board;
-    }
-    game.setDice = setDice;
     function addText(guessList) {
         //window.alert(tempString);
         var s = game.state.guessList;
@@ -204,6 +208,11 @@ var game;
         return oka;
     }
     game.getBgImg = getBgImg;
+    function getID(row, col) {
+        var id = game.state.chosenBoard[row][col];
+        return id;
+    }
+    game.getID = getID;
     function handleDragEvent(type, clientX, clientY) {
         //  if (!isHumanTurn() || passes == 2) {
         ///   return; // if the game is over, do not display dragging effect
@@ -213,13 +222,28 @@ var game;
         var cellSize = getCellSize();
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        if (type === "touchstart" || type === "touchmove") {
+        if (type === "touchstart" || type === "touchmove" || type === "touchstart" || type === "touchleave" || type === "mousedown") {
+            var col = Math.floor(x * 4 / game.boardArea.clientWidth);
+            var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+            var centerXY = getSquareCenterXY(row, col);
+            var topLeft = getSquareTopLeft(row, col);
+            game.curRow = row;
+            game.curCol = col;
+            var som = document.elementFromPoint(clientX, clientY);
+            console.log("no " + som.id + " somthinet element from py");
+            if (som) {
+                var arrId = som.id.split("_");
+                var a = parseInt(arrId[0]);
+                var b = parseInt(arrId[1]);
+                game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
+                checkIf(a, b);
+            }
         }
         // Center point in boardArea
         if (type === "mouseup") {
             game.tempString = null;
         }
-        var button = document.getElementById("img_" + row + "_" + col);
+        //let button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
@@ -227,31 +251,7 @@ var game;
             return;
         }
         //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
-        var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-        var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        var centerXY = getSquareCenterXY(row, col);
-        var topLeft = getSquareTopLeft(row, col);
-        game.curRow = row;
-        game.curCol = col;
-        //console.log(centerXY.x+" "+centerXY.y+"get center x y");
-        //console.log(cellSize.height + " cell size " + cellSize.width)
-        //console.log(gameArea.clientWidth + " clientWidth size ");
-        //console.log(gameArea.clientHeight + " clientHeight size ");
-        console.log(clientX + " row to height * col -10 " + (cellSize.height * (col + 1) - 10));
-        console.log(clientY + " row to width times row" + (cellSize.width * (row + 1) - 10));
-        //console.log(row+" row to checkif then col"+col);
-        if (clientY < (cellSize.height * (row + 1) - 10) && (clientX > (cellSize.width * (col + 1) - 10))) {
-            console.log((cellSize.height * (row + 1) - 10) + " vs " + clientY + " and clientX: " + clientX + " vs " + (clientX < (cellSize.width * (col + 1) - 10)));
-            game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
-            checkIf(row, col);
-        }
-        game.buttonBg = true;
-        // if the cell is not empty, don't preview the piece, but still show the dragging lines
-        //  return;
-        //  }
-        // draggingLines.style.display = "inline";
-        //if (type === "touchend") {tempString=null}
-        if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
+        if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
             // drag ended
             dragDone(game.tempString, row, col);
             game.tempString = '';
@@ -300,14 +300,6 @@ var game;
                 game.dragArr.push(4 + '' + 4);
             }
             console.log(game.state.guessList);
-            // if (deadBoard == null) {
-            ///window.alert("something deadboard")
-            //  moveToConfirm = {row: row, col: col};
-            // alert(board[row][col]);
-            // } else {
-            //window.alert("something deadboard")
-            //game.tempString = game.tempString.concat(game.state.board[row][col]);
-            //}
         });
     }
     function showGuess() {
@@ -336,30 +328,21 @@ var game;
         // Only one move/proposal per updateUI
         game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
         game.yourPlayerInfo = params.yourPlayerInfo;
-        game.proposals = playerIdToProposal ? getProposalsBoard(playerIdToProposal) : null;
-        if (playerIdToProposal) {
-            console.log("player id" + playerIdToProposal);
-            // If only proposals changed, then return.
-            // I don't want to disrupt the player if he's in the middle of a move.
-            // I delete playerIdToProposal field from params (and so it's also not in currentUpdateUI),
-            // and compare whether the objects are now deep-equal.
-            params.playerIdToProposal = null;
-            if (game.currentUpdateUI && angular.equals(game.currentUpdateUI, params))
-                return;
-        }
+        game.proposals = null;
         game.currentUpdateUI = params;
-        score();
         showGuess();
         updateCache();
         clearAnimationTimeout();
+        game.state = params.state;
         if (isFirstMove()) {
-            game.state = gameLogic.getInitialState();
-            game.delta = null;
-            game.board = game.state.chosenBoard;
+            var move = gameLogic.createInitialMove();
+            game.state = move.state;
+            score(game.state.guessList);
+            if (isMyTurn())
+                makeMove(move);
         }
-        else {
-            game.state = params.state;
-            game.board = game.state.chosenBoard;
+        if (isMyTurn()) {
+            startTimer();
         }
     }
     game.updateUI = updateUI;
@@ -389,16 +372,15 @@ var game;
         if (game.didMakeMove) {
             return;
         }
-        else {
-            var delta_2 = { board: game.state.chosenBoard, guessList: game.state.guessList };
-            var myProposal = {
-                data: delta_2,
-                chatDescription: 'player guessed ' + game.state.guessList.length,
-                playerInfo: game.yourPlayerInfo,
-            };
-            // Decide whether we make a move or not
-            gameService.makeMove(move, myProposal);
-        }
+        game.didMakeMove = true;
+        var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
+        var myProposal = {
+            data: delta,
+            chatDescription: 'player guessed ' + game.state.guessList.length,
+            playerInfo: game.yourPlayerInfo,
+        };
+        // Decide whether we make a move or not
+        gameService.makeMove(move, myProposal);
     }
     function isFirstMove() {
         console.log("first move ");
@@ -429,7 +411,7 @@ var game;
             return '';
         }
         var state = game.currentUpdateUI.state;
-        var board = state.chosenBoard;
+        var board = game.state.chosenBoard;
         if (!board)
             return '';
         var boardStr = '';

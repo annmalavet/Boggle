@@ -3,8 +3,6 @@ type GuessList = string[];
 
 
 interface BoardDelta {
-  //row: number;
-  //col: number;
   board: Board;
   guessList: GuessList;
 }
@@ -70,7 +68,7 @@ module gameLogic {
   }
   export function getInitialState(): IState {
     return {
-      chosenBoard: getInitialBoard(), guessList:[""]
+      chosenBoard: getInitialBoard(), guessList:[]
     };
   }
 
@@ -81,14 +79,12 @@ module gameLogic {
     };
   }
 
-
-
   export function createMove(board: Board,
     stateBeforeMove: IState,  turnIndexBeforeMove: number): IMove {
-    if (!stateBeforeMove) {
-      stateBeforeMove = getInitialState();
-    }
-    let chosenBoard: Board = stateBeforeMove.chosenBoard;
+    //if (!stateBeforeMove) {
+      //stateBeforeMove = getInitialState();
+    //}
+    let chosenBoard: Board = board;
     let guessList:GuessList = stateBeforeMove.guessList;
     console.log("this is createMove");
     let boardAfterMove = angular.copy(chosenBoard);

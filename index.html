@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- build:[manifest] index.min.appcache -->
-<html lang="en" ng-app="myApp">
+<html lang="en" >
 <!-- /build -->
 
 <head>
@@ -32,8 +32,8 @@
 
 </head>
 
-<body ng-cloak ng-app="myApp" ontouchstart>
-  <div class="overlayModal oneOpacity" ng-hide="!game.isModalShown" ng-class="{zeroOpacity: !game.isModalShown, oneOpacity: game.isModalShown}"aria-hidden="true"
+<body ng-cloak ng-app="myApp" ontouchstart ng-app="myApp">
+  <div class="overlayModal oneOpacity" ng-if="game.isModalShown" ng-class="{zeroOpacity: !game.isModalShown, oneOpacity: game.isModalShown}"aria-hidden="true"
     aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -52,7 +52,7 @@
 
   <div id="gameArea">
     <div class="top">
-    <h2 class="timer">Time remaining: {{game.countDownLeft}}</h2>
+    <h2 class="timer" ng-if="game.isTimerRunning()">Time remaining: {{game.countDownLeft}}</h2>
    <textarea class="wordBox" id="inputarea"> {{game.showGuess()}}</textarea>
     <textarea class="score" id="score"> {{game.score()}}</textarea>
     </div>
@@ -61,7 +61,7 @@
       <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row * 110 / game.dim}}%; left:0; width:100%; height:100%;">
         <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 100 / game.dim}}%; width:100%; height:100%;">
           <div id="{{'img_container_' + row + '_' + col}}" class="img_container" ng-class="game.cachedPieceContainerClass[row][col]">
-            <button id="img_0" class="button" style="z-index: 30; width: 25%; height: 25%; " ng-class="game.cachedPieceSrc[row][col]" ng-style="{ 'background-image': 'url(' + game.getBgImg(row, col) + ')'}"
+            <button id="{{ + row + '_' + col}}" class="button" style="z-index: 30; width: 25%; height: 25%; " ng-class="game.cachedPieceSrc[row][col]" ng-style="{ 'background-image': 'url(' + game.getBgImg(row, col) + ')'}"
               ng-click="game.listOf(row, col)"></button>
           </div>
 
