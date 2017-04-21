@@ -49,10 +49,10 @@
     </div>
   </div>
 
-
+<!-- ng-if="game.isTimerRunning()"-->
   <div id="gameArea">
     <div class="top">
-    <h2 class="timer" ng-if="game.isTimerRunning()">Time remaining: {{game.countDownLeft}}</h2>
+    <h2 class="timer" >Time left: {{game.countDownLeft}} seconds</h2>
    <textarea class="wordBox" id="inputarea"> {{game.showGuess()}}</textarea>
     <h3 class="score" id="score"> {{game.score()}}</h3>
     </div>

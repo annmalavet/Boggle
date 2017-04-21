@@ -82,7 +82,7 @@ module gameLogic {
       //stateBeforeMove = getInitialState();
     //}
     let chosenBoard: Board = board;
-    let guessList:GuessList = stateBeforeMove.guessList;
+    let guessList:GuessList = [];
     console.log("this is createMove");
     let boardAfterMove = angular.copy(chosenBoard);
     let endMatchScores: number[];

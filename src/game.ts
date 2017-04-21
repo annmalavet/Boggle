@@ -44,7 +44,7 @@ module game {
   export let g: string = '';
   export let buttonBg = false;
   export let counter = 100;
-  export let countDownLeft = 100;
+  export let countDownLeft = 60;
   export let clickToDragPiece: HTMLElement;
   export let time: HTMLElement;
   export let gameArea: HTMLElement;
@@ -60,9 +60,9 @@ module game {
   }
   export function score(guessList: string[]) {
     let s = state.guessList;
-    if (s.length>0){
-    return state.guessList.length;
-     }
+    if (s.length > 0) {
+      return state.guessList.length;
+    }
     return 0;
   }
   export function clearClickToDrag(row: number, col: number) {
@@ -97,7 +97,7 @@ module game {
   }
   function showModal() {
     isModalShown = true;
-  
+
   }
 
   let cacheIntegersTill: number[][] = [];
@@ -192,9 +192,9 @@ module game {
         isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
-          if(currentUpdateUI.turnIndex < 1) {
-        makeMove(move);
-          }
+        if (currentUpdateUI.turnIndex < 1) {
+          makeMove(move);
+        }
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -241,25 +241,25 @@ module game {
     let cellSize: CellSize = getCellSize();
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
-    if (type === "touchstart" || type === "touchmove" ||  type === "mousedown") {
+    if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
       let centerXY = getSquareCenterXY(row, col);
       let topLeft = getSquareTopLeft(row, col);
       curRow = row; curCol = col;
-     // console.log("no "+som.id+" somthinet element from py");
+      // console.log("no "+som.id+" somthinet element from py");
     }
     var som = document.elementFromPoint(clientX, clientY);
-      if (som) {
+    if (som) {
       let arrId = som.id.split("_");
       let a = parseInt(arrId[0]);
       let b = parseInt(arrId[1]);
       cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
       checkIf(a, b);
-       }
+    }
 
 
-    
+
     // Center point in boardArea
     if (type === "mouseup" || type === "touchleave") {
       tempString = null;
@@ -362,7 +362,7 @@ module game {
     proposals = null;
 
     currentUpdateUI = params;
-   
+
     showGuess();
     updateCache();
     clearAnimationTimeout();
@@ -370,8 +370,8 @@ module game {
     if (isFirstMove()) {
       let move = gameLogic.createInitialMove();
       state = move.state;
-       score(state.guessList);
-      if (isMyTurn()&& currentUpdateUI.turnIndex < 1) makeMove(move);
+      score(state.guessList);
+      if (isMyTurn() && currentUpdateUI.turnIndex < 1) makeMove(move);
     }
 
     if (isMyTurn() && currentUpdateUI.turnIndex < 1) {
@@ -405,9 +405,9 @@ module game {
   }
 
   function makeMove(move: IMove) {
-   // if (didMakeMove) { // Only one move per updateUI
+    // if (didMakeMove) { // Only one move per updateUI
     //  return;
-   // }
+    // }
 
     didMakeMove = true;
     startTimer();
@@ -418,8 +418,8 @@ module game {
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-    if(currentUpdateUI.turnIndex < 1) {
-    gameService.makeMove(move, myProposal);
+    if (currentUpdateUI.turnIndex < 1) {
+      gameService.makeMove(move, myProposal);
     }
   }
 

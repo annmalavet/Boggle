@@ -38,7 +38,6 @@ body {
     display: inline-block;
     position: relative;
     width:25%;
-    border: 3px solid #9BDB40;
     padding: 7px;
 }
 .wordBox {
@@ -55,7 +54,6 @@ body {
 
 .overlayModal {
   background: rgba(0,0,0,0.5);
-  text-align:center;
   z-index: 1000;
   position: absolute;
   left: 0px;

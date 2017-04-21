@@ -25,7 +25,7 @@ var game;
     game.g = '';
     game.buttonBg = false;
     game.counter = 100;
-    game.countDownLeft = 100;
+    game.countDownLeft = 60;
     game.deadBoard = null;
     game.curRow = 5;
     game.curCol = 5;

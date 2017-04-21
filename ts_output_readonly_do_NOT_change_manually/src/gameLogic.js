@@ -67,7 +67,7 @@ var gameLogic;
         //stateBeforeMove = getInitialState();
         //}
         var chosenBoard = board;
-        var guessList = stateBeforeMove.guessList;
+        var guessList = [];
         console.log("this is createMove");
         var boardAfterMove = angular.copy(chosenBoard);
         var endMatchScores;
