@@ -171,7 +171,7 @@ var game;
                 game.didMakeMove = true;
                 game.isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
-                if (game.currentUpdateUI.turnIndex < 1) {
+                if (game.currentUpdateUI.turnIndex < 2) {
                     makeMove(move);
                 }
             }
@@ -340,10 +340,10 @@ var game;
             var move = gameLogic.createInitialMove();
             game.state = move.state;
             score(game.state.guessList);
-            if (isMyTurn() && game.currentUpdateUI.turnIndex < 1)
+            if (isMyTurn() && game.currentUpdateUI.turnIndex < 2)
                 makeMove(move);
         }
-        if (isMyTurn() && game.currentUpdateUI.turnIndex < 1) {
+        if (isMyTurn() && game.currentUpdateUI.turnIndex < 2) {
             startTimer();
         }
     }
@@ -383,7 +383,7 @@ var game;
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        if (game.currentUpdateUI.turnIndex < 1) {
+        if (game.currentUpdateUI.turnIndex < 2) {
             gameService.makeMove(move, myProposal);
         }
     }
