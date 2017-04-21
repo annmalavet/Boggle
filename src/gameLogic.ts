@@ -1,12 +1,10 @@
 type Board = string[][];
 type GuessList = string[];
 
-
 interface BoardDelta {
   board: Board;
   guessList: GuessList;
 }
-
 
 type IProposalData = BoardDelta;
 
@@ -14,7 +12,6 @@ interface IState {
   chosenBoard: Board;//game board
   guessList: GuessList;
 }
-
 
 import gameService = gamingPlatform.gameService;
 import alphaBetaService = gamingPlatform.alphaBetaService;

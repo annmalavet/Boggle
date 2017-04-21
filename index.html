@@ -32,14 +32,14 @@
 
 </head>
 
-<body ng-cloak ng-app="myApp" ontouchstart ng-app="myApp">
+<body ng-cloak ng-app="myApp" ontouchstart >
   <div class="overlayModal oneOpacity" ng-if="game.isModalShown" ng-class="{zeroOpacity: !game.isModalShown, oneOpacity: game.isModalShown}"aria-hidden="true"
     aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
           <h4 class="modal-title">
-            {{game.modalTitle}}
+           <h2> {{game.modalTitle}}</h2>
           </h4>
         </div>
         <div class="modal-body">
@@ -54,7 +54,7 @@
     <div class="top">
     <h2 class="timer" ng-if="game.isTimerRunning()">Time remaining: {{game.countDownLeft}}</h2>
    <textarea class="wordBox" id="inputarea"> {{game.showGuess()}}</textarea>
-    <textarea class="score" id="score"> {{game.score()}}</textarea>
+    <h3 class="score" id="score"> {{game.score()}}</h3>
     </div>
 
     <div id="boardArea">

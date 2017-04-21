@@ -1,8 +1,8 @@
 var game;
 (function (game) {
     game.isModalShown = false;
-    game.modalTitle = "Game Over";
-    game.modalBody = "Done";
+    game.modalTitle = "Your turn is over";
+    game.modalBody = "Time is up";
     game.$rootScope = null;
     game.$timeout = null;
     // Global variables are cleared when getting updateUI.
@@ -165,13 +165,15 @@ var game;
     }
     function startTimer() {
         stopTimer();
-        var timerCount = 60;
+        var timerCount = 10; //60;
         var countDown = function () {
             if (timerCount < 0) {
                 game.didMakeMove = true;
                 game.isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
-                makeMove(move);
+                if (game.currentUpdateUI.turnIndex < 1) {
+                    makeMove(move);
+                }
             }
             else {
                 game.countDownLeft = timerCount;
@@ -222,25 +224,25 @@ var game;
         var cellSize = getCellSize();
         var col = Math.floor(x * 4 / game.boardArea.clientWidth);
         var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-        if (type === "touchstart" || type === "touchmove" || type === "touchstart" || type === "touchleave" || type === "mousedown") {
+        if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
             var centerXY = getSquareCenterXY(row, col);
             var topLeft = getSquareTopLeft(row, col);
             game.curRow = row;
             game.curCol = col;
-            var som = document.elementFromPoint(clientX, clientY);
-            console.log("no " + som.id + " somthinet element from py");
-            if (som) {
-                var arrId = som.id.split("_");
-                var a = parseInt(arrId[0]);
-                var b = parseInt(arrId[1]);
-                game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
-                checkIf(a, b);
-            }
+            // console.log("no "+som.id+" somthinet element from py");
+        }
+        var som = document.elementFromPoint(clientX, clientY);
+        if (som) {
+            var arrId = som.id.split("_");
+            var a = parseInt(arrId[0]);
+            var b = parseInt(arrId[1]);
+            game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
+            checkIf(a, b);
         }
         // Center point in boardArea
-        if (type === "mouseup") {
+        if (type === "mouseup" || type === "touchleave") {
             game.tempString = null;
         }
         //let button = document.getElementById("img_" + row + "_" + col);
@@ -338,10 +340,10 @@ var game;
             var move = gameLogic.createInitialMove();
             game.state = move.state;
             score(game.state.guessList);
-            if (isMyTurn())
+            if (isMyTurn() && game.currentUpdateUI.turnIndex < 1)
                 makeMove(move);
         }
-        if (isMyTurn()) {
+        if (isMyTurn() && game.currentUpdateUI.turnIndex < 1) {
             startTimer();
         }
     }
@@ -369,10 +371,11 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        if (game.didMakeMove) {
-            return;
-        }
+        // if (didMakeMove) { // Only one move per updateUI
+        //  return;
+        // }
         game.didMakeMove = true;
+        startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,
@@ -380,7 +383,9 @@ var game;
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        gameService.makeMove(move, myProposal);
+        if (game.currentUpdateUI.turnIndex < 1) {
+            gameService.makeMove(move, myProposal);
+        }
     }
     function isFirstMove() {
         console.log("first move ");

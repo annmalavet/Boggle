@@ -18,8 +18,8 @@ interface RowCol {
 
 module game {
   export let isModalShown = false;
-  export let modalTitle = "Game Over";
-  export let modalBody = "Done";
+  export let modalTitle = "Your turn is over";
+  export let modalBody = "Time is up";
   export let $rootScope: angular.IScope = null;
   export let $timeout: angular.ITimeoutService = null;
   // Global variables are cleared when getting updateUI.
@@ -97,6 +97,7 @@ module game {
   }
   function showModal() {
     isModalShown = true;
+  
   }
 
   let cacheIntegersTill: number[][] = [];
@@ -184,14 +185,16 @@ module game {
   }
   export function startTimer() {
     stopTimer();
-    let timerCount = 60;
+    let timerCount = 10;//60;
     let countDown = function () {
       if (timerCount < 0) {
         didMakeMove = true;
         isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
+          if(currentUpdateUI.turnIndex < 1) {
         makeMove(move);
+          }
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -238,18 +241,16 @@ module game {
     let cellSize: CellSize = getCellSize();
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
-    if (type === "touchstart" || type === "touchmove" || type === "touchstart" || type === "touchleave" || type === "mousedown") {
+    if (type === "touchstart" || type === "touchmove" ||  type === "mousedown") {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
       let centerXY = getSquareCenterXY(row, col);
       let topLeft = getSquareTopLeft(row, col);
       curRow = row; curCol = col;
-
-      var som = document.elementFromPoint(clientX, clientY);
-      console.log("no "+som.id+" somthinet element from py");
-
+     // console.log("no "+som.id+" somthinet element from py");
+    }
+    var som = document.elementFromPoint(clientX, clientY);
       if (som) {
-      
       let arrId = som.id.split("_");
       let a = parseInt(arrId[0]);
       let b = parseInt(arrId[1]);
@@ -258,9 +259,9 @@ module game {
        }
 
 
-    }
+    
     // Center point in boardArea
-    if (type === "mouseup") {
+    if (type === "mouseup" || type === "touchleave") {
       tempString = null;
     }
     //let button = document.getElementById("img_" + row + "_" + col);
@@ -370,10 +371,10 @@ module game {
       let move = gameLogic.createInitialMove();
       state = move.state;
        score(state.guessList);
-      if (isMyTurn()) makeMove(move);
+      if (isMyTurn()&& currentUpdateUI.turnIndex < 1) makeMove(move);
     }
 
-    if (isMyTurn()) {
+    if (isMyTurn() && currentUpdateUI.turnIndex < 1) {
       startTimer();
     }
 
@@ -404,10 +405,12 @@ module game {
   }
 
   function makeMove(move: IMove) {
-    if (didMakeMove) { // Only one move per updateUI
-      return;
-    }
+   // if (didMakeMove) { // Only one move per updateUI
+    //  return;
+   // }
+
     didMakeMove = true;
+    startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
@@ -415,8 +418,9 @@ module game {
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
+    if(currentUpdateUI.turnIndex < 1) {
     gameService.makeMove(move, myProposal);
-
+    }
   }
 
   function isFirstMove() {
