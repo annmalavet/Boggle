@@ -117,7 +117,7 @@ module game {
     time = document.getElementById("timer");
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
-    dragAndDropService.addDragListener("gameArea", handleDragEvent);
+    dragAndDropService.addDragListener("boardArea", handleDragEvent);
     dragArr = [];
     isModalShown = false;
     dragArr.push(4 + '' + 4);
@@ -238,7 +238,7 @@ module game {
     //}
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
-    let cellSize: CellSize = getCellSize();
+    /*let cellSize: CellSize = getCellSize();
     var col = Math.floor(x * 4 / boardArea.clientWidth);
     var row = Math.floor(y * 4 / boardArea.clientHeight);
     if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
@@ -248,7 +248,7 @@ module game {
       let topLeft = getSquareTopLeft(row, col);
       curRow = row; curCol = col;
       // console.log("no "+som.id+" somthinet element from py");
-    }
+    }*/
     var som = document.elementFromPoint(clientX, clientY);
     if (som) {
       let arrId = som.id.split("_");

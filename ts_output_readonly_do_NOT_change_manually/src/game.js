@@ -98,7 +98,7 @@ var game;
         game.time = document.getElementById("timer");
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
-        dragAndDropService.addDragListener("gameArea", handleDragEvent);
+        dragAndDropService.addDragListener("boardArea", handleDragEvent);
         game.dragArr = [];
         game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
@@ -221,18 +221,17 @@ var game;
         //}
         var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
         var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
-        var cellSize = getCellSize();
-        var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-        var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+        /*let cellSize: CellSize = getCellSize();
+        var col = Math.floor(x * 4 / boardArea.clientWidth);
+        var row = Math.floor(y * 4 / boardArea.clientHeight);
         if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
-            var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-            var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-            var centerXY = getSquareCenterXY(row, col);
-            var topLeft = getSquareTopLeft(row, col);
-            game.curRow = row;
-            game.curCol = col;
-            // console.log("no "+som.id+" somthinet element from py");
-        }
+          var col = Math.floor(x * 4 / game.boardArea.clientWidth);
+          var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+          let centerXY = getSquareCenterXY(row, col);
+          let topLeft = getSquareTopLeft(row, col);
+          curRow = row; curCol = col;
+          // console.log("no "+som.id+" somthinet element from py");
+        }*/
         var som = document.elementFromPoint(clientX, clientY);
         if (som) {
             var arrId = som.id.split("_");
