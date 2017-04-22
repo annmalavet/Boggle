@@ -177,7 +177,7 @@ var game;
                 game.didMakeMove = true;
                 game.isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
-                if (game.currentUpdateUI.turnIndex < 2) {
+                if (game.currentUpdateUI.turnIndex < 3) {
                     makeMove(move);
                 }
                 var scoreDiff = game.scoreObj.first - game.scoreObj.second - 6.5; // komi is 6.5 points (on all board sizes.)
@@ -394,7 +394,7 @@ var game;
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        if (game.currentUpdateUI.turnIndex < 2) {
+        if (game.currentUpdateUI.turnIndex < 3) {
             gameService.makeMove(move, myProposal);
         }
     }

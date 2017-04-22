@@ -199,11 +199,11 @@ module game {
         isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
-        if (currentUpdateUI.turnIndex < 2) {
+        if (currentUpdateUI.turnIndex < 3) {
           makeMove(move);
         }
         let scoreDiff = scoreObj.first- scoreObj.second - 6.5; // komi is 6.5 points (on all board sizes.)
-        let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+    let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
         makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
       } else {
         countDownLeft = timerCount;
@@ -431,7 +431,7 @@ module game {
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-    if (currentUpdateUI.turnIndex < 2) {
+    if (currentUpdateUI.turnIndex < 3) {
       gameService.makeMove(move, myProposal);
     }
   }
