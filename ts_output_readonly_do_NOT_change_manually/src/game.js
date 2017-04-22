@@ -180,7 +180,7 @@ var game;
                 if (game.currentUpdateUI.turnIndex < 3) {
                     makeMove(move);
                 }
-                var scoreDiff = game.scoreObj.first - game.scoreObj.second - 6.5; // komi is 6.5 points (on all board sizes.)
+                var scoreDiff = game.scoreObj.first - game.scoreObj.second;
                 var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
                 makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
             }

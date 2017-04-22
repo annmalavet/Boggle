@@ -202,7 +202,7 @@ module game {
         if (currentUpdateUI.turnIndex < 3) {
           makeMove(move);
         }
-        let scoreDiff = scoreObj.first- scoreObj.second - 6.5; // komi is 6.5 points (on all board sizes.)
+        let scoreDiff = scoreObj.first- scoreObj.second; 
     let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
         makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
       } else {
