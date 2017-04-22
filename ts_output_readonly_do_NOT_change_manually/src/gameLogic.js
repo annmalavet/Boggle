@@ -62,18 +62,21 @@ var gameLogic;
         };
     }
     gameLogic.createInitialMove = createInitialMove;
+    function getWinner() {
+    }
     function createMove(board, stateBeforeMove, turnIndexBeforeMove) {
         //if (!stateBeforeMove) {
         //stateBeforeMove = getInitialState();
         //}
+        var winner = getWinner();
         var chosenBoard = board;
         var guessList = [];
         console.log("this is createMove");
         var turnIndexAfterMove = 1 - turnIndexBeforeMove;
         var boardAfterMove = angular.copy(chosenBoard);
-        var endMatchScores;
+        var endMatchScores; // = [stateBeforeMove.guessList.length];
         var turnIndex;
-        var delta = { board: chosenBoard, guessList: guessList }; // { row: row, col: col };
+        var delta = { board: chosenBoard, guessList: guessList };
         var state = { chosenBoard: chosenBoard, guessList: guessList };
         return {
             endMatchScores: endMatchScores,
@@ -90,33 +93,13 @@ var gameLogic;
     */
     gameLogic.myDictionary = gameLogic.wordList.trim().split(',');
     //console.log(myDictionary[0]);
-    /**
-     * Returns true if the game ended in a tie because there are no empty cells.
-     * E.g., isTie returns true for the following board:
-     *     [['X', 'O', 'X'],
-     *      ['X', 'O', 'O'],
-     *      ['O', 'X', 'X']]
-     
-    function isTie(board: Board): boolean {
-      for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLS; j++) {
-          if (board[i][j] === '') {
-            // If there is an empty cell then we do not have a tie.
-            return false;
-          }
-        }
-      }
-      // No empty cells, so we have a tie!
-      return true;
+    function createEndMove(state, endMatchScores) {
+        return {
+            endMatchScores: endMatchScores,
+            turnIndex: 3,
+            state: state,
+        };
     }
-  */
-    /**
-     * Return the winner (either 'X' or 'O') or '' if there is no winner.
-     * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
-     * E.g., getWinner returns 'X' for the following board:
-     *     [['X', 'O', ''],
-     *      ['X', 'O', ''],
-     *      ['X', '', '']]
-     */
+    gameLogic.createEndMove = createEndMove;
 })(gameLogic || (gameLogic = {}));
 //# sourceMappingURL=gameLogic.js.map

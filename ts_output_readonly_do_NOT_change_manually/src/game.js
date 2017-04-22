@@ -25,20 +25,26 @@ var game;
     game.g = '';
     game.buttonBg = false;
     game.counter = 100;
-    game.countDownLeft = 60;
+    game.countDownLeft = 10;
     game.deadBoard = null;
     game.curRow = 5;
     game.curCol = 5;
     game.hasDim = false;
     game.dim = 4;
+    game.scoreObj = { first: 0, second: 0 };
     function rowsPercent() {
         return 100 / game.dim;
     }
     game.rowsPercent = rowsPercent;
     function score(guessList) {
         var s = game.state.guessList;
-        if (s.length > 0) {
-            return game.state.guessList.length;
+        if (s.length > 0 && game.currentUpdateUI.turnIndex < 2) {
+            game.scoreObj.first = s.length;
+            return game.scoreObj.first;
+        }
+        else if (s.length > 0 && game.currentUpdateUI.turnIndex > 1) {
+            game.scoreObj.second = s.length;
+            return game.scoreObj.second;
         }
         return 0;
     }
@@ -174,6 +180,9 @@ var game;
                 if (game.currentUpdateUI.turnIndex < 2) {
                     makeMove(move);
                 }
+                var scoreDiff = game.scoreObj.first - game.scoreObj.second - 6.5; // komi is 6.5 points (on all board sizes.)
+                var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+                makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
             }
             else {
                 game.countDownLeft = timerCount;
@@ -345,8 +354,14 @@ var game;
         if (isMyTurn() && game.currentUpdateUI.turnIndex < 2) {
             startTimer();
         }
+        if (game.currentUpdateUI.turnIndex > 2) {
+            calcScore();
+        }
     }
     game.updateUI = updateUI;
+    function calcScore() {
+        game.scoreObj.first += game.state.guessList.length;
+    }
     function animationEndedCallback() {
         log.info("Animation ended");
         maybeSendComputerMove();
@@ -370,9 +385,6 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        // if (didMakeMove) { // Only one move per updateUI
-        //  return;
-        // }
         game.didMakeMove = true;
         startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
@@ -427,27 +439,14 @@ var game;
         return boardStr;
     }
     game.getStateForOgImage = getStateForOgImage;
-    // export function shouldShowImage(row: number, col: number): boolean {
-    //  return state.board[row][col] !== "" || isProposal(row, col);
-    // }
-    // export function isPieceX(row: number, col: number): boolean {
-    //  return isPiece(row, col, 0, 'X');
-    //}
-    // export function isPieceO(row: number, col: number): boolean {
-    //   return isPiece(row, col, 1, 'O');
-    //}
-    //  export function shouldSlowlyAppear(row: number, col: number): boolean {
-    //   return state.delta &&
-    //    state.delta.row === row && state.delta.col === col;
-    // }
+    var app = angular.module('myApp', ['gameServices']);
+    app.run(['$rootScope', '$timeout',
+        function ($rootScope, $timeout) {
+            $rootScope['game'] = game;
+            game.init($rootScope, $timeout);
+        }]);
+    app.controller('MainController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+            $scope.animateToggle = false;
+        }]);
 })(game || (game = {}));
-var app = angular.module('myApp', ['gameServices']);
-app.run(['$rootScope', '$timeout',
-    function ($rootScope, $timeout) {
-        $rootScope['game'] = game;
-        game.init($rootScope, $timeout);
-    }]);
-app.controller('MainController', ['$scope', '$rootScope', function ($scope, $rootScope) {
-        $scope.animateToggle = false;
-    }]);
 //# sourceMappingURL=game.js.map

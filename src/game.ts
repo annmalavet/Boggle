@@ -13,7 +13,9 @@ interface RowCol {
   roww: number;
   coll: number;
 }
-
+interface Score {
+  first: number, second: number;
+}
 
 
 module game {
@@ -44,7 +46,7 @@ module game {
   export let g: string = '';
   export let buttonBg = false;
   export let counter = 100;
-  export let countDownLeft = 60;
+  export let countDownLeft = 10;
   export let clickToDragPiece: HTMLElement;
   export let time: HTMLElement;
   export let gameArea: HTMLElement;
@@ -54,14 +56,19 @@ module game {
   export let curCol: number = 5;
   export let hasDim = false;
   export let dim = 4;
-
+  export let scoreObj: Score = {first: 0, second: 0};
   export function rowsPercent() {
-    return 100 / dim;
+    return 100 / dim; 
   }
   export function score(guessList: string[]) {
     let s = state.guessList;
-    if (s.length > 0) {
-      return state.guessList.length;
+    if (s.length > 0 && currentUpdateUI.turnIndex <2 ) {
+      scoreObj.first  = s.length;
+      return scoreObj.first;
+    }
+    else if (s.length > 0 && currentUpdateUI.turnIndex >1){
+      scoreObj.second = s.length;
+      return scoreObj.second ;
     }
     return 0;
   }
@@ -195,6 +202,9 @@ module game {
         if (currentUpdateUI.turnIndex < 2) {
           makeMove(move);
         }
+        let scoreDiff = scoreObj.first- scoreObj.second - 6.5; // komi is 6.5 points (on all board sizes.)
+        let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+        makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -378,6 +388,13 @@ module game {
       startTimer();
     }
 
+      if (currentUpdateUI.turnIndex > 2) {
+        calcScore();
+      }
+
+  }
+  function calcScore(){
+    scoreObj.first += state.guessList.length;
   }
 
   function animationEndedCallback() {
@@ -405,10 +422,6 @@ module game {
   }
 
   function makeMove(move: IMove) {
-    // if (didMakeMove) { // Only one move per updateUI
-    //  return;
-    // }
-
     didMakeMove = true;
     startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
@@ -471,26 +484,7 @@ module game {
   }
 
 
-  // export function shouldShowImage(row: number, col: number): boolean {
-  //  return state.board[row][col] !== "" || isProposal(row, col);
-  // }
 
-
-
-  // export function isPieceX(row: number, col: number): boolean {
-  //  return isPiece(row, col, 0, 'X');
-  //}
-
-  // export function isPieceO(row: number, col: number): boolean {
-  //   return isPiece(row, col, 1, 'O');
-  //}
-
-  //  export function shouldSlowlyAppear(row: number, col: number): boolean {
-  //   return state.delta &&
-  //    state.delta.row === row && state.delta.col === col;
-
-  // }
-}
 
 
 var app = angular.module('myApp', ['gameServices']);

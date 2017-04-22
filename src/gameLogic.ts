@@ -75,20 +75,23 @@ module gameLogic {
       state: getInitialState() ///returns initial board
     };
   }
+  function getWinner(){
 
+  }
   export function createMove(board: Board,
     stateBeforeMove: IState,  turnIndexBeforeMove: number): IMove {
     //if (!stateBeforeMove) {
       //stateBeforeMove = getInitialState();
     //}
+    let winner = getWinner();
     let chosenBoard: Board = board;
     let guessList:GuessList = [];
     console.log("this is createMove");
     let turnIndexAfterMove = 1 - turnIndexBeforeMove;
     let boardAfterMove = angular.copy(chosenBoard);
-    let endMatchScores: number[];
+    let endMatchScores: number[] ;// = [stateBeforeMove.guessList.length];
     let turnIndex: number;
-    let delta: BoardDelta =  {board:chosenBoard, guessList:guessList};// { row: row, col: col };
+    let delta: BoardDelta =  {board:chosenBoard, guessList:guessList};
     let state: IState =  { chosenBoard: chosenBoard, guessList:guessList };
     return {
       endMatchScores: endMatchScores,
@@ -107,7 +110,14 @@ wordList.trim().split(',');
 //console.log(myDictionary[0]);
 
 
-
+  export function createEndMove(state: IState, endMatchScores: number[]): IMove {
+    return {
+        endMatchScores: endMatchScores,
+        turnIndex: 3,
+        state: state,
+    };
+  }
+}
 
   /**
    * Returns true if the game ended in a tie because there are no empty cells.
