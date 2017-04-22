@@ -84,6 +84,7 @@ module gameLogic {
     let chosenBoard: Board = board;
     let guessList:GuessList = [];
     console.log("this is createMove");
+    let turnIndexAfterMove = 1 - turnIndexBeforeMove;
     let boardAfterMove = angular.copy(chosenBoard);
     let endMatchScores: number[];
     let turnIndex: number;
@@ -91,7 +92,7 @@ module gameLogic {
     let state: IState =  { chosenBoard: chosenBoard, guessList:guessList };
     return {
       endMatchScores: endMatchScores,
-      turnIndex: turnIndex,
+      turnIndex: turnIndexAfterMove,
       state: state,
     };
   }

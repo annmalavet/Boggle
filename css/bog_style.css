@@ -159,6 +159,10 @@ border-width: medium;
 overflow-y: scroll;
 }
 
+h3 {
+   color: #ffffff;
+}
+
 h2 {
   position: absolute;
   display: inline-block;
