@@ -180,9 +180,6 @@ var game;
                 if (game.currentUpdateUI.turnIndex < 3) {
                     makeMove(move);
                 }
-                var scoreDiff = game.scoreObj.first - game.scoreObj.second;
-                var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-                makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
             }
             else {
                 game.countDownLeft = timerCount;
@@ -340,8 +337,8 @@ var game;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
         game.currentUpdateUI = params;
-        showGuess();
         updateCache();
+        calcScore();
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {
@@ -354,13 +351,14 @@ var game;
         if (isMyTurn() && game.currentUpdateUI.turnIndex < 2) {
             startTimer();
         }
-        if (game.currentUpdateUI.turnIndex > 2) {
-            calcScore();
-        }
     }
     game.updateUI = updateUI;
     function calcScore() {
-        game.scoreObj.first += game.state.guessList.length;
+        var scoreDiff = game.scoreObj.first - game.scoreObj.second;
+        var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+        if (scoreDiff > 0) {
+            makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
+        }
     }
     function animationEndedCallback() {
         log.info("Animation ended");
@@ -394,7 +392,7 @@ var game;
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        if (game.currentUpdateUI.turnIndex < 3) {
+        if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
             gameService.makeMove(move, myProposal);
         }
     }

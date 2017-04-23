@@ -193,6 +193,8 @@ module game {
   export function startTimer() {
     stopTimer();
     let timerCount = 10;//60;
+
+      
     let countDown = function () {
       if (timerCount < 0) {
         didMakeMove = true;
@@ -202,9 +204,6 @@ module game {
         if (currentUpdateUI.turnIndex < 3) {
           makeMove(move);
         }
-        let scoreDiff = scoreObj.first- scoreObj.second; 
-    let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
-        makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -373,8 +372,10 @@ module game {
 
     currentUpdateUI = params;
 
-    showGuess();
+
     updateCache();
+
+    calcScore();
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
@@ -388,13 +389,17 @@ module game {
       startTimer();
     }
 
-      if (currentUpdateUI.turnIndex > 2) {
-        calcScore();
-      }
+     
+
+      
 
   }
   function calcScore(){
-    scoreObj.first += state.guessList.length;
+      let scoreDiff = scoreObj.first- scoreObj.second; 
+      let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+      if(scoreDiff >0){
+        makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
+      }
   }
 
   function animationEndedCallback() {
@@ -431,7 +436,7 @@ module game {
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-    if (currentUpdateUI.turnIndex < 3) {
+    if (currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
       gameService.makeMove(move, myProposal);
     }
   }

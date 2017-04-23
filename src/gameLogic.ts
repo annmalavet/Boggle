@@ -93,6 +93,7 @@ module gameLogic {
     let turnIndex: number;
     let delta: BoardDelta =  {board:chosenBoard, guessList:guessList};
     let state: IState =  { chosenBoard: chosenBoard, guessList:guessList };
+    
     return {
       endMatchScores: endMatchScores,
       turnIndex: turnIndexAfterMove,
@@ -113,7 +114,7 @@ wordList.trim().split(',');
   export function createEndMove(state: IState, endMatchScores: number[]): IMove {
     return {
         endMatchScores: endMatchScores,
-        turnIndex: 3,
+        turnIndex: -1,
         state: state,
     };
   }

@@ -96,7 +96,7 @@ var gameLogic;
     function createEndMove(state, endMatchScores) {
         return {
             endMatchScores: endMatchScores,
-            turnIndex: 3,
+            turnIndex: -1,
             state: state,
         };
     }
