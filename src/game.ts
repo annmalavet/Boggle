@@ -62,11 +62,11 @@ module game {
   }
   export function score(guessList: string[]) {
     let s = state.guessList;
-    if (s.length > 0 && currentUpdateUI.turnIndex <2 ) {
+    if (s.length > 0 && currentUpdateUI.turnIndex >2 ) {
       scoreObj.first  = s.length;
       return scoreObj.first;
     }
-    else if (s.length > 0 && currentUpdateUI.turnIndex >1){
+    else if (s.length > 0 && currentUpdateUI.turnIndex <2){
       scoreObj.second = s.length;
       return scoreObj.second ;
     }
