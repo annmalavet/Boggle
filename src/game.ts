@@ -376,6 +376,7 @@ module game {
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
+      showModal();
       let move = gameLogic.createInitialMove();
       state = move.state;
       score(state.guessList);
@@ -431,6 +432,7 @@ module game {
       chatDescription: 'player guessed ' + game.state.guessList.length,
       playerInfo: yourPlayerInfo,
     };
+    
     // Decide whether we make a move or not
     if (currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
       gameService.makeMove(move, myProposal);
