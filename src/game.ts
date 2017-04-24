@@ -376,7 +376,7 @@ module game {
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
-      showModal();
+
       let move = gameLogic.createInitialMove();
       state = move.state;
       score(state.guessList);
@@ -425,7 +425,7 @@ module game {
   }
 
   function makeMove(move: IMove) {
-    startTimer();
+   // startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
