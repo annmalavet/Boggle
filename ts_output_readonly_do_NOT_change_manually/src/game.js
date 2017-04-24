@@ -174,7 +174,6 @@ var game;
         var timerCount = 10; //60;
         var countDown = function () {
             if (timerCount < 0) {
-                game.didMakeMove = true;
                 game.isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
                 if (game.currentUpdateUI.turnIndex < 3) {
@@ -246,7 +245,6 @@ var game;
             game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
             checkIf(a, b);
         }
-        // Center point in boardArea
         if (type === "mouseup" || type === "touchleave") {
             game.tempString = null;
         }
@@ -254,10 +252,8 @@ var game;
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-            //console.log("row=" + row + " col=" + col);
             return;
         }
-        //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
         if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
             // drag ended
             dragDone(game.tempString, row, col);
@@ -281,7 +277,7 @@ var game;
         var size = getSquareWidthHeight();
         return {
             x: col,
-            y: row // * size.height + size.height / 2
+            y: row
         };
     }
     function dragDone(tempString, row, col) {
@@ -392,7 +388,7 @@ var game;
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
+        if (game.currentUpdateUI.turnIndex === -1) {
             gameService.makeMove(move, myProposal);
         }
     }
