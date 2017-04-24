@@ -344,7 +344,7 @@ var game;
             if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
                 makeMove(move);
         }
-        if (isMyTurn() && game.currentUpdateUI.turnIndex < 2) {
+        if (isMyTurn() && game.currentUpdateUI.turnIndex < 3) {
             startTimer();
         }
     }

@@ -380,7 +380,7 @@ module game {
       if (isMyTurn() && currentUpdateUI.turnIndex < 3) makeMove(move);
     }
 
-    if (isMyTurn() && currentUpdateUI.turnIndex < 2) {
+    if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
       startTimer();
     }
 
