@@ -128,7 +128,7 @@ module game {
     dragArr = [];
     scoreObj.first=0;
     scoreObj.second=0;
-    isModalShown = false;
+    
     dragArr.push(4 + '' + 4);
     toClearRC = [];
     registerServiceWorker();
@@ -200,7 +200,7 @@ module game {
     let countDown = function () {
       if (timerCount < 0) {
         didMakeMove = true;
-        isModalShown = true;
+        //isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
         if (currentUpdateUI.turnIndex < 3) {
