@@ -126,6 +126,8 @@ module game {
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
     dragArr = [];
+    scoreObj.first=0;
+    scoreObj.second=0;
     isModalShown = false;
     dragArr.push(4 + '' + 4);
     toClearRC = [];

@@ -106,6 +106,8 @@ var game;
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("boardArea", handleDragEvent);
         game.dragArr = [];
+        game.scoreObj.first = 0;
+        game.scoreObj.second = 0;
         game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
         game.toClearRC = [];
