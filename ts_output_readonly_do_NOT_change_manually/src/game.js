@@ -249,7 +249,6 @@ var game;
         if (type === "mouseup" || type === "touchleave") {
             game.tempString = null;
         }
-        //let button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
@@ -342,7 +341,7 @@ var game;
             var move = gameLogic.createInitialMove();
             game.state = move.state;
             score(game.state.guessList);
-            if (isMyTurn() && game.currentUpdateUI.turnIndex < 2)
+            if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
                 makeMove(move);
         }
         if (isMyTurn() && game.currentUpdateUI.turnIndex < 2) {
@@ -388,7 +387,7 @@ var game;
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        if (game.currentUpdateUI.turnIndex === -1) {
+        if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
             gameService.makeMove(move, myProposal);
         }
     }

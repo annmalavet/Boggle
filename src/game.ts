@@ -197,7 +197,7 @@ module game {
       
     let countDown = function () {
       if (timerCount < 0) {
-         didMakeMove = true;
+        didMakeMove = true;
         isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
@@ -267,15 +267,17 @@ module game {
       checkIf(a, b);
     }
 
+
+
     if (type === "mouseup" || type === "touchleave") {
       tempString = null;
     }
-    //let button = document.getElementById("img_" + row + "_" + col);
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
       return;
     }
+
 
     if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
       // drag ended
@@ -332,6 +334,8 @@ module game {
   export function showGuess() {
     g = tempString;
     return g;
+
+
   }
 
   function getProposalsBoard(playerIdToProposal: IProposals): string[][] {
@@ -360,8 +364,12 @@ module game {
     didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = null;
+
     currentUpdateUI = params;
+
+
     updateCache();
+
     calcScore();
     clearAnimationTimeout();
     state = params.state;
@@ -369,8 +377,9 @@ module game {
       let move = gameLogic.createInitialMove();
       state = move.state;
       score(state.guessList);
-      if (isMyTurn() && currentUpdateUI.turnIndex < 2) makeMove(move);
+      if (isMyTurn() && currentUpdateUI.turnIndex < 3) makeMove(move);
     }
+
     if (isMyTurn() && currentUpdateUI.turnIndex < 2) {
       startTimer();
     }
@@ -413,7 +422,6 @@ module game {
   }
 
   function makeMove(move: IMove) {
-   
     startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
@@ -422,7 +430,7 @@ module game {
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-    if (currentUpdateUI.turnIndex === -1) {
+    if (currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
       gameService.makeMove(move, myProposal);
     }
   }
