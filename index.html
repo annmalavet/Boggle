@@ -33,19 +33,7 @@
 </head>
 
 <body ng-cloak ng-app="myApp" ontouchstart >
-  <div class="overlayModal oneOpacity" ng-if="game.isModalShown" ng-class="{zeroOpacity: !game.isModalShown, oneOpacity: game.isModalShown}"aria-hidden="true"
-    aria-hidden="true">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">
-           <h3> {{game.modalTitle}}</h3>
-          </h4>
-        </div>
-        <div class="modal-body">
-          {{game.modalBody}}
-        </div>
-      </div>
-  </div>
+
 
 <!-- ng-if="game.isTimerRunning()"-->
   <div id="gameArea">
