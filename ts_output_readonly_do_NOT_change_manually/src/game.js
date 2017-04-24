@@ -341,15 +341,16 @@ var game;
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {
+            startTimer();
             var move = gameLogic.createInitialMove();
             game.state = move.state;
             score(game.state.guessList);
             if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
                 makeMove(move);
         }
-        if (isMyTurn() && game.currentUpdateUI.turnIndex < 3) {
-            startTimer();
-        }
+        // if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
+        //   startTimer();
+        // }    
     }
     game.updateUI = updateUI;
     function calcScore() {
@@ -382,7 +383,7 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        // startTimer();
+        startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,

@@ -371,29 +371,24 @@ module game {
 
     currentUpdateUI = params;
 
-
     updateCache();
-
     calcScore();
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
-
+    startTimer();
       let move = gameLogic.createInitialMove();
       state = move.state;
       score(state.guessList);
       if (isMyTurn() && currentUpdateUI.turnIndex < 3) makeMove(move);
     }
-
-    if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
-      startTimer();
-    }
-
-     
-
-      
-
+   // if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
+   //   startTimer();
+   // }    
   }
+
+
+
   function calcScore(){
       let scoreDiff = scoreObj.first- scoreObj.second; 
       let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
@@ -427,7 +422,7 @@ module game {
   }
 
   function makeMove(move: IMove) {
-   // startTimer();
+    startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
