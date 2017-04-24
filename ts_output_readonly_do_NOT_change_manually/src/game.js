@@ -185,9 +185,9 @@ var game;
             else if (timerCount < 0 && game.currentUpdateUI.turnIndex > 2) {
                 var scoreDiff = game.scoreObj.first - game.scoreObj.second;
                 var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-                if (scoreDiff > 0) {
-                    makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
-                }
+                // if(scoreDiff >0){
+                makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
+                // }
             }
             else {
                 game.countDownLeft = timerCount;
@@ -346,16 +346,15 @@ var game;
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {
-            startTimer();
             var move = gameLogic.createInitialMove();
             game.state = move.state;
             score(game.state.guessList);
             if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
                 makeMove(move);
         }
-        // if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
-        //   startTimer();
-        // }    
+        if (isMyTurn() && game.currentUpdateUI.turnIndex < 3) {
+            startTimer();
+        }
     }
     game.updateUI = updateUI;
     function calcScore() {

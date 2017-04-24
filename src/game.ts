@@ -209,9 +209,9 @@ module game {
         else if (timerCount < 0  && currentUpdateUI.turnIndex > 2){
       let scoreDiff = scoreObj.first- scoreObj.second; 
       let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
-              if(scoreDiff >0){
+             // if(scoreDiff >0){
                 makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
-              }
+             // }
         }
        else {
         countDownLeft = timerCount;
@@ -381,15 +381,15 @@ module game {
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
-    startTimer();
+ 
       let move = gameLogic.createInitialMove();
       state = move.state;
       score(state.guessList);
       if (isMyTurn() && currentUpdateUI.turnIndex < 3) makeMove(move);
     }
-   // if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
-   //   startTimer();
-   // }    
+    if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
+     startTimer();
+   }    
   }
 
 
