@@ -38,11 +38,11 @@ var game;
     game.rowsPercent = rowsPercent;
     function score(guessList) {
         var s = game.state.guessList;
-        if (s.length > 0 && game.currentUpdateUI.turnIndex < 2) {
+        if (s.length > 0 && game.currentUpdateUI.turnIndex > 3) {
             game.scoreObj.first = s.length;
             return game.scoreObj.first;
         }
-        else if (s.length > 0 && game.currentUpdateUI.turnIndex > 1) {
+        else if (s.length > 0 && game.currentUpdateUI.turnIndex < 3) {
             game.scoreObj.second = s.length;
             return game.scoreObj.second;
         }
@@ -108,7 +108,6 @@ var game;
         game.dragArr = [];
         game.scoreObj.first = 0;
         game.scoreObj.second = 0;
-        game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
         game.toClearRC = [];
         registerServiceWorker();
@@ -177,8 +176,10 @@ var game;
         var countDown = function () {
             if (timerCount < 0) {
                 game.didMakeMove = true;
-                game.isModalShown = true;
+                //isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
+                console.log("player index " + yourPlayerIndex());
+                console.log("turn index " + game.currentUpdateUI.turnIndex);
                 if (game.currentUpdateUI.turnIndex < 3) {
                     makeMove(move);
                 }
@@ -286,7 +287,7 @@ var game;
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDictionary;
             var res = tempString.toLowerCase();
-            game.$rootScope.boxClass = false;
+            //$rootScope.boxClass = false;
             console.log(tempString);
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
@@ -381,7 +382,7 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        startTimer();
+        // startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,

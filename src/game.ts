@@ -62,11 +62,11 @@ module game {
   }
   export function score(guessList: string[]) {
     let s = state.guessList;
-    if (s.length > 0 && currentUpdateUI.turnIndex >2 ) {
+    if (s.length > 0 && currentUpdateUI.turnIndex >3 ) {
       scoreObj.first  = s.length;
       return scoreObj.first;
     }
-    else if (s.length > 0 && currentUpdateUI.turnIndex <2){
+    else if (s.length > 0 && currentUpdateUI.turnIndex <3){
       scoreObj.second = s.length;
       return scoreObj.second ;
     }
@@ -203,6 +203,8 @@ module game {
         //isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
+          console.log("player index "+ yourPlayerIndex());
+          console.log("turn index "+ currentUpdateUI.turnIndex);
         if (currentUpdateUI.turnIndex < 3) {
           makeMove(move);
         }
@@ -313,7 +315,7 @@ module game {
     $rootScope.$apply(function () {
       let dic = gameLogic.myDictionary;
       var res = tempString.toLowerCase();
-      $rootScope.boxClass = false;
+      //$rootScope.boxClass = false;
       console.log(tempString);
       for (var v = 0; v < dic.length; v++) {
         if (dic[v] === res) {
