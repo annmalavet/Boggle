@@ -197,6 +197,7 @@ module game {
       
     let countDown = function () {
       if (timerCount < 0) {
+         didMakeMove = true;
         isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
@@ -412,7 +413,7 @@ module game {
   }
 
   function makeMove(move: IMove) {
-    didMakeMove = true;
+   
     startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {

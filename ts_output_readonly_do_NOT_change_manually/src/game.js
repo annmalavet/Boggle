@@ -174,6 +174,7 @@ var game;
         var timerCount = 10; //60;
         var countDown = function () {
             if (timerCount < 0) {
+                game.didMakeMove = true;
                 game.isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
                 if (game.currentUpdateUI.turnIndex < 3) {
@@ -379,7 +380,6 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        game.didMakeMove = true;
         startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
