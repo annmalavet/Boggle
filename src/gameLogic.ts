@@ -12,9 +12,6 @@ interface IState {
   chosenBoard: Board;//game board
   guessList: GuessList;
 }
-type Score {
-  first: number, second: number;
-}
 
 
 import gameService = gamingPlatform.gameService;
@@ -25,11 +22,13 @@ import log = gamingPlatform.log;
 import dragAndDropService = gamingPlatform.dragAndDropService;
 
 module gameLogic {
+
   export const score:Score ={first:0, second:0};
 
-  export function getScore(first: number, second:number): Score{
-    return {first:first , second:second};
+  export function putScoreOne(first: number): Score{
+    return {first:first, second:0 };
   }
+
   export const ROWS = 4;
   export const COLS = 4;
   export function getInitialBoard(): Board {
@@ -158,5 +157,3 @@ wordList.trim().split(',');
    *      ['X', '', '']]
    */
 
-
-}

@@ -10,8 +10,8 @@ var game;
     // simply typing in the console, e.g.,
     game.board = null;
     game.boardBeforeMove = null;
-    game.delta = null;
     game.currentUpdateUI = null;
+    game.oldGuessList = null;
     game.didMakeMove = false; // You can only make one move per updateUI
     game.animationEndedTimeout = null;
     game.state = null;
@@ -20,7 +20,6 @@ var game;
     game.proposals = null;
     game.yourPlayerInfo = null;
     game.tempString = '';
-    game.arrAnswer = null;
     game.toClearRC = null;
     game.g = '';
     game.buttonBg = false;
@@ -40,7 +39,6 @@ var game;
         var s = game.state.guessList;
         if (s.length > 0 && game.currentUpdateUI.turnIndex == 0) {
             var z = s.length;
-            game.scoreObj = gameLogic.getScore(z, 0);
             console.log("turn index " + game.currentUpdateUI.turnIndex);
             console.log("second  sec " + game.scoreObj.second);
             console.log("first score " + game.scoreObj.first);
@@ -51,7 +49,6 @@ var game;
             console.log("turn index " + game.currentUpdateUI.turnIndex);
             console.log("second  sec " + game.scoreObj.second);
             console.log("first score " + game.scoreObj.first);
-            game.scoreObj = gameLogic.getScore(gameLogic.score.first, y);
             return y;
         }
         return 0;
@@ -183,10 +180,16 @@ var game;
         var countDown = function () {
             if (timerCount < 0) {
                 //isModalShown = true;
-                var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
-                if (game.currentUpdateUI.turnIndex < 3) {
-                    makeMove(move);
+                var move = void 0;
+                if (yourPlayerIndex() == 1) {
+                    var scoreDiff = game.oldGuessList.length - game.state.guessList.length;
+                    var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+                    move = gameLogic.createEndMove(game.state, endMatchScores);
                 }
+                else {
+                    move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
+                }
+                makeMove(move);
             }
             else {
                 game.countDownLeft = timerCount;
@@ -331,7 +334,7 @@ var game;
         }
         for (var playerId in playerIdToProposal) {
             var proposal = playerIdToProposal[playerId];
-            var delta_1 = proposal.data;
+            var delta = proposal.data;
             //proposals[delta.board][delta.guessList]++;?????????????????????????
         }
         return proposals;
@@ -344,8 +347,8 @@ var game;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
         game.currentUpdateUI = params;
+        game.oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
         updateCache();
-        calcScore();
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {
@@ -359,17 +362,6 @@ var game;
         }
     }
     game.updateUI = updateUI;
-    function calcScore() {
-        if (typeof game.delta.guessList == "undefined" || game.delta.guessList == null) {
-            return;
-        }
-        else {
-            var scoreDiff = game.delta.guessList.length - game.state.guessList.length;
-            var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-            console.log(scoreDiff + " score diff");
-            makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
-        }
-    }
     function animationEndedCallback() {
         log.info("Animation ended");
         maybeSendComputerMove();
@@ -446,14 +438,14 @@ var game;
         return boardStr;
     }
     game.getStateForOgImage = getStateForOgImage;
-    var app = angular.module('myApp', ['gameServices']);
-    app.run(['$rootScope', '$timeout',
-        function ($rootScope, $timeout) {
-            $rootScope['game'] = game;
-            game.init($rootScope, $timeout);
-        }]);
-    app.controller('MainController', ['$scope', '$rootScope', function ($scope, $rootScope) {
-            $scope.animateToggle = false;
-        }]);
 })(game || (game = {}));
+var app = angular.module('myApp', ['gameServices']);
+app.run(['$rootScope', '$timeout',
+    function ($rootScope, $timeout) {
+        $rootScope['game'] = game;
+        game.init($rootScope, $timeout);
+    }]);
+app.controller('MainController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+        $scope.animateToggle = false;
+    }]);
 //# sourceMappingURL=game.js.map

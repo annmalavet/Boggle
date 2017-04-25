@@ -7,10 +7,10 @@ var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
     gameLogic.score = { first: 0, second: 0 };
-    function getScore(first, second) {
-        return { first: first, second: second };
+    function putScoreOne(first) {
+        return { first: first, second: 0 };
     }
-    gameLogic.getScore = getScore;
+    gameLogic.putScoreOne = putScoreOne;
     gameLogic.ROWS = 4;
     gameLogic.COLS = 4;
     function getInitialBoard() {
@@ -107,4 +107,32 @@ var gameLogic;
     }
     gameLogic.createEndMove = createEndMove;
 })(gameLogic || (gameLogic = {}));
+/**
+ * Returns true if the game ended in a tie because there are no empty cells.
+ * E.g., isTie returns true for the following board:
+ *     [['X', 'O', 'X'],
+ *      ['X', 'O', 'O'],
+ *      ['O', 'X', 'X']]
+ 
+function isTie(board: Board): boolean {
+  for (let i = 0; i < ROWS; i++) {
+    for (let j = 0; j < COLS; j++) {
+      if (board[i][j] === '') {
+        // If there is an empty cell then we do not have a tie.
+        return false;
+      }
+    }
+  }
+  // No empty cells, so we have a tie!
+  return true;
+}
+*/
+/**
+ * Return the winner (either 'X' or 'O') or '' if there is no winner.
+ * The board is a matrix of size 3x3 containing either 'X', 'O', or ''.
+ * E.g., getWinner returns 'X' for the following board:
+ *     [['X', 'O', ''],
+ *      ['X', 'O', ''],
+ *      ['X', '', '']]
+ */
 //# sourceMappingURL=gameLogic.js.map

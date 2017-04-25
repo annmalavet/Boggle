@@ -14,6 +14,9 @@ interface RowCol {
   coll: number;
 }
 
+interface Score {
+  first: number, second: number;
+}
 
 module game {
   export let isModalShown = false;
@@ -26,8 +29,8 @@ module game {
   // simply typing in the console, e.g.,
   export let board: Board = null;
   export let boardBeforeMove: Board = null;
-  export let delta: BoardDelta = null;
   export let currentUpdateUI: IUpdateUI = null;
+  export let oldGuessList: GuessList = null;
   export let didMakeMove: boolean = false; // You can only make one move per updateUI
   export let animationEndedTimeout: ng.IPromise<any> = null;
   export let state: IState = null;
@@ -37,7 +40,6 @@ module game {
   export let yourPlayerInfo: IPlayerInfo = null;
   export let tempString: string = '';
 
-  export let arrAnswer: string[] = null;
   export let dragArr: string[];
   export let toClearRC: RowCol[] = null;
   export let g: string = '';
@@ -61,7 +63,6 @@ module game {
     let s = state.guessList;
     if (s.length > 0 && currentUpdateUI.turnIndex == 0) {
       let z = s.length;
-      scoreObj = gameLogic.getScore(z, 0);
       console.log("turn index " + currentUpdateUI.turnIndex)
       console.log("second  sec " + scoreObj.second)
       console.log("first score " + scoreObj.first)
@@ -73,7 +74,6 @@ module game {
       console.log("turn index " + currentUpdateUI.turnIndex)
       console.log("second  sec " + scoreObj.second)
       console.log("first score " + scoreObj.first)
-      scoreObj = gameLogic.getScore(gameLogic.score.first, y);
       return y;
     }
     return 0;
@@ -205,11 +205,17 @@ module game {
     let countDown = function () {
       if (timerCount < 0) {
         //isModalShown = true;
-        let move = gameLogic.createMove(game.state.chosenBoard,
+        let move: IMove;
+        if (yourPlayerIndex() == 1) {
+          let scoreDiff = oldGuessList.length - state.guessList.length;
+          let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+          move = gameLogic.createEndMove(state, endMatchScores);
+        } else {
+          move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
-        if (currentUpdateUI.turnIndex < 3) {
-          makeMove(move);
         }
+        makeMove(move);
+        
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -219,6 +225,7 @@ module game {
     countDownLeft = timerCount;
     countDown();
   }
+
   export function listOf(row: number, col: number) {
     let arr = [];
     arr.push(game.state.chosenBoard[row][col]);
@@ -375,9 +382,9 @@ module game {
     proposals = null;
 
     currentUpdateUI = params;
-
+    oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
     updateCache();
-    calcScore();
+    
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
@@ -390,17 +397,6 @@ module game {
       startTimer();
     }
 
-  }
-  function calcScore() {
-    if (typeof delta.guessList == "undefined" || delta.guessList == null) {
-      return;
-    }
-    else {
-      let scoreDiff = delta.guessList.length - state.guessList.length;
-      let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
-      console.log(scoreDiff + " score diff");
-      makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
-    }
   }
 
   function animationEndedCallback() {
@@ -428,7 +424,7 @@ module game {
   }
 
   function makeMove(move: IMove) {
-
+    
     didMakeMove = true;
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
@@ -489,7 +485,7 @@ module game {
     return boardStr;
   }
 
-
+}
 
 
 
