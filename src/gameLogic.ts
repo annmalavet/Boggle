@@ -113,9 +113,11 @@ wordList.trim().split(',');
 
   export function createEndMove(state: IState, endMatchScores: number[]): IMove {
     return {
+      
         endMatchScores: endMatchScores,
         turnIndex: -1,
         state: state,
+
     };
   }
 }
