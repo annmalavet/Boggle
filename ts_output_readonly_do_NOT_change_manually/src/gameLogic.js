@@ -6,6 +6,11 @@ var log = gamingPlatform.log;
 var dragAndDropService = gamingPlatform.dragAndDropService;
 var gameLogic;
 (function (gameLogic) {
+    gameLogic.score = { first: 0, second: 0 };
+    function getScore(first, second) {
+        return { first: first, second: second };
+    }
+    gameLogic.getScore = getScore;
     gameLogic.ROWS = 4;
     gameLogic.COLS = 4;
     function getInitialBoard() {

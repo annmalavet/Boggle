@@ -38,13 +38,19 @@ var game;
     game.rowsPercent = rowsPercent;
     function score(guessList) {
         var s = game.state.guessList;
-        if (s.length > 0 && game.currentUpdateUI.turnIndex < 2) {
-            game.scoreObj.first = s.length;
-            return game.scoreObj.first;
+        if (s.length > 0 && game.currentUpdateUI.turnIndex == 0) {
+            var z = s.length;
+            game.scoreObj = gameLogic.getScore(z, 0);
+            console.log("turn index " + game.currentUpdateUI.turnIndex);
+            console.log("second  sec " + game.scoreObj.second);
+            console.log("first score " + game.scoreObj.first);
         }
-        else if (s.length > 0 && game.currentUpdateUI.turnIndex > 1) {
-            game.scoreObj.second = s.length;
-            return game.scoreObj.second;
+        else if (s.length > 0 && game.currentUpdateUI.turnIndex == 1) {
+            var y = s.length;
+            console.log("turn index " + game.currentUpdateUI.turnIndex);
+            console.log("second  sec " + game.scoreObj.second);
+            console.log("first score " + game.scoreObj.first);
+            game.scoreObj = gameLogic.getScore(gameLogic.score.first, y);
         }
         return 0;
     }
@@ -174,8 +180,7 @@ var game;
         var timerCount = 10; //60;
         var countDown = function () {
             if (timerCount < 0) {
-                game.didMakeMove = true;
-                game.isModalShown = true;
+                //isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
                 if (game.currentUpdateUI.turnIndex < 3) {
                     makeMove(move);
@@ -345,10 +350,10 @@ var game;
             var move = gameLogic.createInitialMove();
             game.state = move.state;
             score(game.state.guessList);
-            if (isMyTurn() && game.currentUpdateUI.turnIndex < 2)
+            if (isMyTurn())
                 makeMove(move);
         }
-        if (isMyTurn() && game.currentUpdateUI.turnIndex < 2) {
+        if (isMyTurn()) {
             startTimer();
         }
     }
@@ -384,7 +389,6 @@ var game;
     }
     function makeMove(move) {
         game.didMakeMove = true;
-        startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,

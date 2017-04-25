@@ -13,9 +13,6 @@ interface RowCol {
   roww: number;
   coll: number;
 }
-interface Score {
-  first: number, second: number;
-}
 
 
 module game {
@@ -62,13 +59,20 @@ module game {
   }
   export function score(guessList: string[]) {
     let s = state.guessList;
-    if (s.length > 0 && currentUpdateUI.turnIndex <2 ) {
-      scoreObj.first  = s.length;
-      return scoreObj.first;
-    }
-    else if (s.length > 0 && currentUpdateUI.turnIndex >1){
-      scoreObj.second = s.length;
-      return scoreObj.second ;
+    if (s.length > 0 && currentUpdateUI.turnIndex ==0 ) {
+      let z  = s.length;
+       scoreObj = gameLogic.getScore(z, 0);
+             console.log("turn index "+currentUpdateUI.turnIndex)
+     console.log("second  sec "+scoreObj.second)
+       console.log("first score "+scoreObj.first)
+  }
+
+    else if (s.length > 0 && currentUpdateUI.turnIndex ==1){
+       let y  = s.length;
+      console.log("turn index "+currentUpdateUI.turnIndex)
+      console.log("second  sec "+scoreObj.second)
+       console.log("first score "+scoreObj.first)
+  scoreObj = gameLogic.getScore(gameLogic.score.first, y);
     }
     return 0;
   }
@@ -197,8 +201,7 @@ module game {
       
     let countDown = function () {
       if (timerCount < 0) {
-        didMakeMove = true;
-        isModalShown = true;
+        //isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
         if (currentUpdateUI.turnIndex < 3) {
@@ -372,7 +375,6 @@ module game {
 
     currentUpdateUI = params;
 
-
     updateCache();
 
     calcScore();
@@ -382,16 +384,12 @@ module game {
       let move = gameLogic.createInitialMove();
       state = move.state;
       score(state.guessList);
-      if (isMyTurn() && currentUpdateUI.turnIndex < 2) makeMove(move);
+       if (isMyTurn())makeMove(move);
     }
 
-    if (isMyTurn() && currentUpdateUI.turnIndex < 2) {
+    if (isMyTurn()) {
       startTimer();
     }
-
-     
-
-      
 
   }
   function calcScore(){
@@ -427,8 +425,8 @@ module game {
   }
 
   function makeMove(move: IMove) {
+
     didMakeMove = true;
-    startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
