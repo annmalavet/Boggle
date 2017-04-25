@@ -197,15 +197,7 @@ module game {
     let timerCount = 10;//60;
 
     let countDown = function () {
-      if (timerCount < 0 && currentUpdateUI.turnIndex ===-1) {
-        let scoreDiff = scoreObj.first - scoreObj.second;
-        let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
-        stopTimer();
-        makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
-        // }
-      }
-
-      else if (timerCount < 0 && currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
+    if (timerCount < 0 && currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
         didMakeMove = true;
         //isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
@@ -382,6 +374,12 @@ module game {
     //calcScore();
     clearAnimationTimeout();
     state = params.state;
+if (currentUpdateUI.turnIndex === 3){
+        let scoreDiff = scoreObj.first - scoreObj.second;
+        let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+        makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
+}
+
     if (isFirstMove()) {
 
       let move = gameLogic.createInitialMove();

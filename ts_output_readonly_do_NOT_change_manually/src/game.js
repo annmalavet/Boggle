@@ -174,14 +174,7 @@ var game;
         stopTimer();
         var timerCount = 10; //60;
         var countDown = function () {
-            if (timerCount < 0 && game.currentUpdateUI.turnIndex === -1) {
-                var scoreDiff = game.scoreObj.first - game.scoreObj.second;
-                var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-                stopTimer();
-                makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
-                // }
-            }
-            else if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
+            if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
                 game.didMakeMove = true;
                 //isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
@@ -345,6 +338,11 @@ var game;
         //calcScore();
         clearAnimationTimeout();
         game.state = params.state;
+        if (game.currentUpdateUI.turnIndex === 3) {
+            var scoreDiff = game.scoreObj.first - game.scoreObj.second;
+            var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+            makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
+        }
         if (isFirstMove()) {
             var move = gameLogic.createInitialMove();
             game.state = move.state;
