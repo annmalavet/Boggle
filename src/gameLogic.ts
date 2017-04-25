@@ -75,21 +75,19 @@ module gameLogic {
       state: getInitialState() ///returns initial board
     };
   }
-  function getWinner(){
 
-  }
+
   export function createMove(board: Board,
     stateBeforeMove: IState,  turnIndexBeforeMove: number): IMove {
     //if (!stateBeforeMove) {
       //stateBeforeMove = getInitialState();
     //}
-    let winner = getWinner();
     let chosenBoard: Board = board;
     let guessList:GuessList = [];
     console.log("this is createMove");
     let turnIndexAfterMove = 1 - turnIndexBeforeMove;
     let boardAfterMove = angular.copy(chosenBoard);
-    let endMatchScores: number[] ;// = [stateBeforeMove.guessList.length];
+    let endMatchScores: number[] = null;// = [stateBeforeMove.guessList.length];
     let turnIndex: number;
     let delta: BoardDelta =  {board:chosenBoard, guessList:guessList};
     let state: IState =  { chosenBoard: chosenBoard, guessList:guessList };
