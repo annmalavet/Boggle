@@ -177,7 +177,7 @@ var game;
         var countDown = function () {
             if (timerCount < 0) {
                 game.didMakeMove = true;
-                game.isModalShown = true;
+                // isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
                 if (game.currentUpdateUI.turnIndex < 3) {
                     makeMove(move);
