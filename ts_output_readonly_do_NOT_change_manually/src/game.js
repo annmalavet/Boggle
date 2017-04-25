@@ -174,7 +174,7 @@ var game;
         stopTimer();
         var timerCount = 10; //60;
         var countDown = function () {
-            if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3) {
+            if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
                 game.didMakeMove = true;
                 //isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());

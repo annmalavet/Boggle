@@ -197,7 +197,7 @@ module game {
     let timerCount = 10;//60;
 
     let countDown = function () {
-      if (timerCount < 0  && currentUpdateUI.turnIndex < 3) {
+      if (timerCount < 0  && currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
         didMakeMove = true;
         //isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
