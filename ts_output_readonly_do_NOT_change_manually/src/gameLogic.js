@@ -62,19 +62,16 @@ var gameLogic;
         };
     }
     gameLogic.createInitialMove = createInitialMove;
-    function getWinner() {
-    }
     function createMove(board, stateBeforeMove, turnIndexBeforeMove) {
         //if (!stateBeforeMove) {
         //stateBeforeMove = getInitialState();
         //}
-        var winner = getWinner();
         var chosenBoard = board;
         var guessList = [];
         console.log("this is createMove");
         var turnIndexAfterMove = 1 - turnIndexBeforeMove;
         var boardAfterMove = angular.copy(chosenBoard);
-        var endMatchScores; // = [stateBeforeMove.guessList.length];
+        var endMatchScores = null; // = [stateBeforeMove.guessList.length];
         var turnIndex;
         var delta = { board: chosenBoard, guessList: guessList };
         var state = { chosenBoard: chosenBoard, guessList: guessList };

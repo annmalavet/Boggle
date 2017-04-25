@@ -373,12 +373,12 @@ module game {
     currentUpdateUI = params;
 
     updateCache();
-    calcScore();
+   // calcScore();
     clearAnimationTimeout();
     state = params.state;
 if (currentUpdateUI.turnIndex > 2){
         let scoreDiff = scoreObj.first - scoreObj.second;
-        let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+        let endMatchScores: number[] =  [1, 0] ;
         makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
 }
 

@@ -40,10 +40,12 @@ var game;
         var s = game.state.guessList;
         if (s.length > 0 && game.currentUpdateUI.turnIndex > 3) {
             game.scoreObj.first = s.length;
+            console.log("score 1 " + game.scoreObj.first);
             return game.scoreObj.first;
         }
         else if (s.length > 0 && game.currentUpdateUI.turnIndex < 3) {
             game.scoreObj.second = s.length;
+            console.log("score 1 " + game.scoreObj.second);
             return game.scoreObj.second;
         }
         return 0;
@@ -335,12 +337,12 @@ var game;
         game.proposals = null;
         game.currentUpdateUI = params;
         updateCache();
-        calcScore();
+        // calcScore();
         clearAnimationTimeout();
         game.state = params.state;
-        if (game.currentUpdateUI.turnIndex === 3) {
+        if (game.currentUpdateUI.turnIndex > 2) {
             var scoreDiff = game.scoreObj.first - game.scoreObj.second;
-            var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+            var endMatchScores = [1, 0];
             makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
         }
         if (isFirstMove()) {
@@ -350,7 +352,7 @@ var game;
             if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
                 makeMove(move);
         }
-        if (isMyTurn() && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
+        if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
             startTimer();
         }
     }
@@ -358,7 +360,7 @@ var game;
     function calcScore() {
         var scoreDiff = game.scoreObj.first - game.scoreObj.second;
         var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-        if (scoreDiff > 0) {
+        if (game.currentUpdateUI.turnIndex > 3) {
             makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
         }
     }
@@ -386,14 +388,15 @@ var game;
     }
     function makeMove(move) {
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
+        var chat = 'player guessed ' + game.state.guessList.length;
         var myProposal = {
             data: delta,
-            chatDescription: 'player guessed ' + game.state.guessList.length,
+            //chatDescription: 'player guessed ' + game.state.guessList.length,
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
         if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
-            gameService.makeMove(move, myProposal);
+            gameService.makeMove(move, myProposal, chat);
         }
     }
     function isFirstMove() {
