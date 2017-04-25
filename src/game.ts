@@ -64,10 +64,12 @@ module game {
     let s = state.guessList;
     if (s.length > 0 && currentUpdateUI.turnIndex > 3) {
       scoreObj.first = s.length;
+      console.log ("score 1 "+ scoreObj.first);
       return scoreObj.first;
     }
     else if (s.length > 0 && currentUpdateUI.turnIndex < 3) {
       scoreObj.second = s.length;
+      console.log ("score 1 "+ scoreObj.second);
       return scoreObj.second;
     }
     return 0;
@@ -374,7 +376,7 @@ module game {
     calcScore();
     clearAnimationTimeout();
     state = params.state;
-if (currentUpdateUI.turnIndex === 3){
+if (currentUpdateUI.turnIndex > 2){
         let scoreDiff = scoreObj.first - scoreObj.second;
         let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
         makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
@@ -387,7 +389,7 @@ if (currentUpdateUI.turnIndex === 3){
       score(state.guessList);
       if (isMyTurn() && currentUpdateUI.turnIndex < 3) makeMove(move);
     }
-    if (isMyTurn() && currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
+    if ( currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
       startTimer();
     }
   }
@@ -397,7 +399,7 @@ if (currentUpdateUI.turnIndex === 3){
   function calcScore() {
     let scoreDiff = scoreObj.first - scoreObj.second;
     let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
-    if (scoreDiff > 0) {
+    if (currentUpdateUI.turnIndex > 3) {
       makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
     }
   }
@@ -427,18 +429,16 @@ if (currentUpdateUI.turnIndex === 3){
   }
 
   function makeMove(move: IMove) {
-
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
+    let chat = 'player guessed ' + game.state.guessList.length;
     let myProposal: IProposal = {
       data: delta,
-      chatDescription: 'player guessed ' + game.state.guessList.length,
+      //chatDescription: 'player guessed ' + game.state.guessList.length,
       playerInfo: yourPlayerInfo,
     };
-
     // Decide whether we make a move or not
     if (currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
-
-      gameService.makeMove(move, myProposal);
+      gameService.makeMove(move, myProposal, chat);
     }
   }
 
