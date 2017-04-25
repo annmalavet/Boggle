@@ -174,20 +174,20 @@ var game;
         stopTimer();
         var timerCount = 10; //60;
         var countDown = function () {
-            if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
+            if (timerCount < 0 && game.currentUpdateUI.turnIndex === -1) {
+                var scoreDiff = game.scoreObj.first - game.scoreObj.second;
+                var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+                stopTimer();
+                makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
+                // }
+            }
+            else if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
                 game.didMakeMove = true;
                 //isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
                 console.log("player index " + yourPlayerIndex());
                 console.log("turn index " + game.currentUpdateUI.turnIndex);
                 makeMove(move);
-            }
-            else if (timerCount < 0 && game.currentUpdateUI.turnIndex === -1) {
-                var scoreDiff = game.scoreObj.first - game.scoreObj.second;
-                var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-                // if(scoreDiff >0){
-                makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
-                // }
             }
             else {
                 game.countDownLeft = timerCount;
