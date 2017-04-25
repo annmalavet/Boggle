@@ -206,7 +206,7 @@ module game {
           console.log("turn index "+ currentUpdateUI.turnIndex);
           makeMove(move);
       }
-        else if (timerCount < 0  && currentUpdateUI.turnIndex > 2){
+        else if (timerCount < 0  && currentUpdateUI.turnIndex ===-1){
       let scoreDiff = scoreObj.first- scoreObj.second; 
       let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
              // if(scoreDiff >0){

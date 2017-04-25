@@ -182,7 +182,7 @@ var game;
                 console.log("turn index " + game.currentUpdateUI.turnIndex);
                 makeMove(move);
             }
-            else if (timerCount < 0 && game.currentUpdateUI.turnIndex > 2) {
+            else if (timerCount < 0 && game.currentUpdateUI.turnIndex === -1) {
                 var scoreDiff = game.scoreObj.first - game.scoreObj.second;
                 var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
                 // if(scoreDiff >0){
