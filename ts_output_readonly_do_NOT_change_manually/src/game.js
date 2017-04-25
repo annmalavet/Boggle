@@ -36,7 +36,7 @@ var game;
         return 100 / game.dim;
     }
     game.rowsPercent = rowsPercent;
-    function score(guessList) {
+    function score() {
         var s = game.state.guessList;
         if (s.length > 0 && game.currentUpdateUI.turnIndex == 0) {
             var z = s.length;
@@ -44,6 +44,7 @@ var game;
             console.log("turn index " + game.currentUpdateUI.turnIndex);
             console.log("second  sec " + game.scoreObj.second);
             console.log("first score " + game.scoreObj.first);
+            return s;
         }
         else if (s.length > 0 && game.currentUpdateUI.turnIndex == 1) {
             var y = s.length;
@@ -51,6 +52,7 @@ var game;
             console.log("second  sec " + game.scoreObj.second);
             console.log("first score " + game.scoreObj.first);
             game.scoreObj = gameLogic.getScore(gameLogic.score.first, y);
+            return y;
         }
         return 0;
     }

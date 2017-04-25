@@ -57,7 +57,7 @@ module game {
   export function rowsPercent() {
     return 100 / dim; 
   }
-  export function score(guessList: string[]) {
+  export function score() {
     let s = state.guessList;
     if (s.length > 0 && currentUpdateUI.turnIndex ==0 ) {
       let z  = s.length;
@@ -65,6 +65,7 @@ module game {
              console.log("turn index "+currentUpdateUI.turnIndex)
      console.log("second  sec "+scoreObj.second)
        console.log("first score "+scoreObj.first)
+       return s;
   }
 
     else if (s.length > 0 && currentUpdateUI.turnIndex ==1){
@@ -73,6 +74,7 @@ module game {
       console.log("second  sec "+scoreObj.second)
        console.log("first score "+scoreObj.first)
   scoreObj = gameLogic.getScore(gameLogic.score.first, y);
+  return y;
     }
     return 0;
   }
