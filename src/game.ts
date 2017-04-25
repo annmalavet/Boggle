@@ -387,8 +387,8 @@ module game {
       score(state.guessList);
       if (isMyTurn() && currentUpdateUI.turnIndex < 3) makeMove(move);
     }
-    if (isMyTurn() && currentUpdateUI.turnIndex < 3) {
-     startTimer();
+    if (isMyTurn() && currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex >-1) {
+       startTimer();
    }    
   }
 
@@ -427,7 +427,7 @@ module game {
   }
 
   function makeMove(move: IMove) {
-    startTimer();
+    
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
@@ -437,6 +437,7 @@ module game {
     
     // Decide whether we make a move or not
     if (currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
+
       gameService.makeMove(move, myProposal);
     }
   }

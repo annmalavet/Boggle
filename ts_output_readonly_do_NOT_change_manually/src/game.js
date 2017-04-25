@@ -352,7 +352,7 @@ var game;
             if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
                 makeMove(move);
         }
-        if (isMyTurn() && game.currentUpdateUI.turnIndex < 3) {
+        if (isMyTurn() && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
             startTimer();
         }
     }
@@ -387,7 +387,6 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,
