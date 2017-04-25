@@ -38,12 +38,14 @@ var game;
     game.rowsPercent = rowsPercent;
     function score(guessList) {
         var s = game.state.guessList;
-        if (s.length > 0 && game.currentUpdateUI.turnIndex > 3) {
+        if (s.length > 0 && game.currentUpdateUI.turnIndex < 2 && game.currentUpdateUI.turnIndex > 1) {
             game.scoreObj.first = s.length;
+            console.log("score 1 " + game.scoreObj.first);
             return game.scoreObj.first;
         }
         else if (s.length > 0 && game.currentUpdateUI.turnIndex < 3) {
             game.scoreObj.second = s.length;
+            console.log("score 2 " + game.scoreObj.second);
             return game.scoreObj.second;
         }
         return 0;
@@ -174,15 +176,12 @@ var game;
         stopTimer();
         var timerCount = 10; //60;
         var countDown = function () {
-            if (timerCount < 0) {
+            if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
                 game.didMakeMove = true;
-                //isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
                 console.log("player index " + yourPlayerIndex());
                 console.log("turn index " + game.currentUpdateUI.turnIndex);
-                if (game.currentUpdateUI.turnIndex < 3) {
-                    makeMove(move);
-                }
+                makeMove(move);
             }
             else {
                 game.countDownLeft = timerCount;
@@ -337,9 +336,14 @@ var game;
         game.proposals = null;
         game.currentUpdateUI = params;
         updateCache();
-        calcScore();
+        // calcScore();
         clearAnimationTimeout();
         game.state = params.state;
+        if (game.currentUpdateUI.turnIndex > 2) {
+            var scoreDiff = game.scoreObj.first - game.scoreObj.second;
+            var endMatchScores = [1, 0];
+            makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
+        }
         if (isFirstMove()) {
             var move = gameLogic.createInitialMove();
             game.state = move.state;
@@ -347,7 +351,7 @@ var game;
             if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
                 makeMove(move);
         }
-        if (isMyTurn() && game.currentUpdateUI.turnIndex < 3) {
+        if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
             startTimer();
         }
     }
@@ -355,7 +359,7 @@ var game;
     function calcScore() {
         var scoreDiff = game.scoreObj.first - game.scoreObj.second;
         var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-        if (scoreDiff > 0) {
+        if (game.currentUpdateUI.turnIndex > 3) {
             makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
         }
     }
@@ -382,8 +386,8 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
-        // startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
+        var chat = 'player guessed ' + game.state.guessList.length;
         var myProposal = {
             data: delta,
             chatDescription: 'player guessed ' + game.state.guessList.length,
