@@ -371,7 +371,7 @@ module game {
     currentUpdateUI = params;
 
     updateCache();
-    //calcScore();
+    calcScore();
     clearAnimationTimeout();
     state = params.state;
 if (currentUpdateUI.turnIndex === 3){

@@ -335,7 +335,7 @@ var game;
         game.proposals = null;
         game.currentUpdateUI = params;
         updateCache();
-        //calcScore();
+        calcScore();
         clearAnimationTimeout();
         game.state = params.state;
         if (game.currentUpdateUI.turnIndex === 3) {
