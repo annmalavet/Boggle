@@ -38,14 +38,12 @@ var game;
     game.rowsPercent = rowsPercent;
     function score(guessList) {
         var s = game.state.guessList;
-        if (s.length > 0 && game.currentUpdateUI.turnIndex < 2 && game.currentUpdateUI.turnIndex > 1) {
+        if (s.length > 0 && game.currentUpdateUI.turnIndex < 2) {
             game.scoreObj.first = s.length;
-            console.log("score 1 " + game.scoreObj.first);
             return game.scoreObj.first;
         }
-        else if (s.length > 0 && game.currentUpdateUI.turnIndex < 3) {
+        else if (s.length > 0 && game.currentUpdateUI.turnIndex > 1) {
             game.scoreObj.second = s.length;
-            console.log("score 2 " + game.scoreObj.second);
             return game.scoreObj.second;
         }
         return 0;
@@ -108,8 +106,7 @@ var game;
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("boardArea", handleDragEvent);
         game.dragArr = [];
-        game.scoreObj.first = 0;
-        game.scoreObj.second = 0;
+        game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
         game.toClearRC = [];
         registerServiceWorker();
@@ -176,12 +173,13 @@ var game;
         stopTimer();
         var timerCount = 10; //60;
         var countDown = function () {
-            if (timerCount < 0 && game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
+            if (timerCount < 0) {
                 game.didMakeMove = true;
+                game.isModalShown = true;
                 var move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
-                console.log("player index " + yourPlayerIndex());
-                console.log("turn index " + game.currentUpdateUI.turnIndex);
-                makeMove(move);
+                if (game.currentUpdateUI.turnIndex < 3) {
+                    makeMove(move);
+                }
             }
             else {
                 game.countDownLeft = timerCount;
@@ -248,14 +246,18 @@ var game;
             game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
             checkIf(a, b);
         }
+        // Center point in boardArea
         if (type === "mouseup" || type === "touchleave") {
             game.tempString = null;
         }
+        //let button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+            //console.log("row=" + row + " col=" + col);
             return;
         }
+        //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
         if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
             // drag ended
             dragDone(game.tempString, row, col);
@@ -279,14 +281,14 @@ var game;
         var size = getSquareWidthHeight();
         return {
             x: col,
-            y: row
+            y: row // * size.height + size.height / 2
         };
     }
     function dragDone(tempString, row, col) {
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDictionary;
             var res = tempString.toLowerCase();
-            //$rootScope.boxClass = false;
+            game.$rootScope.boxClass = false;
             console.log(tempString);
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
@@ -336,22 +338,17 @@ var game;
         game.proposals = null;
         game.currentUpdateUI = params;
         updateCache();
-        // calcScore();
+        calcScore();
         clearAnimationTimeout();
         game.state = params.state;
-        if (game.currentUpdateUI.turnIndex > 2) {
-            var scoreDiff = game.scoreObj.first - game.scoreObj.second;
-            var endMatchScores = [1, 0];
-            makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
-        }
         if (isFirstMove()) {
             var move = gameLogic.createInitialMove();
             game.state = move.state;
             score(game.state.guessList);
-            if (isMyTurn() && game.currentUpdateUI.turnIndex < 3)
+            if (isMyTurn() && game.currentUpdateUI.turnIndex < 2)
                 makeMove(move);
         }
-        if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
+        if (isMyTurn() && game.currentUpdateUI.turnIndex < 2) {
             startTimer();
         }
     }
@@ -359,7 +356,7 @@ var game;
     function calcScore() {
         var scoreDiff = game.scoreObj.first - game.scoreObj.second;
         var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-        if (game.currentUpdateUI.turnIndex > 3) {
+        if (scoreDiff > 0) {
             makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
         }
     }
@@ -386,8 +383,9 @@ var game;
         // makeMove(move);
     }
     function makeMove(move) {
+        game.didMakeMove = true;
+        startTimer();
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
-        var chat = 'player guessed ' + game.state.guessList.length;
         var myProposal = {
             data: delta,
             chatDescription: 'player guessed ' + game.state.guessList.length,

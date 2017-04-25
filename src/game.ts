@@ -56,21 +56,19 @@ module game {
   export let curCol: number = 5;
   export let hasDim = false;
   export let dim = 4;
-  export let scoreObj: Score = { first: 0, second: 0 };
+  export let scoreObj: Score = {first: 0, second: 0};
   export function rowsPercent() {
-    return 100 / dim;
+    return 100 / dim; 
   }
   export function score(guessList: string[]) {
     let s = state.guessList;
-    if (s.length > 0 && currentUpdateUI.turnIndex <2 && currentUpdateUI.turnIndex >1 ) {
-      scoreObj.first = s.length;
-      console.log ("score 1 "+ scoreObj.first);
+    if (s.length > 0 && currentUpdateUI.turnIndex <2 ) {
+      scoreObj.first  = s.length;
       return scoreObj.first;
     }
-    else if (s.length > 0 && currentUpdateUI.turnIndex < 3) {
+    else if (s.length > 0 && currentUpdateUI.turnIndex >1){
       scoreObj.second = s.length;
-      console.log ("score 2 "+ scoreObj.second);
-      return scoreObj.second;
+      return scoreObj.second ;
     }
     return 0;
   }
@@ -128,9 +126,7 @@ module game {
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
     dragArr = [];
-    scoreObj.first = 0;
-    scoreObj.second = 0;
-
+    isModalShown = false;
     dragArr.push(4 + '' + 4);
     toClearRC = [];
     registerServiceWorker();
@@ -198,29 +194,24 @@ module game {
     stopTimer();
     let timerCount = 10;//60;
 
+      
     let countDown = function () {
-    if (timerCount < 0 && currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
+      if (timerCount < 0) {
         didMakeMove = true;
-<<<<<<< HEAD
-       // isModalShown = true;
-=======
-        //isModalShown = true;
->>>>>>> origin/gh-pages
+        isModalShown = true;
         let move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
-        console.log("player index " + yourPlayerIndex());
-        console.log("turn index " + currentUpdateUI.turnIndex);
-        makeMove(move);
-      }
-      else {
+        if (currentUpdateUI.turnIndex < 3) {
+          makeMove(move);
+        }
+      } else {
         countDownLeft = timerCount;
         timerCount--;
         timeoutId = $timeout(countDown, 1000);
       }
-        };
+    };
     countDownLeft = timerCount;
     countDown();
-
   }
   export function listOf(row: number, col: number) {
     let arr = [];
@@ -278,14 +269,19 @@ module game {
 
 
 
+    // Center point in boardArea
     if (type === "mouseup" || type === "touchleave") {
       tempString = null;
     }
+    //let button = document.getElementById("img_" + row + "_" + col);
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+      //console.log("row=" + row + " col=" + col);
       return;
     }
+    //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
+
 
 
     if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
@@ -311,8 +307,8 @@ module game {
   function getSquareCenterXY(row: number, col: number) {
     let size = getSquareWidthHeight();
     return {
-      x: col,
-      y: row
+      x: col, // * size.width + size.width / 2,
+      y: row // * size.height + size.height / 2
     };
   }
 
@@ -320,7 +316,7 @@ module game {
     $rootScope.$apply(function () {
       let dic = gameLogic.myDictionary;
       var res = tempString.toLowerCase();
-      //$rootScope.boxClass = false;
+      $rootScope.boxClass = false;
       console.log(tempString);
       for (var v = 0; v < dic.length; v++) {
         if (dic[v] === res) {
@@ -376,36 +372,34 @@ module game {
 
     currentUpdateUI = params;
 
+
     updateCache();
-   // calcScore();
+
+    calcScore();
     clearAnimationTimeout();
     state = params.state;
-if (currentUpdateUI.turnIndex > 2){
-        let scoreDiff = scoreObj.first - scoreObj.second;
-        let endMatchScores: number[] =  [1, 0] ;
-        makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
-}
-
     if (isFirstMove()) {
-
       let move = gameLogic.createInitialMove();
       state = move.state;
       score(state.guessList);
-      if (isMyTurn() && currentUpdateUI.turnIndex < 3) makeMove(move);
+      if (isMyTurn() && currentUpdateUI.turnIndex < 2) makeMove(move);
     }
-    if ( currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
+
+    if (isMyTurn() && currentUpdateUI.turnIndex < 2) {
       startTimer();
     }
+
+     
+
+      
+
   }
-
-
-
-  function calcScore() {
-    let scoreDiff = scoreObj.first - scoreObj.second;
-    let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
-    if (currentUpdateUI.turnIndex > 3) {
-      makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
-    }
+  function calcScore(){
+      let scoreDiff = scoreObj.first- scoreObj.second; 
+      let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+      if(scoreDiff >0){
+        makeMove(gameLogic.createEndMove(currentUpdateUI.state, endMatchScores));
+      }
   }
 
   function animationEndedCallback() {
@@ -433,8 +427,9 @@ if (currentUpdateUI.turnIndex > 2){
   }
 
   function makeMove(move: IMove) {
+    didMakeMove = true;
+    startTimer();
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
-    let chat = 'player guessed ' + game.state.guessList.length;
     let myProposal: IProposal = {
       data: delta,
       chatDescription: 'player guessed ' + game.state.guessList.length,
@@ -497,18 +492,18 @@ if (currentUpdateUI.turnIndex > 2){
 
 
 
-  var app = angular.module('myApp', ['gameServices']);
-  app.run(['$rootScope', '$timeout',
-    function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
-      $rootScope['game'] = game;
-      game.init($rootScope, $timeout);
-    }]);
-
-
-
-  app.controller('MainController', ['$scope', '$rootScope', function ($scope: any, $rootScope: any) {
-
-
-    $scope.animateToggle = false;
+var app = angular.module('myApp', ['gameServices']);
+app.run(['$rootScope', '$timeout',
+  function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
+    $rootScope['game'] = game;
+    game.init($rootScope, $timeout);
   }]);
+
+
+
+app.controller('MainController', ['$scope', '$rootScope', function ($scope: any, $rootScope: any) {
+
+
+  $scope.animateToggle = false;
+}]);
 
