@@ -44,7 +44,7 @@ var game;
             console.log("turn index " + game.currentUpdateUI.turnIndex);
             console.log("second  sec " + game.scoreObj.second);
             console.log("first score " + game.scoreObj.first);
-            return s;
+            return z;
         }
         else if (s.length > 0 && game.currentUpdateUI.turnIndex == 1) {
             var y = s.length;
@@ -295,7 +295,7 @@ var game;
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDictionary;
             var res = tempString.toLowerCase();
-            game.$rootScope.boxClass = false;
+            //$rootScope.boxClass = false;
             console.log(tempString);
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
@@ -351,7 +351,6 @@ var game;
         if (isFirstMove()) {
             var move = gameLogic.createInitialMove();
             game.state = move.state;
-            score(game.state.guessList);
             if (isMyTurn())
                 makeMove(move);
         }
@@ -361,9 +360,13 @@ var game;
     }
     game.updateUI = updateUI;
     function calcScore() {
-        var scoreDiff = game.scoreObj.first - game.scoreObj.second;
-        var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
-        if (scoreDiff > 0) {
+        if (typeof game.delta.guessList == "undefined" || game.delta.guessList == null) {
+            return;
+        }
+        else {
+            var scoreDiff = game.delta.guessList.length - game.state.guessList.length;
+            var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+            console.log(scoreDiff + " score diff");
             makeMove(gameLogic.createEndMove(game.currentUpdateUI.state, endMatchScores));
         }
     }

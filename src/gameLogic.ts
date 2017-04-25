@@ -12,7 +12,7 @@ interface IState {
   chosenBoard: Board;//game board
   guessList: GuessList;
 }
-interface Score {
+type Score {
   first: number, second: number;
 }
 
