@@ -162,13 +162,14 @@ var game;
         stopTimer();
         var timerCount = 10; //60;
         var countDown = function () {
+            game.isModalShown = false;
             if (timerCount < 0) {
-                game.isModalShown = true;
                 var move = void 0;
                 if (yourPlayerIndex() == 1) {
                     var scoreDiff = game.oldGuessList.length - game.state.guessList.length;
                     var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
                     move = gameLogic.createEndMove(game.state, endMatchScores);
+                    game.isModalShown = true;
                 }
                 else {
                     move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
@@ -365,9 +366,7 @@ var game;
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        if (game.currentUpdateUI.turnIndex < 3 && game.currentUpdateUI.turnIndex > -1) {
-            gameService.makeMove(move, myProposal);
-        }
+        gameService.makeMove(move, myProposal);
     }
     function isFirstMove() {
         console.log("first move ");

@@ -186,16 +186,17 @@ module game {
 
 
     let countDown = function () {
+      isModalShown = false;
       if (timerCount < 0) {
-        isModalShown = true;
         let move: IMove;
         if (yourPlayerIndex() == 1) {
           let scoreDiff = oldGuessList.length - state.guessList.length;
           let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
           move = gameLogic.createEndMove(state, endMatchScores);
+          isModalShown = true;
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
-            state, yourPlayerIndex());
+          state, yourPlayerIndex());
         }
         makeMove(move);
 
@@ -398,9 +399,8 @@ module game {
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-    if (currentUpdateUI.turnIndex < 3 && currentUpdateUI.turnIndex > -1) {
       gameService.makeMove(move, myProposal);
-    }
+    
   }
 
   function isFirstMove() {
