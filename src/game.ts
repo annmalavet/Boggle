@@ -114,7 +114,7 @@ module game {
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
-    isModalShown = false;
+    
     dragArr = [];
     isModalShown = false;
     dragArr.push(4 + '' + 4);
@@ -352,6 +352,7 @@ module game {
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
+      isModalShown = false;
       let move = gameLogic.createInitialMove();
       state = move.state;
       if (isMyTurn()) makeMove(move);
