@@ -88,7 +88,6 @@ module game {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         cachedPieceSrc[i][j] = clearClickToDrag(i, j);
-        //cachedPieceSrc[i][j] = 'alphabet/img_' + board[i][j] + '.png'
       }
     }
   }
@@ -188,7 +187,7 @@ module game {
 
     let countDown = function () {
       if (timerCount < 0) {
-        //isModalShown = true;
+        isModalShown = true;
         let move: IMove;
         if (yourPlayerIndex() == 1) {
           let scoreDiff = oldGuessList.length - state.guessList.length;

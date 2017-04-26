@@ -68,7 +68,6 @@ var game;
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 4; j++) {
                 game.cachedPieceSrc[i][j] = clearClickToDrag(i, j);
-                //cachedPieceSrc[i][j] = 'alphabet/img_' + board[i][j] + '.png'
             }
         }
     }
@@ -164,7 +163,7 @@ var game;
         var timerCount = 10; //60;
         var countDown = function () {
             if (timerCount < 0) {
-                //isModalShown = true;
+                game.isModalShown = true;
                 var move = void 0;
                 if (yourPlayerIndex() == 1) {
                     var scoreDiff = game.oldGuessList.length - game.state.guessList.length;
