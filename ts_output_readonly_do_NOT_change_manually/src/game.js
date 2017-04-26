@@ -173,6 +173,7 @@ var game;
                 }
                 else {
                     move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());
+                    game.isModalShown = true;
                 }
                 makeMove(move);
             }

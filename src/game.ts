@@ -197,6 +197,7 @@ module game {
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
+          isModalShown = true;
         }
         makeMove(move);
 
