@@ -60,7 +60,7 @@ module game {
     return 100 / dim;
   }
   export function score() {
-    let s = state.guessList;
+   let s = state.guessList;
   return s.length;
   }
   export function clearClickToDrag(row: number, col: number) {
@@ -114,7 +114,7 @@ module game {
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
-
+    isModalShown = false;
     dragArr = [];
     isModalShown = false;
     dragArr.push(4 + '' + 4);

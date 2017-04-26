@@ -94,6 +94,7 @@ var game;
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("boardArea", handleDragEvent);
+        game.isModalShown = false;
         game.dragArr = [];
         game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
