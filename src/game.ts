@@ -61,22 +61,7 @@ module game {
   }
   export function score() {
     let s = state.guessList;
-    if (s.length > 0 && currentUpdateUI.turnIndex == 0) {
-      let z = s.length;
-      console.log("turn index " + currentUpdateUI.turnIndex)
-      console.log("second  sec " + scoreObj.second)
-      console.log("first score " + scoreObj.first)
-      return z;
-    }
-
-    else if (s.length > 0 && currentUpdateUI.turnIndex == 1) {
-      let y = s.length;
-      console.log("turn index " + currentUpdateUI.turnIndex)
-      console.log("second  sec " + scoreObj.second)
-      console.log("first score " + scoreObj.first)
-      return y;
-    }
-    return 0;
+  return s.length;
   }
   export function clearClickToDrag(row: number, col: number) {
     return "";
@@ -85,7 +70,6 @@ module game {
 
   }
   export function getPieceContainerClass(row: number, col: number) {
-    // toClearRC.push([[row][col]]);
     toClearRC.push({ roww: row, coll: col });
     return "grow";
   }
@@ -212,10 +196,10 @@ module game {
           move = gameLogic.createEndMove(state, endMatchScores);
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
-          state, yourPlayerIndex());
+            state, yourPlayerIndex());
         }
         makeMove(move);
-        
+
       } else {
         countDownLeft = timerCount;
         timerCount--;
@@ -258,43 +242,26 @@ module game {
     //  if (!isHumanTurn() || passes == 2) {
     ///   return; // if the game is over, do not display dragging effect
     //}
+    if (!isMyTurn()) return;
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
-    /*let cellSize: CellSize = getCellSize();
-    var col = Math.floor(x * 4 / boardArea.clientWidth);
-    var row = Math.floor(y * 4 / boardArea.clientHeight);
-    if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
-      var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-      var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-      let centerXY = getSquareCenterXY(row, col);
-      let topLeft = getSquareTopLeft(row, col);
-      curRow = row; curCol = col;
-      // console.log("no "+som.id+" somthinet element from py");
-    }*/
     var som = document.elementFromPoint(clientX, clientY);
-    if (som) {
-      let arrId = som.id.split("_");
-      let a = parseInt(arrId[0]);
-      let b = parseInt(arrId[1]);
-      cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
-      checkIf(a, b);
-    }
+    if (!som || !som.id || som.id.indexOf('_') == -1) return;
+    let arrId = som.id.split("_");
+    let a = parseInt(arrId[0]);
+    let b = parseInt(arrId[1]);
 
+    cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
+    checkIf(a, b);
 
-
-    // Center point in boardArea
     if (type === "mouseup" || type === "touchleave") {
       tempString = null;
     }
-    //let button = document.getElementById("img_" + row + "_" + col);
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-      //console.log("row=" + row + " col=" + col);
       return;
     }
-    //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
-
 
 
     if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
@@ -352,8 +319,6 @@ module game {
   export function showGuess() {
     g = tempString;
     return g;
-
-
   }
 
   function getProposalsBoard(playerIdToProposal: IProposals): string[][] {
@@ -384,7 +349,7 @@ module game {
     currentUpdateUI = params;
     oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
     updateCache();
-    
+
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
@@ -424,7 +389,7 @@ module game {
   }
 
   function makeMove(move: IMove) {
-    
+
     didMakeMove = true;
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
@@ -489,18 +454,18 @@ module game {
 
 
 
-  var app = angular.module('myApp', ['gameServices']);
-  app.run(['$rootScope', '$timeout',
-    function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
-      $rootScope['game'] = game;
-      game.init($rootScope, $timeout);
-    }]);
-
-
-
-  app.controller('MainController', ['$scope', '$rootScope', function ($scope: any, $rootScope: any) {
-
-
-    $scope.animateToggle = false;
+var app = angular.module('myApp', ['gameServices']);
+app.run(['$rootScope', '$timeout',
+  function ($rootScope: angular.IScope, $timeout: angular.ITimeoutService) {
+    $rootScope['game'] = game;
+    game.init($rootScope, $timeout);
   }]);
+
+
+
+app.controller('MainController', ['$scope', '$rootScope', function ($scope: any, $rootScope: any) {
+
+
+  $scope.animateToggle = false;
+}]);
 

@@ -37,21 +37,7 @@ var game;
     game.rowsPercent = rowsPercent;
     function score() {
         var s = game.state.guessList;
-        if (s.length > 0 && game.currentUpdateUI.turnIndex == 0) {
-            var z = s.length;
-            console.log("turn index " + game.currentUpdateUI.turnIndex);
-            console.log("second  sec " + game.scoreObj.second);
-            console.log("first score " + game.scoreObj.first);
-            return z;
-        }
-        else if (s.length > 0 && game.currentUpdateUI.turnIndex == 1) {
-            var y = s.length;
-            console.log("turn index " + game.currentUpdateUI.turnIndex);
-            console.log("second  sec " + game.scoreObj.second);
-            console.log("first score " + game.scoreObj.first);
-            return y;
-        }
-        return 0;
+        return s.length;
     }
     game.score = score;
     function clearClickToDrag(row, col) {
@@ -62,7 +48,6 @@ var game;
     }
     game.getAnimationClass = getAnimationClass;
     function getPieceContainerClass(row, col) {
-        // toClearRC.push([[row][col]]);
         game.toClearRC.push({ roww: row, coll: col });
         return "grow";
     }
@@ -235,39 +220,26 @@ var game;
         //  if (!isHumanTurn() || passes == 2) {
         ///   return; // if the game is over, do not display dragging effect
         //}
+        if (!isMyTurn())
+            return;
         var x = clientX - game.boardArea.offsetLeft - game.gameArea.offsetLeft;
         var y = clientY - game.boardArea.offsetTop - game.gameArea.offsetTop;
-        /*let cellSize: CellSize = getCellSize();
-        var col = Math.floor(x * 4 / boardArea.clientWidth);
-        var row = Math.floor(y * 4 / boardArea.clientHeight);
-        if (type === "touchstart" || type === "touchmove" || type === "mousedown") {
-          var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-          var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-          let centerXY = getSquareCenterXY(row, col);
-          let topLeft = getSquareTopLeft(row, col);
-          curRow = row; curCol = col;
-          // console.log("no "+som.id+" somthinet element from py");
-        }*/
         var som = document.elementFromPoint(clientX, clientY);
-        if (som) {
-            var arrId = som.id.split("_");
-            var a = parseInt(arrId[0]);
-            var b = parseInt(arrId[1]);
-            game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
-            checkIf(a, b);
-        }
-        // Center point in boardArea
+        if (!som || !som.id || som.id.indexOf('_') == -1)
+            return;
+        var arrId = som.id.split("_");
+        var a = parseInt(arrId[0]);
+        var b = parseInt(arrId[1]);
+        game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
+        checkIf(a, b);
         if (type === "mouseup" || type === "touchleave") {
             game.tempString = null;
         }
-        //let button = document.getElementById("img_" + row + "_" + col);
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-            //console.log("row=" + row + " col=" + col);
             return;
         }
-        //  if (voidAreacol !== 0 || voidAreacol >= 4 || voidAreaRow !== 0 || voidAreaRow >= 4) { 
         if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
             // drag ended
             dragDone(game.tempString, row, col);
