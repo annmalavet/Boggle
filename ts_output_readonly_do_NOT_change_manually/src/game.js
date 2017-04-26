@@ -166,10 +166,10 @@ var game;
             if (timerCount < 0) {
                 var move = void 0;
                 if (yourPlayerIndex() == 1) {
+                    game.isModalShown = true;
                     var scoreDiff = game.oldGuessList.length - game.state.guessList.length;
                     var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
                     move = gameLogic.createEndMove(game.state, endMatchScores);
-                    game.isModalShown = true;
                 }
                 else {
                     move = gameLogic.createMove(game.state.chosenBoard, game.state, yourPlayerIndex());

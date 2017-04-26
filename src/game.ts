@@ -190,10 +190,10 @@ module game {
       if (timerCount < 0) {
         let move: IMove;
         if (yourPlayerIndex() == 1) {
+          isModalShown = true;
           let scoreDiff = oldGuessList.length - state.guessList.length;
           let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
           move = gameLogic.createEndMove(state, endMatchScores);
-          isModalShown = true;
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
           state, yourPlayerIndex());
