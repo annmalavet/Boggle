@@ -19,6 +19,7 @@ interface Score {
 }
 
 module game {
+
   export let isModalShown = false;
   export let modalTitle = "Your turn is over";
   export let modalBody = "Time is up";
@@ -39,26 +40,18 @@ module game {
   export let proposals: string[][] = null;
   export let yourPlayerInfo: IPlayerInfo = null;
   export let tempString: string = '';
-
   export let dragArr: string[];
   export let toClearRC: RowCol[] = null;
   export let g: string = '';
   export let buttonBg = false;
   export let counter = 100;
-  export let countDownLeft = 10;
+  export let countDownLeft = 60;
   export let clickToDragPiece: HTMLElement;
   export let time: HTMLElement;
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
-  export let deadBoard: boolean[][] = null;
-  export let curRow: number = 5;
-  export let curCol: number = 5;
-  export let hasDim = false;
   export let dim = 4;
   export let scoreObj: Score = { first: 0, second: 0 };
-  export function rowsPercent() {
-    return 100 / dim;
-  }
   export function score() {
    let s = state.guessList;
   return s.length;
@@ -71,7 +64,7 @@ module game {
   }
   export function getPieceContainerClass(row: number, col: number) {
     toClearRC.push({ roww: row, coll: col });
-    return "grow";
+    return "growi";
   }
   export let cachedPieceClass: string[][] = getEmpty8Arrays();
   export let cachedPieceSrc: string[][] = getEmpty8Arrays();
@@ -133,6 +126,7 @@ module game {
   function checkIf(row: number, col: number) {
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
+         cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
         game.tempString = tempString.concat(state.chosenBoard[row][col]);
         showGuess();
         console.log(game.tempString);
@@ -141,12 +135,7 @@ module game {
     }
   }
 
-  export function getGrow() {
-    return "grow1";
-  }
-  export function grow1() {
-    return "";
-  }
+
   function registerServiceWorker() {
     // I prefer to use appCache over serviceWorker
     // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -182,9 +171,7 @@ module game {
   }
   export function startTimer() {
     stopTimer();
-    let timerCount = 10;//60;
-
-
+    let timerCount = 60;
     let countDown = function () {
       isModalShown = false;
       if (timerCount < 0) {
@@ -251,13 +238,9 @@ module game {
     let arrId = som.id.split("_");
     let a = parseInt(arrId[0]);
     let b = parseInt(arrId[1]);
-
-    cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
+   
     checkIf(a, b);
 
-    if (type === "mouseup" || type === "touchleave") {
-      tempString = null;
-    }
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
       var col = Math.floor(x * 4 / game.boardArea.clientWidth);
       var row = Math.floor(y * 4 / game.boardArea.clientHeight);
@@ -302,9 +285,9 @@ module game {
       for (var v = 0; v < dic.length; v++) {
         if (dic[v] === res) {
           state.guessList.push(tempString);
-          //showGuess();
           console.log("yes in dictionary");
           reset();
+          tempString = null;
           return;
         } else {
           console.log("not in dictionary " + res);
@@ -333,7 +316,6 @@ module game {
     for (let playerId in playerIdToProposal) {
       let proposal = playerIdToProposal[playerId];
       let delta = proposal.data;
-      //proposals[delta.board][delta.guessList]++;?????????????????????????
     }
     return proposals;
   }

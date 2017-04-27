@@ -69,12 +69,12 @@ body {
 }
 
 .grow {
-  animation: grow  0.3s ease-out;
+  animation: grow ;
 }
 
 @keyframes grow {
   from {transform: scale(1, 1);}
-  to {transform: scale(1.3, 1.3);}
+  to {transform: scale(1.2, 1.2);}
 }
 .grow.ng-enter {
   animation: grow  0.3s ease-in;

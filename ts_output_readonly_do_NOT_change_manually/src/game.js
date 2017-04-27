@@ -24,17 +24,9 @@ var game;
     game.g = '';
     game.buttonBg = false;
     game.counter = 100;
-    game.countDownLeft = 10;
-    game.deadBoard = null;
-    game.curRow = 5;
-    game.curCol = 5;
-    game.hasDim = false;
+    game.countDownLeft = 60;
     game.dim = 4;
     game.scoreObj = { first: 0, second: 0 };
-    function rowsPercent() {
-        return 100 / game.dim;
-    }
-    game.rowsPercent = rowsPercent;
     function score() {
         var s = game.state.guessList;
         return s.length;
@@ -49,7 +41,7 @@ var game;
     game.getAnimationClass = getAnimationClass;
     function getPieceContainerClass(row, col) {
         game.toClearRC.push({ roww: row, coll: col });
-        return "grow";
+        return "growi";
     }
     game.getPieceContainerClass = getPieceContainerClass;
     game.cachedPieceClass = getEmpty8Arrays();
@@ -111,6 +103,7 @@ var game;
     function checkIf(row, col) {
         for (var i = 0; i < game.dragArr.length; i++) {
             if (game.dragArr.indexOf(row + '' + col) === -1) {
+                game.cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
                 game.tempString = game.tempString.concat(game.state.chosenBoard[row][col]);
                 showGuess();
                 console.log(game.tempString);
@@ -118,14 +111,6 @@ var game;
             }
         }
     }
-    function getGrow() {
-        return "grow1";
-    }
-    game.getGrow = getGrow;
-    function grow1() {
-        return "";
-    }
-    game.grow1 = grow1;
     function registerServiceWorker() {
         // I prefer to use appCache over serviceWorker
         // (because iOS doesn't support serviceWorker, so we have to use appCache)
@@ -160,7 +145,7 @@ var game;
     }
     function startTimer() {
         stopTimer();
-        var timerCount = 10; //60;
+        var timerCount = 60;
         var countDown = function () {
             game.isModalShown = false;
             if (timerCount < 0) {
@@ -231,11 +216,7 @@ var game;
         var arrId = som.id.split("_");
         var a = parseInt(arrId[0]);
         var b = parseInt(arrId[1]);
-        game.cachedPieceSrc[a][b] = getPieceContainerClass(a, b);
         checkIf(a, b);
-        if (type === "mouseup" || type === "touchleave") {
-            game.tempString = null;
-        }
         if (x < 0 || x >= game.boardArea.clientWidth || y < 0 || y >= game.boardArea.clientHeight) {
             var col = Math.floor(x * 4 / game.boardArea.clientWidth);
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
@@ -276,9 +257,9 @@ var game;
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
                     game.state.guessList.push(tempString);
-                    //showGuess();
                     console.log("yes in dictionary");
                     reset();
+                    tempString = null;
                     return;
                 }
                 else {
@@ -308,7 +289,6 @@ var game;
         for (var playerId in playerIdToProposal) {
             var proposal = playerIdToProposal[playerId];
             var delta = proposal.data;
-            //proposals[delta.board][delta.guessList]++;?????????????????????????
         }
         return proposals;
     }

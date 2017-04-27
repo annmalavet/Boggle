@@ -14,14 +14,14 @@
   <!-- To ensure CSS files are downloaded in parallel, always include external CSS before external JavaScript. -->
   <!-- build:[href] css/everything.min.css -->
   <link rel="stylesheet" type="text/css" href="css/bog_style.css">
+  <link rel="stylesheet" type="text/css" href="css/csshake-slow.css">
   <!-- /build -->
 
   <!-- build:js js/everything.min.js 
   <script type="text/javascript" src="lib/boggle.js"></script>
   -->
 
-  <script src="lib/angular.js"></script>
-<!--   <script src="lib/angular-animate.js"></script> -->
+    <script src="lib/angular.js"></script>
     <script src="lib/boggle.js"></script>
     <script data-main="lib/boggle" src="lib/require.js"></script>
     <script src="lib/turnBasedServices.4.js"></script>
@@ -59,7 +59,7 @@
       <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row * 110 / game.dim}}%; left:0; width:100%; height:100%;">
         <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 100 / game.dim}}%; width:100%; height:100%;">
           <div id="{{'img_container_' + row + '_' + col}}" class="img_container" ng-class="game.cachedPieceContainerClass[row][col]">
-            <button id="{{ + row + '_' + col}}" class="button" style="z-index: 30; width: 25%; height: 25%; " ng-class="game.cachedPieceSrc[row][col]" ng-style="{ 'background-image': 'url(' + game.getBgImg(row, col) + ')'}"
+            <button class="shake-slow" id="{{ + row + '_' + col}}" class="button" style="z-index: 30; width: 25%; height: 25%; " ng-class="game.cachedPieceSrc[row][col]" ng-style="{ 'background-image': 'url(' + game.getBgImg(row, col) + ')'}"
               ng-click="game.listOf(row, col)"></button>
           </div>
 
