@@ -1,5 +1,6 @@
 var game;
 (function (game) {
+    game.trie = new gameTrie.Trie();
     game.isModalShown = false;
     game.modalTitle = "Your turn is over";
     game.modalBody = "Time is up";
@@ -32,6 +33,12 @@ var game;
         return s.length;
     }
     game.score = score;
+    function makeDic() {
+        for (var i = 0; i < gameLogic.myDictionary.length; i++) {
+            game.trie.insert(gameLogic.myDictionary[i], "got");
+        }
+    }
+    game.makeDic = makeDic;
     function clearClickToDrag(row, col) {
         return "";
     }
@@ -86,6 +93,7 @@ var game;
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("boardArea", handleDragEvent);
+        makeDic();
         game.dragArr = [];
         game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
@@ -257,6 +265,7 @@ var game;
             for (var v = 0; v < dic.length; v++) {
                 if (dic[v] === res) {
                     game.state.guessList.push(tempString);
+                    console.log("trie trying out " + game.trie.contains(""));
                     console.log("yes in dictionary");
                     reset();
                     tempString = null;

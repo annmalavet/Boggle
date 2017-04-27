@@ -19,7 +19,7 @@ interface Score {
 }
 
 module game {
-
+ export let  trie = new gameTrie.Trie();
   export let isModalShown = false;
   export let modalTitle = "Your turn is over";
   export let modalBody = "Time is up";
@@ -55,6 +55,11 @@ module game {
   export function score() {
    let s = state.guessList;
   return s.length;
+}
+  export function makeDic() {
+    for (let i: number = 0; i < gameLogic.myDictionary.length; i++) {
+      trie.insert( gameLogic.myDict[i], gameLogic.myDict[i])
+    }
   }
   export function clearClickToDrag(row: number, col: number) {
     return "";
@@ -107,7 +112,7 @@ module game {
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
-    
+    makeDic();
     dragArr = [];
     isModalShown = false;
     dragArr.push(4 + '' + 4);
@@ -124,6 +129,7 @@ module game {
   }
 
   function checkIf(row: number, col: number) {
+    
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
          cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
@@ -283,8 +289,10 @@ module game {
       //$rootScope.boxClass = false;
       console.log(tempString);
       for (var v = 0; v < dic.length; v++) {
-        if (dic[v] === res) {
+      //  if (dic[v] === res) {
+        if (trie.contains(tempString)) {
           state.guessList.push(tempString);
+          console.log("trie trying out "+trie.contains(tempString));
           console.log("yes in dictionary");
           reset();
           tempString = null;
@@ -332,7 +340,7 @@ module game {
     currentUpdateUI = params;
     oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
     updateCache();
-
+    
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
