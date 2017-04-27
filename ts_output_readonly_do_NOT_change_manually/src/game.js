@@ -35,7 +35,7 @@ var game;
     game.score = score;
     function makeDic() {
         for (var i = 0; i < gameLogic.myDictionary.length; i++) {
-            game.trie.insert(gameLogic.myDictionary[i], "got");
+            game.trie.insert(gameLogic.myDict[i], gameLogic.myDict[i]);
         }
     }
     game.makeDic = makeDic;
@@ -263,9 +263,10 @@ var game;
             //$rootScope.boxClass = false;
             console.log(tempString);
             for (var v = 0; v < dic.length; v++) {
-                if (dic[v] === res) {
+                //  if (dic[v] === res) {
+                if (game.trie.contains(tempString)) {
                     game.state.guessList.push(tempString);
-                    console.log("trie trying out " + game.trie.contains(""));
+                    console.log("trie trying out " + game.trie.contains(tempString));
                     console.log("yes in dictionary");
                     reset();
                     tempString = null;
