@@ -34,8 +34,10 @@ var game;
     }
     game.score = score;
     function makeDic() {
-        for (var i = 0; i < gameLogic.myDictionary.length; i++) {
-            game.trie.insert(gameLogic.myDict[i], gameLogic.myDict[i]);
+        for (var i = 0; i < 100; i++) {
+            var res = gameLogic.myDict[i].toLowerCase();
+            console.log("trie inserted? " + game.trie.contains(res));
+            game.trie.insert(gameLogic.myDict[i], i);
         }
     }
     game.makeDic = makeDic;
@@ -258,25 +260,25 @@ var game;
     }
     function dragDone(tempString, row, col) {
         game.$rootScope.$apply(function () {
-            var dic = gameLogic.myDictionary;
+            var dic = gameLogic.myDict;
             var res = tempString.toLowerCase();
             //$rootScope.boxClass = false;
             console.log(tempString);
-            for (var v = 0; v < dic.length; v++) {
-                //  if (dic[v] === res) {
-                if (game.trie.contains(tempString)) {
-                    game.state.guessList.push(tempString);
-                    console.log("trie trying out " + game.trie.contains(tempString));
-                    console.log("yes in dictionary");
-                    reset();
-                    tempString = null;
-                    return;
-                }
-                else {
-                    console.log("not in dictionary " + res);
-                    reset();
-                }
+            //for (var v = 0; v < dic.length; v++) {
+            //  if (dic[v] === res) {
+            if (game.trie.contains(tempString)) {
+                game.state.guessList.push(tempString);
+                console.log("trie trying out " + game.trie.contains(tempString));
+                console.log("yes in dictionary");
+                reset();
+                tempString = null;
+                return;
             }
+            else {
+                console.log("not in dictionary " + res);
+                reset();
+            }
+            //}
             if (game.dragArr.length === 0) {
                 game.dragArr.push(4 + '' + 4);
             }

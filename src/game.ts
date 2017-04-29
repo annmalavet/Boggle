@@ -57,8 +57,10 @@ module game {
   return s.length;
 }
   export function makeDic() {
-    for (let i: number = 0; i < gameLogic.myDictionary.length; i++) {
-      trie.insert( gameLogic.myDict[i], gameLogic.myDict[i])
+    for (let i: number = 0; i < 100; i++) {
+        var res = gameLogic.myDict[i].toLowerCase();
+    console.log("trie inserted? "+trie.contains(res));
+      trie.insert( gameLogic.myDict[i], i)
     }
   }
   export function clearClickToDrag(row: number, col: number) {
@@ -284,11 +286,11 @@ module game {
 
   function dragDone(tempString: any, row: number, col: number) {
     $rootScope.$apply(function () {
-      let dic = gameLogic.myDictionary;
+      let dic = gameLogic.myDict;
       var res = tempString.toLowerCase();
       //$rootScope.boxClass = false;
       console.log(tempString);
-      for (var v = 0; v < dic.length; v++) {
+      //for (var v = 0; v < dic.length; v++) {
       //  if (dic[v] === res) {
         if (trie.contains(tempString)) {
           state.guessList.push(tempString);
@@ -301,7 +303,7 @@ module game {
           console.log("not in dictionary " + res);
           reset();
         }
-      }
+      //}
       if (dragArr.length === 0) {
         dragArr.push(4 + '' + 4);
       }
