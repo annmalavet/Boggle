@@ -33,11 +33,14 @@
     "karma-jasmine": "*",
     "load-grunt-tasks": "*",
     "load-json-file": "^2.0.0",
+    "node-libs-browser": "^0.6.0",
+    "prefix-trie-ts": "0.0.2",
     "protractor": "^5.1.1",
     "requirejs-plugins": "^1.0.2",
-    "typescript": "*",
+    "typescript": "^2.3.2",
     "typescript-require": "^0.2.9-1",
-    "webpack": "^2.3.2",
+    "webdriver-manager": "^12.0.5",
+    "webpack": "^1.9.11",
     "word-list-json": "^0.2.0"
   },
   "scripts": {
