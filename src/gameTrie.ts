@@ -13,8 +13,8 @@ export class Trie {
 
     public constructor(){
         this._root = {
-            children: [],
-            value: []
+            children: new Array<TrieNode>(26),
+            isWord: false
         };
     }
 
@@ -31,18 +31,15 @@ export class Trie {
      * @param value
      */
     public insert(word:string, value:any):void {
-        var node = this._root;
-        for (var i = 0; i < word.length; i++) {
-            var w:any = word[i];
-            if (node.children[w] === undefined) {
-                node.children[w] = {
-                    children: [],
-                    value: []
-                };
+        let node: TrieNode = this._root;
+        for (let i = 0; i < word.length; i++) {
+            let c = word.charCodeAt(i) - 97; // 97 is the unicode for lower case 'a'
+            if (!node.children[c]) {
+                node.children[c] = new TrieNode();
             }
-            node = node.children[w];
+            node = node.children[c];
         }
-        node.value.push(value);
+        node.isWord = true;
     }
 
     /**
@@ -51,11 +48,11 @@ export class Trie {
      * @return {TrieNode}
      */
     private getNode(word:string):TrieNode {
-        var node = this._root;
-        for (var i = 0; i < word.length; i++) {
-            var w = word.charCodeAt(i);
-            if (node.children[w]) {
-                node = node.children[w];
+        let node = this._root;
+        for (let i = 0; i < word.length; i++) {
+            let c = word.charCodeAt(i) - 97;
+            if (node.children[c]) {
+                node = node.children[c];
             } else {
                 return null;
             }
@@ -69,14 +66,19 @@ export class Trie {
      * @return {boolean}
      */
     public contains(word:string):boolean {
-        var node = this.getNode(word);
+        let node = this.getNode(word);
         return node ? true : false;
     }
 }
 
-interface TrieNode {
+class TrieNode {
     children:Array<TrieNode>;
-    value:Array<any>;
+    isWord: boolean;
+
+    constructor() {
+        this.children = new Array(26);
+        this.isWord = false;
+    }
 }
 
 //export = Trie;

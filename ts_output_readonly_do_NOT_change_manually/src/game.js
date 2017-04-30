@@ -34,10 +34,10 @@ var game;
     }
     game.score = score;
     function makeDic() {
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < gameLogic.myDict.length; i++) {
             var res = gameLogic.myDict[i].toLowerCase();
+            game.trie.insert(res, i);
             console.log("trie inserted? " + game.trie.contains(res));
-            game.trie.insert(gameLogic.myDict[i], i);
         }
     }
     game.makeDic = makeDic;
@@ -95,7 +95,6 @@ var game;
         game.gameArea = document.getElementById("gameArea");
         game.boardArea = document.getElementById("boardArea");
         dragAndDropService.addDragListener("boardArea", handleDragEvent);
-        makeDic();
         game.dragArr = [];
         game.isModalShown = false;
         game.dragArr.push(4 + '' + 4);
@@ -264,11 +263,12 @@ var game;
             var res = tempString.toLowerCase();
             //$rootScope.boxClass = false;
             console.log(tempString);
+            console.log("trie contains? " + game.trie.contains(res));
+            //trie.insert(tempString, 0);
             //for (var v = 0; v < dic.length; v++) {
             //  if (dic[v] === res) {
-            if (game.trie.contains(tempString)) {
+            if (game.trie.contains(res)) {
                 game.state.guessList.push(tempString);
-                console.log("trie trying out " + game.trie.contains(tempString));
                 console.log("yes in dictionary");
                 reset();
                 tempString = null;
@@ -311,6 +311,7 @@ var game;
         game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
+        makeDic();
         game.currentUpdateUI = params;
         game.oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
         updateCache();
