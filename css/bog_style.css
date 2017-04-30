@@ -19,40 +19,53 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
+textarea, input {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+}
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed!important;
+}
 body {
-  height:100%;
-  width:95%;
   font-family: sans-serif;
   background-color:#F0F8FF;
   z-index: 1;
 }
 .scoreOf {
   top:0%;
-    display: inline-block;
+  height:5%
     position: top;
-    width:10%;
-    border: 2px solid #000000;
-    padding: 3px;
+    width:500%;
 }
 .timer {
+    height:10%
+     height:10%
     display: inline-block;
-    position: relative;
-    width:25%;
+    width:50%;
    
 }
 .wordBox {
     display: inline-block;
     position: top;
-    width:55%;
-    border: 3px solid #9BDB40;
+    width:100%;
     padding: 7px;
 }
 .topArea{
+  
+  transform: translate(50px, -30px);
     text-align: justify;
-    border: 1px solid #ccc;
-}
 
+}
+.showEndList{
+ color: #ffffff;
+}
 .overlayModal {
   background: rgba(0,0,0,1);
   z-index: 1000;
@@ -69,6 +82,45 @@ body {
   transition-delay:0s;
 }
 
+
+#gameArea{
+  margin: 0;
+  padding: 0;
+  top: 1%;
+}
+
+#boardArea {
+  position:absolute;
+  top: 15%;
+  left: 0;
+  width: 80%;
+  height: 80%;
+  border-radius: 3%;
+}
+
+
+
+button {
+position: absolute;
+background-color:rgba(0,0,0,0);
+background-repeat: no-repeat;
+margin-right: 0%;
+top: 0%;
+left: 0%;
+right:0%;
+z-index:71;
+background-color: rgba(0,0,0,0);
+-webkit-transform:scale(.8);
+-moz-transform:scale(.8);
+-ms-transform:scale(.8);
+-o-transform:scale(.8);
+transform:scale(.7);
+border-style: none;
+background-size: 90% 90%;
+background-position: center;
+}
+
+/*
 
 @media only screen 
   and (min-device-width: 320px) 
@@ -91,13 +143,14 @@ background-color: rgba(0,0,0,0);
 -ms-transform:scale(.8);
 -o-transform:scale(.8);
 transform:scale(.7);
-border-style: solid;
+border-style: none;
 background-size: 90% 90%;
 background-position: center;
 }
 #boardArea {
 display: inline-block;
-position: absolute;
+position: center;
+width:80%;
 top: 10%;
 left: 0%;
 right:0%;
@@ -121,74 +174,19 @@ overflow-y: scroll;
 }
 
 h3 {
-   color: #ffffff;
+   color: #000000;
 }
 
 h2 {
   position: absolute;
   display: inline-block;
   z-index: 50;
-  font-size: 10px;
   align-content: top;
   width: 100%;
 }
 
 }
-
-
-#gameArea{
-  overflow: hidden;
-}
-
-#boardArea {
-  position:absolute;
-  top: 10%;
-  left: 0;
-  width: 100%;
-  height: 90%;
-  border-radius: 3%;
-}
-
-
-div div h2  textarea {
-position: absolute;
-top: 0%; 
-z-index:2;
-width: 80%;
-height: 15%;
-background-color:rgba(0,0,0,0);
-font-size:14px;
-margin-bottom: 15px;
-display: block;
-border-style: solid;
-border-width: medium;
-display: inline-block;
-vertical-align: top;
-}
-
-button {
-position: absolute;
-background-color:rgba(0,0,0,0);
-background-repeat: no-repeat;
-margin-right: 0%;
-top: 0%;
-left: 0%;
-right:0%;
-z-index:71;
-background-color: rgba(0,0,0,0);
--webkit-transform:scale(.8);
--moz-transform:scale(.8);
--ms-transform:scale(.8);
--o-transform:scale(.8);
-transform:scale(.7);
-border-style: solid;
-background-size: 90% 90%;
-background-position: center;
-}
-
-
-
-
+*/
 
 
 

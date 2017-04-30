@@ -51,7 +51,6 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let dim = 4;
-  export let scoreObj: Score = { first: 0, second: 0 };
   export function score() {
    let s = state.guessList;
   return s.length;

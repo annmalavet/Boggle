@@ -27,7 +27,6 @@ var game;
     game.counter = 100;
     game.countDownLeft = 60;
     game.dim = 4;
-    game.scoreObj = { first: 0, second: 0 };
     function score() {
         var s = game.state.guessList;
         return s.length;
