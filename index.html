@@ -6,11 +6,11 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html, charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Boggle Game</title>
+  <title>Boggle-ish Game</title>
   <meta name="description" content="Boggle game">
-  <link rel="shortcut icon" type="image/x-icon" href="data:image/x-icon;,">
   <!-- Suppress browser request for favicon.ico -->
-
+<link rel="shortcut icon" href="alphabet/favicon.ico" type="image/x-icon">
+<link rel="icon" href="alphabet/favicon.ico" type="image/x-icon">
   <!-- To ensure CSS files are downloaded in parallel, always include external CSS before external JavaScript. -->
   <!-- build:[href] css/everything.min.css -->
   <link rel="stylesheet" type="text/css" href="css/bog_style.css">
@@ -53,12 +53,12 @@
     <div class="topArea">
       <h3 class="timer">Time left: {{game.countDownLeft}}</h3>
       <h3 class="scoreOf" id="score">Score: {{game.score()}}</h3>
-      <h3 class="wordBox1" id="inputarea"> {{game.showGuess()}}</h3>
+      <h3 class="wordBox1" id="inputarea"> Current guess: {{game.showGuess()}}</h3>
     </div>
 
     <div id="boardArea">
-      <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row *95/ game.dim}}%; left:0; width:100%; height:100%;">
-        <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 85 / game.dim}}%; width:100%; height:100%;">
+      <div ng-repeat="row in game.getIntegersTill(game.dim)" style="position:absolute; top:{{row *100/ game.dim}}%; left:0; width:100%; height:100%;">
+        <div ng-repeat="col in game.getIntegersTill(game.dim)" style="position:absolute; top:50; left:{{col * 100 / game.dim}}%; width:100%; height:100%;">
           <div id="{{'img_container_' + row + '_' + col}}" class="img_container" ng-class="game.cachedPieceContainerClass[row][col]">
             <button class="shake-slow" id="{{ + row + '_' + col}}" class="button" style="z-index: 30; width: 25%; height: 25%; " ng-class="game.cachedPieceSrc[row][col]"
               ng-style="{ 'background-image': 'url(' + game.getBgImg(row, col) + ')'}" ng-click="game.listOf(row, col)"></button>
@@ -67,6 +67,7 @@
         </div>
       </div>
     </div>
+    <div id="wordList">Words created: {{game.showWords()}}</div>
   </div>
 
 </body>

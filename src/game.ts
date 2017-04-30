@@ -55,6 +55,10 @@ module game {
    let s = state.guessList;
   return s.length;
 }
+export function showWords(){
+
+  return state.guessList.toString();
+}
   export function makeDic() {
     for (let i: number = 0; i < gameLogic.myDict.length; i++) {
         var res = gameLogic.myDict[i].toLowerCase();
@@ -302,6 +306,7 @@ module game {
         } else {
           console.log("not in dictionary " + res);
           reset();
+          tempString = null;
         }
       //}
       if (dragArr.length === 0) {

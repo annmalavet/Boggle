@@ -40,27 +40,28 @@ body {
 }
 .scoreOf {
   top:0%;
-  height:5%
-    position: top;
+  height:5%;
+ position: top;
     width:500%;
 }
 .timer {
-    height:10%
-     height:10%
+    top:0%;
+    height:10%;
     display: inline-block;
-    width:50%;
+    width:100%;
    
 }
 .wordBox {
     display: inline-block;
+    height:10%;
     position: top;
     width:100%;
     padding: 7px;
 }
 .topArea{
-  
+  display: inline-block;
   transform: translate(50px, -30px);
-    text-align: justify;
+    text-align: left;
 
 }
 .showEndList{
@@ -90,10 +91,10 @@ body {
 }
 
 #boardArea {
-  position:absolute;
-  top: 15%;
+  display: inline-block;
+  position:relative;
   left: 0;
-  width: 80%;
+  width: 90%;
   height: 80%;
   border-radius: 3%;
 }
@@ -101,6 +102,7 @@ body {
 
 
 button {
+   display: inline-block;
 position: absolute;
 background-color:rgba(0,0,0,0);
 background-repeat: no-repeat;

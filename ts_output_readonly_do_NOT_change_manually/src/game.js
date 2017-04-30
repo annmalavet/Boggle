@@ -32,6 +32,10 @@ var game;
         return s.length;
     }
     game.score = score;
+    function showWords() {
+        return game.state.guessList.toString();
+    }
+    game.showWords = showWords;
     function makeDic() {
         for (var i = 0; i < gameLogic.myDict.length; i++) {
             var res = gameLogic.myDict[i].toLowerCase();
@@ -276,6 +280,7 @@ var game;
             else {
                 console.log("not in dictionary " + res);
                 reset();
+                tempString = null;
             }
             //}
             if (game.dragArr.length === 0) {
