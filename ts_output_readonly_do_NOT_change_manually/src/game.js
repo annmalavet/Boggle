@@ -1,6 +1,7 @@
 var game;
 (function (game) {
     game.trie = new gameTrie.Trie();
+    game.answerTrie = new gameTrie.Trie();
     game.isModalShown = false;
     game.modalTitle = "Your turn is over";
     game.modalBody = "Time is up";
@@ -33,7 +34,8 @@ var game;
     }
     game.score = score;
     function showWords() {
-        return game.state.guessList.toString();
+        var s = game.state.guessList.join(', ');
+        return s;
     }
     game.showWords = showWords;
     function makeDic() {

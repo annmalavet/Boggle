@@ -8,7 +8,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Boggle-ish Game</title>
   <meta name="description" content="Boggle game">
-  <!-- Suppress browser request for favicon.ico -->
 <link rel="shortcut icon" href="alphabet/favicon.ico" type="image/x-icon">
 <link rel="icon" href="alphabet/favicon.ico" type="image/x-icon">
   <!-- To ensure CSS files are downloaded in parallel, always include external CSS before external JavaScript. -->
@@ -49,11 +48,12 @@
   </div>
 
   <!-- ng-if="game.isTimerRunning()"-->
-  <div id="gameArea">
+  <div id="gameArea" class="gameArea">
     <div class="topArea">
       <h3 class="timer">Time left: {{game.countDownLeft}}</h3>
       <h3 class="scoreOf" id="score">Score: {{game.score()}}</h3>
       <h3 class="wordBox1" id="inputarea"> Current guess: {{game.showGuess()}}</h3>
+    <div id="anim"><button></button></div>
     </div>
 
     <div id="boardArea">

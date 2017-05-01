@@ -20,6 +20,7 @@ interface Score {
 
 module game {
  export let  trie = new gameTrie.Trie();
+ export let  answerTrie = new gameTrie.Trie();
   export let isModalShown = false;
   export let modalTitle = "Your turn is over";
   export let modalBody = "Time is up";
@@ -56,8 +57,8 @@ module game {
   return s.length;
 }
 export function showWords(){
-
-  return state.guessList.toString();
+  let s = state.guessList.join(', ');
+  return s;
 }
   export function makeDic() {
     for (let i: number = 0; i < gameLogic.myDict.length; i++) {
