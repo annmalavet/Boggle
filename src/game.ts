@@ -299,7 +299,7 @@ export function showWords(){
       //trie.insert(tempString, 0);
       //for (var v = 0; v < dic.length; v++) {
       //  if (dic[v] === res) {
-        if (trie.contains(res) && !(game.answerTrie.contains(tempString))) {
+        if (trie.contains(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
           state.guessList.push(tempString);
           console.log("yes in dictionary");
           game.answerTrie.insert(tempString, 0);

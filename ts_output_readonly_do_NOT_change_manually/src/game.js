@@ -273,7 +273,7 @@ var game;
             //trie.insert(tempString, 0);
             //for (var v = 0; v < dic.length; v++) {
             //  if (dic[v] === res) {
-            if (game.trie.contains(res) && !(game.answerTrie.contains(tempString))) {
+            if (game.trie.contains(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
                 game.state.guessList.push(tempString);
                 console.log("yes in dictionary");
                 game.answerTrie.insert(tempString, 0);

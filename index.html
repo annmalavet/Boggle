@@ -42,7 +42,7 @@
         </h4>
       </div>
       <div class="listOf" class="showEndList">
-        {{game.showGuess()}}
+        {{game.showWords()}}
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
     <div class="topArea">
       <h3 class="timer">Time left: {{game.countDownLeft}}</h3>
       <h3 class="scoreOf" id="score">Score: {{game.score()}}</h3>
-      <h3 class="wordBox1" id="inputarea"> Current guess: {{game.showWords()}}</h3>
+      <h3 class="wordBox1" id="inputarea"> Current guess: {{game.showGuess()}}</h3>
 
     </div>
 
