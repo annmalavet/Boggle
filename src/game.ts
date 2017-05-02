@@ -354,14 +354,15 @@ export function showWords(){
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
+     
       isModalShown = false;
       let move = gameLogic.createInitialMove();
       state = move.state;
       if (isMyTurn()) makeMove(move);
     }
 
-    if (isMyTurn()) {
-      startTimer();
+    if (isMyTurn() && countDownLeft === 60) {
+       startTimer();
     }
 
   }

@@ -332,7 +332,7 @@ var game;
             if (isMyTurn())
                 makeMove(move);
         }
-        if (isMyTurn()) {
+        if (isMyTurn() && game.countDownLeft === 60) {
             startTimer();
         }
     }
