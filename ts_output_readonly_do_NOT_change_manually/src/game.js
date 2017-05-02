@@ -159,6 +159,7 @@ var game;
     }
     function startTimer() {
         stopTimer();
+        game.isModalShown = false;
         var timerCount = 60;
         var countDown = function () {
             game.isModalShown = false;
@@ -272,9 +273,10 @@ var game;
             //trie.insert(tempString, 0);
             //for (var v = 0; v < dic.length; v++) {
             //  if (dic[v] === res) {
-            if (game.trie.contains(res)) {
+            if (game.trie.contains(res) && !(game.answerTrie.contains(tempString))) {
                 game.state.guessList.push(tempString);
                 console.log("yes in dictionary");
+                game.answerTrie.insert(tempString, 0);
                 reset();
                 tempString = null;
                 return;

@@ -48,9 +48,8 @@ body {
 .wordBox {
     width:800%;
     padding: 2px;
+    position: inline-block;
 }
-
-
 
 .showEndList{
  color: #ffffff;

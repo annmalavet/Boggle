@@ -183,6 +183,7 @@ export function showWords(){
   }
   export function startTimer() {
     stopTimer();
+    isModalShown = false;
     let timerCount = 60;
     let countDown = function () {
       isModalShown = false;
@@ -298,9 +299,10 @@ export function showWords(){
       //trie.insert(tempString, 0);
       //for (var v = 0; v < dic.length; v++) {
       //  if (dic[v] === res) {
-        if (trie.contains(res)) {
+        if (trie.contains(res) && !(game.answerTrie.contains(tempString))) {
           state.guessList.push(tempString);
           console.log("yes in dictionary");
+          game.answerTrie.insert(tempString, 0);
           reset();
           tempString = null;
           return;
