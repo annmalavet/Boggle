@@ -359,14 +359,14 @@ var game;
     }
     function makeMove(move) {
         game.didMakeMove = true;
-        var chat = "I created " + game.oldGuessList.length + " word(s).";
+        var chat = "Hello.";
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        gameService.makeMove(move, chat, myProposal);
+        gameService.makeMove(move, myProposal, chat);
     }
     function isFirstMove() {
         console.log("first move ");

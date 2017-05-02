@@ -195,7 +195,7 @@ export function showWords(){
           move = gameLogic.createEndMove(state, endMatchScores);
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
-          state, yourPlayerIndex());
+          state, yourPlayerIndex(), );
           isModalShown = true;
         }
         makeMove(move);
@@ -391,14 +391,14 @@ export function showWords(){
   function makeMove(move: IMove) {
 
     didMakeMove = true;
-    let chat = "I created "+oldGuessList.length+" word(s)."
+    let chat = "Hello."
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-      gameService.makeMove(move,chat,myProposal);
+      gameService.makeMove(move,myProposal, chat);
     
   }
 
