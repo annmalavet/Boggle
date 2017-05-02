@@ -317,7 +317,7 @@ var game;
         game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
-        makeDic();
+        //makeDic();
         game.currentUpdateUI = params;
         game.oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
         updateCache();

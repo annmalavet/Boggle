@@ -344,7 +344,7 @@ export function showWords(){
     didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = null;
-    makeDic();
+    //makeDic();
     currentUpdateUI = params;
     oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
     updateCache();
