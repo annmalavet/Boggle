@@ -344,7 +344,7 @@ export function showWords(){
     didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = null;
-    //makeDic();
+    makeDic();
     currentUpdateUI = params;
     oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
     updateCache();
@@ -391,14 +391,14 @@ export function showWords(){
   function makeMove(move: IMove) {
 
     didMakeMove = true;
+    let chat = "I created "+oldGuessList.length+" word(s)."
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
-      chatDescription: 'player guessed ' + game.state.guessList.length,
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-      gameService.makeMove(move, myProposal);
+      gameService.makeMove(move,chat,myProposal);
     
   }
 

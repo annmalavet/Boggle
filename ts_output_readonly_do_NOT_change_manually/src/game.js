@@ -317,7 +317,7 @@ var game;
         game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
-        //makeDic();
+        makeDic();
         game.currentUpdateUI = params;
         game.oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
         updateCache();
@@ -359,14 +359,14 @@ var game;
     }
     function makeMove(move) {
         game.didMakeMove = true;
+        var chat = "I created " + game.oldGuessList.length + " word(s).";
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,
-            chatDescription: 'player guessed ' + game.state.guessList.length,
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        gameService.makeMove(move, myProposal);
+        gameService.makeMove(move, chat, myProposal);
     }
     function isFirstMove() {
         console.log("first move ");
