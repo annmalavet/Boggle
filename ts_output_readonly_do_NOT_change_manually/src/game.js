@@ -363,10 +363,11 @@ var game;
         var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
         var myProposal = {
             data: delta,
+            chatDescription: chat,
             playerInfo: game.yourPlayerInfo,
         };
         // Decide whether we make a move or not
-        gameService.makeMove(move, myProposal, chat);
+        gameService.makeMove(move, myProposal);
     }
     function isFirstMove() {
         console.log("first move ");

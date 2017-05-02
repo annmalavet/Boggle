@@ -395,10 +395,11 @@ export function showWords(){
     let delta = { board: game.state.chosenBoard, guessList: state.guessList };
     let myProposal: IProposal = {
       data: delta,
+      chatDescription:chat,
       playerInfo: yourPlayerInfo,
     };
     // Decide whether we make a move or not
-      gameService.makeMove(move,myProposal, chat);
+      gameService.makeMove(move,myProposal);
     
   }
 
