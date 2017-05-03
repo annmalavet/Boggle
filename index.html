@@ -42,7 +42,10 @@
         </h4>
       </div>
       <div class="listOf" class="showEndList">
-        These are the words you created: {{game.showWords()}}
+        This the list of words you created: {{game.showWords()}}
+
+        <p>
+        This is the list of words your opponent created: {{game.showWordsOpponents()}} 
       </div>
     </div>
   </div>
@@ -67,7 +70,7 @@
         </div>
       </div>
     </div>
-    <div id="wordList">Words created: {{game.showWords()}}</div>
+    <div id="wordList">Words created: {{game.showCurWords()}}</div>
   </div>
 
 </body>

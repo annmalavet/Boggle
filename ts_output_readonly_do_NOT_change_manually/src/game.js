@@ -28,21 +28,32 @@ var game;
     game.counter = 100;
     game.countDownLeft = 60;
     game.dim = 4;
+    game.myDictObj = {};
     function score() {
         var s = game.state.guessList;
         return s.length;
     }
     game.score = score;
-    function showWords() {
+    function showCurWords() {
         var s = game.state.guessList.join(', ');
+        ;
+        return s;
+    }
+    game.showCurWords = showCurWords;
+    function showWords() {
+        var s = (game.currentUpdateUI.yourPlayerIndex == 0 ? game.state.guessList : game.state.guessList2).join(', ');
         return s;
     }
     game.showWords = showWords;
+    function showWordsOpponents() {
+        var s = (game.currentUpdateUI.yourPlayerIndex == 1 ? game.state.guessList : game.state.guessList2).join(', ');
+        return s;
+    }
+    game.showWordsOpponents = showWordsOpponents;
     function makeDic() {
         for (var i = 0; i < gameLogic.myDict.length; i++) {
             var res = gameLogic.myDict[i].toLowerCase();
-            game.trie.insert(res, i);
-            console.log("trie inserted? " + game.trie.contains(res));
+            game.myDictObj[res] = true;
         }
     }
     game.makeDic = makeDic;
@@ -94,6 +105,7 @@ var game;
     }
     game.getIntegersTill = getIntegersTill;
     function init($rootScope_, $timeout_) {
+        makeDic();
         game.$rootScope = $rootScope_;
         game.$timeout = $timeout_;
         game.time = document.getElementById("timer");
@@ -167,7 +179,10 @@ var game;
                 var move = void 0;
                 if (yourPlayerIndex() == 1) {
                     game.isModalShown = true;
-                    var scoreDiff = game.oldGuessList.length - game.state.guessList.length;
+                    var guessList2 = game.state.guessList;
+                    var scoreDiff = game.oldGuessList.length - guessList2.length;
+                    game.state.guessList = game.oldGuessList;
+                    game.state.guessList2 = guessList2;
                     var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
                     move = gameLogic.createEndMove(game.state, endMatchScores);
                 }
@@ -263,17 +278,20 @@ var game;
             y: row // * size.height + size.height / 2
         };
     }
+    function isValidWord(word) {
+        return game.myDictObj[word];
+    }
     function dragDone(tempString, row, col) {
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDict;
             var res = tempString.toLowerCase();
             //$rootScope.boxClass = false;
             console.log(tempString);
-            console.log("trie contains? " + game.trie.contains(res));
+            console.log("trie contains? " + isValidWord(res));
             //trie.insert(tempString, 0);
             //for (var v = 0; v < dic.length; v++) {
             //  if (dic[v] === res) {
-            if (game.trie.contains(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
+            if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
                 game.state.guessList.push(tempString);
                 console.log("yes in dictionary");
                 game.answerTrie.insert(tempString, 0);
@@ -319,7 +337,6 @@ var game;
         game.didMakeMove = playerIdToProposal && playerIdToProposal[game.yourPlayerInfo.playerId] != undefined;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
-        makeDic();
         game.currentUpdateUI = params;
         game.oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
         updateCache();

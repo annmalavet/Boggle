@@ -52,19 +52,32 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let dim = 4;
+
+  export let myDictObj: any = {};
+
   export function score() {
    let s = state.guessList;
   return s.length;
 }
+
+export function showCurWords(){
+  let s = state.guessList.join(', ');;
+  return s;
+}
+
 export function showWords(){
-  let s = state.guessList.join(', ');
+  let s = (currentUpdateUI.yourPlayerIndex == 0 ? state.guessList : state.guessList2).join(', ');
+  return s;
+}
+
+export function showWordsOpponents(){
+  let s = (currentUpdateUI.yourPlayerIndex == 1 ? state.guessList : state.guessList2).join(', ');
   return s;
 }
   export function makeDic() {
     for (let i: number = 0; i < gameLogic.myDict.length; i++) {
         var res = gameLogic.myDict[i].toLowerCase();
-        trie.insert(res, i)
-          console.log("trie inserted? "+game.trie.contains(res));
+        myDictObj[res] = true;
     }
   }
   export function clearClickToDrag(row: number, col: number) {
@@ -112,6 +125,9 @@ export function showWords(){
   }
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
+
+    makeDic();
+
     $rootScope = $rootScope_;
     $timeout = $timeout_;
     time = document.getElementById("timer");
@@ -191,7 +207,10 @@ export function showWords(){
         let move: IMove;
         if (yourPlayerIndex() == 1) {
           isModalShown = true;
-          let scoreDiff = oldGuessList.length - state.guessList.length;
+          let guessList2 = state.guessList;
+          let scoreDiff = oldGuessList.length - guessList2.length;
+          state.guessList = oldGuessList;
+          state.guessList2 = guessList2;
           let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
           move = gameLogic.createEndMove(state, endMatchScores);
         } else {
@@ -289,17 +308,21 @@ export function showWords(){
     };
   }
 
+  function isValidWord(word: string) {
+    return myDictObj[word];
+  }
+
   function dragDone(tempString: any, row: number, col: number) {
     $rootScope.$apply(function () {
       let dic = gameLogic.myDict;
       var res = tempString.toLowerCase();
       //$rootScope.boxClass = false;
       console.log(tempString);
-    console.log("trie contains? "+game.trie.contains(res));
+    console.log("trie contains? "+isValidWord(res));
       //trie.insert(tempString, 0);
       //for (var v = 0; v < dic.length; v++) {
       //  if (dic[v] === res) {
-        if (trie.contains(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
+        if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
           state.guessList.push(tempString);
           console.log("yes in dictionary");
           game.answerTrie.insert(tempString, 0);
@@ -346,7 +369,6 @@ export function showWords(){
     didMakeMove = playerIdToProposal && playerIdToProposal[yourPlayerInfo.playerId] != undefined;
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = null;
-    makeDic();
     currentUpdateUI = params;
     oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
     updateCache();

@@ -56,7 +56,7 @@ var gameLogic;
     gameLogic.getInitialBoard = getInitialBoard;
     function getInitialState() {
         return {
-            chosenBoard: getInitialBoard(), guessList: []
+            chosenBoard: getInitialBoard(), guessList: [], guessList2: []
         };
     }
     gameLogic.getInitialState = getInitialState;
@@ -75,14 +75,13 @@ var gameLogic;
         //}
         var winner = getWinner();
         var chosenBoard = board;
-        var guessList = [];
         console.log("this is createMove");
         var turnIndexAfterMove = 1 - turnIndexBeforeMove;
         var boardAfterMove = angular.copy(chosenBoard);
         var endMatchScores; // = [stateBeforeMove.guessList.length];
         var turnIndex;
-        var delta = { board: chosenBoard, guessList: guessList };
-        var state = { chosenBoard: chosenBoard, guessList: guessList };
+        var delta = { board: chosenBoard, guessList: [] };
+        var state = { chosenBoard: chosenBoard, guessList: [], guessList2: [] };
         return {
             endMatchScores: endMatchScores,
             turnIndex: turnIndexAfterMove,

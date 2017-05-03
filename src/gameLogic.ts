@@ -13,6 +13,7 @@ type IProposalData = BoardDelta;
 interface IState {
   chosenBoard: Board;//game board
   guessList: GuessList;
+  guessList2: GuessList;
 }
 
 
@@ -77,7 +78,7 @@ module gameLogic {
   }
   export function getInitialState(): IState {
     return {
-      chosenBoard: getInitialBoard(), guessList: []
+      chosenBoard: getInitialBoard(), guessList: [], guessList2: []
     };
   }
 
@@ -97,14 +98,13 @@ module gameLogic {
     //}
     let winner = getWinner();
     let chosenBoard: Board = board;
-    let guessList: GuessList = [];
     console.log("this is createMove");
     let turnIndexAfterMove = 1 - turnIndexBeforeMove;
     let boardAfterMove = angular.copy(chosenBoard);
     let endMatchScores: number[];// = [stateBeforeMove.guessList.length];
     let turnIndex: number;
-    let delta: BoardDelta = { board: chosenBoard, guessList: guessList };
-    let state: IState = { chosenBoard: chosenBoard, guessList: guessList };
+    let delta: BoardDelta = { board: chosenBoard, guessList: [] };
+    let state: IState = { chosenBoard: chosenBoard, guessList: [], guessList2: [] };
 
     return {
       endMatchScores: endMatchScores,
