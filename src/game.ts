@@ -19,8 +19,8 @@ interface Score {
 }
 
 module game {
- export let  trie = new gameTrie.Trie();
- export let  answerTrie = new gameTrie.Trie();
+  export let trie = new gameTrie.Trie();
+  export let answerTrie = new gameTrie.Trie();
   export let isModalShown = false;
   export let modalTitle = "Your turn is over";
   export let modalBody = "Time is up";
@@ -52,32 +52,35 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let dim = 4;
-
+  export let wordsDiscoveredPerPlayer0: string[]=[];
+  export let wordsDiscoveredPerPlayer1: string[]=[];
   export let myDictObj: any = {};
 
   export function score() {
-   let s = state.guessList;
-  return s.length;
-}
+    let s = state.guessList;
+    return s.length;
+  }
+  export function showCurWords() {
+    let s = state.guessList.join(', ');;
+    return s
+  }
 
-export function showCurWords(){
-  let s = state.guessList.join(', ');;
-  return s;
-}
+  export function showWords() {
+    let s = (currentUpdateUI.yourPlayerIndex == 0 ?  state.guessListFirst : state.guessList).join(', ');
+   // let s = wordsDiscoveredPerPlayer[currentUpdateUI.yourPlayerIndex];
+    return s;
+  }
 
-export function showWords(){
-  let s = (currentUpdateUI.yourPlayerIndex == 0 ? state.guessList : state.guessList2).join(', ');
-  return s;
-}
+  export function showWordsOpponents() {
+    let s = (currentUpdateUI.yourPlayerIndex == 1 ?  state.guessListFirst : state.guessList).join(', ');
+   //let s = state.guessListFirst;
+    return s;
+  }
 
-export function showWordsOpponents(){
-  let s = (currentUpdateUI.yourPlayerIndex == 1 ? state.guessList : state.guessList2).join(', ');
-  return s;
-}
   export function makeDic() {
     for (let i: number = 0; i < gameLogic.myDict.length; i++) {
-        var res = gameLogic.myDict[i].toLowerCase();
-        myDictObj[res] = true;
+      var res = gameLogic.myDict[i].toLowerCase();
+      myDictObj[res] = true;
     }
   }
   export function clearClickToDrag(row: number, col: number) {
@@ -112,9 +115,9 @@ export function showWordsOpponents(){
     isModalShown = true;
 
   }
-
   let cacheIntegersTill: number[][] = [];
-  export function getIntegersTill(number: any): number[] {
+
+    export function getIntegersTill(number: any): number[] {
     if (cacheIntegersTill[number]) return cacheIntegersTill[number];
     let res: number[] = [];
     for (let i = 0; i < number; i++) {
@@ -134,7 +137,6 @@ export function showWordsOpponents(){
     gameArea = document.getElementById("gameArea");
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
-
     dragArr = [];
     isModalShown = false;
     dragArr.push(4 + '' + 4);
@@ -151,10 +153,10 @@ export function showWordsOpponents(){
   }
 
   function checkIf(row: number, col: number) {
-    
+
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
-         cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
+        cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
         game.tempString = tempString.concat(state.chosenBoard[row][col]);
         showGuess();
         console.log(game.tempString);
@@ -206,16 +208,17 @@ export function showWordsOpponents(){
       if (timerCount < 0) {
         let move: IMove;
         if (yourPlayerIndex() == 1) {
+          //console.log(oldGuessList.join(', ') + " old guess list");
           isModalShown = true;
-          let guessList2 = state.guessList;
-          let scoreDiff = oldGuessList.length - guessList2.length;
-          state.guessList = oldGuessList;
-          state.guessList2 = guessList2;
+         //let guessList2 = state.guessList;
+          let scoreDiff = state.guessListFirst.length - state.guessList.length;
+          //state.guessList = oldGuessList;
+         // state.guessList2 = guessList2;
           let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
           move = gameLogic.createEndMove(state, endMatchScores);
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
-          state, yourPlayerIndex(), );
+            state, yourPlayerIndex(), );
           isModalShown = true;
         }
         makeMove(move);
@@ -270,7 +273,7 @@ export function showWordsOpponents(){
     let arrId = som.id.split("_");
     let a = parseInt(arrId[0]);
     let b = parseInt(arrId[1]);
-   
+
     checkIf(a, b);
 
     if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
@@ -280,7 +283,7 @@ export function showWordsOpponents(){
     }
 
 
-    if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
+    if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
       dragDone(tempString, row, col);
       tempString = '';
@@ -318,22 +321,22 @@ export function showWordsOpponents(){
       var res = tempString.toLowerCase();
       //$rootScope.boxClass = false;
       console.log(tempString);
-    console.log("trie contains? "+isValidWord(res));
+      console.log("trie contains? " + isValidWord(res));
       //trie.insert(tempString, 0);
       //for (var v = 0; v < dic.length; v++) {
       //  if (dic[v] === res) {
-        if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
-          state.guessList.push(tempString);
-          console.log("yes in dictionary");
-          game.answerTrie.insert(tempString, 0);
-          reset();
-          tempString = null;
-          return;
-        } else {
-          console.log("not in dictionary " + res);
-          reset();
-          tempString = null;
-        }
+      if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
+        state.guessList.push(tempString);
+        console.log("yes in dictionary");
+        game.answerTrie.insert(tempString, 0);
+        reset();
+        tempString = null;
+        return;
+      } else {
+        console.log("not in dictionary " + res);
+        reset();
+        tempString = null;
+      }
       //}
       if (dragArr.length === 0) {
         dragArr.push(4 + '' + 4);
@@ -346,20 +349,7 @@ export function showWordsOpponents(){
     return g;
   }
 
-  function getProposalsBoard(playerIdToProposal: IProposals): string[][] {
-    let proposals: string[][] = [];
-    for (let i = 0; i < gameLogic.ROWS; i++) {
-      proposals[i] = [];
-      for (let j = 0; j < gameLogic.COLS; j++) {
-        proposals[i][j] = game.state.chosenBoard[i][j];
-      }
-    }
-    for (let playerId in playerIdToProposal) {
-      let proposal = playerIdToProposal[playerId];
-      let delta = proposal.data;
-    }
-    return proposals;
-  }
+
 
 
   export function updateUI(params: IUpdateUI): void {
@@ -370,23 +360,20 @@ export function showWordsOpponents(){
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = null;
     currentUpdateUI = params;
-    oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
+    // oldGuessList =params.state.guessList;
+    //oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
     updateCache();
-    
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
-     
       isModalShown = false;
       let move = gameLogic.createInitialMove();
       state = move.state;
       if (isMyTurn()) makeMove(move);
     }
-
     if (isMyTurn() && countDownLeft === 60) {
-       startTimer();
+      startTimer();
     }
-
   }
 
   function animationEndedCallback() {
@@ -417,15 +404,16 @@ export function showWordsOpponents(){
 
     didMakeMove = true;
     let chat = "Hello."
-    let delta = { board: game.state.chosenBoard, guessList: state.guessList };
+    let delta = { board: game.state.chosenBoard, guessList0:state.guessListFirst, guessList1: state.guessList };
     let myProposal: IProposal = {
       data: delta,
-      chatDescription:chat,
+      chatDescription: chat,
       playerInfo: yourPlayerInfo,
     };
+
     // Decide whether we make a move or not
-      gameService.makeMove(move,myProposal);
-    
+    gameService.makeMove(move, myProposal);
+
   }
 
   function isFirstMove() {

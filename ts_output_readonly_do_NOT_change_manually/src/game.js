@@ -28,6 +28,8 @@ var game;
     game.counter = 100;
     game.countDownLeft = 60;
     game.dim = 4;
+    game.wordsDiscoveredPerPlayer0 = [];
+    game.wordsDiscoveredPerPlayer1 = [];
     game.myDictObj = {};
     function score() {
         var s = game.state.guessList;
@@ -41,12 +43,14 @@ var game;
     }
     game.showCurWords = showCurWords;
     function showWords() {
-        var s = (game.currentUpdateUI.yourPlayerIndex == 0 ? game.state.guessList : game.state.guessList2).join(', ');
+        var s = (game.currentUpdateUI.yourPlayerIndex == 0 ? game.state.guessListFirst : game.state.guessList).join(', ');
+        // let s = wordsDiscoveredPerPlayer[currentUpdateUI.yourPlayerIndex];
         return s;
     }
     game.showWords = showWords;
     function showWordsOpponents() {
-        var s = (game.currentUpdateUI.yourPlayerIndex == 1 ? game.state.guessList : game.state.guessList2).join(', ');
+        var s = (game.currentUpdateUI.yourPlayerIndex == 1 ? game.state.guessListFirst : game.state.guessList).join(', ');
+        //let s = state.guessListFirst;
         return s;
     }
     game.showWordsOpponents = showWordsOpponents;
@@ -178,11 +182,12 @@ var game;
             if (timerCount < 0) {
                 var move = void 0;
                 if (yourPlayerIndex() == 1) {
+                    //console.log(oldGuessList.join(', ') + " old guess list");
                     game.isModalShown = true;
-                    var guessList2 = game.state.guessList;
-                    var scoreDiff = game.oldGuessList.length - guessList2.length;
-                    game.state.guessList = game.oldGuessList;
-                    game.state.guessList2 = guessList2;
+                    //let guessList2 = state.guessList;
+                    var scoreDiff = game.state.guessListFirst.length - game.state.guessList.length;
+                    //state.guessList = oldGuessList;
+                    // state.guessList2 = guessList2;
                     var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
                     move = gameLogic.createEndMove(game.state, endMatchScores);
                 }
@@ -252,7 +257,7 @@ var game;
             var row = Math.floor(y * 4 / game.boardArea.clientHeight);
             return;
         }
-        if (type === "touchend" || type === "touchcancel" || type === "touchleave") {
+        if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
             // drag ended
             dragDone(game.tempString, row, col);
             game.tempString = '';
@@ -316,20 +321,6 @@ var game;
         return game.g;
     }
     game.showGuess = showGuess;
-    function getProposalsBoard(playerIdToProposal) {
-        var proposals = [];
-        for (var i = 0; i < gameLogic.ROWS; i++) {
-            proposals[i] = [];
-            for (var j = 0; j < gameLogic.COLS; j++) {
-                proposals[i][j] = game.state.chosenBoard[i][j];
-            }
-        }
-        for (var playerId in playerIdToProposal) {
-            var proposal = playerIdToProposal[playerId];
-            var delta = proposal.data;
-        }
-        return proposals;
-    }
     function updateUI(params) {
         log.info("Game got updateUI:", params);
         var playerIdToProposal = params.playerIdToProposal;
@@ -338,7 +329,8 @@ var game;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
         game.currentUpdateUI = params;
-        game.oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
+        // oldGuessList =params.state.guessList;
+        //oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
         updateCache();
         clearAnimationTimeout();
         game.state = params.state;
@@ -379,7 +371,7 @@ var game;
     function makeMove(move) {
         game.didMakeMove = true;
         var chat = "Hello.";
-        var delta = { board: game.state.chosenBoard, guessList: game.state.guessList };
+        var delta = { board: game.state.chosenBoard, guessList0: game.state.guessListFirst, guessList1: game.state.guessList };
         var myProposal = {
             data: delta,
             chatDescription: chat,
