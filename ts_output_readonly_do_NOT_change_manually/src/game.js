@@ -82,9 +82,6 @@ var game;
             res.push([]);
         return res;
     }
-    function updateCache() {
-    }
-    game.updateCache = updateCache;
     function reset() {
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 4; j++) {
@@ -329,9 +326,6 @@ var game;
         game.yourPlayerInfo = params.yourPlayerInfo;
         game.proposals = null;
         game.currentUpdateUI = params;
-        // oldGuessList =params.state.guessList;
-        //oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
-        updateCache();
         clearAnimationTimeout();
         game.state = params.state;
         if (isFirstMove()) {
@@ -342,6 +336,7 @@ var game;
                 makeMove(move);
         }
         if (isMyTurn() && game.countDownLeft === 60) {
+            game.isModalShown = false;
             startTimer();
         }
     }

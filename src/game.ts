@@ -101,9 +101,7 @@ module game {
     for (let i = 0; i < 4; i++) res.push([]);
     return res;
   }
-  export function updateCache() {
 
-  }
   export function reset() {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
@@ -218,7 +216,7 @@ module game {
           move = gameLogic.createEndMove(state, endMatchScores);
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
-            state, yourPlayerIndex(), );
+          state, yourPlayerIndex(), );
           isModalShown = true;
         }
         makeMove(move);
@@ -360,18 +358,17 @@ module game {
     yourPlayerInfo = params.yourPlayerInfo;
     proposals = null;
     currentUpdateUI = params;
-    // oldGuessList =params.state.guessList;
-    //oldGuessList = params.state ? angular.copy(params.state.guessList) : null;
-    updateCache();
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
+      
       isModalShown = false;
       let move = gameLogic.createInitialMove();
       state = move.state;
       if (isMyTurn()) makeMove(move);
     }
     if (isMyTurn() && countDownLeft === 60) {
+      isModalShown = false;
       startTimer();
     }
   }
