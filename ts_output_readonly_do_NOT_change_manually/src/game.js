@@ -65,9 +65,6 @@ var game;
         return "";
     }
     game.clearClickToDrag = clearClickToDrag;
-    function getAnimationClass(row, col) {
-    }
-    game.getAnimationClass = getAnimationClass;
     function getPieceContainerClass(row, col) {
         game.toClearRC.push({ roww: row, coll: col });
         return "growi";
@@ -287,12 +284,6 @@ var game;
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDict;
             var res = tempString.toLowerCase();
-            //$rootScope.boxClass = false;
-            console.log(tempString);
-            console.log("trie contains? " + isValidWord(res));
-            //trie.insert(tempString, 0);
-            //for (var v = 0; v < dic.length; v++) {
-            //  if (dic[v] === res) {
             if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
                 game.state.guessList.push(tempString);
                 console.log("yes in dictionary");
@@ -335,7 +326,7 @@ var game;
             if (isMyTurn())
                 makeMove(move);
         }
-        if (isMyTurn() && game.countDownLeft === 60) {
+        if (isMyTurn() && (game.countDownLeft === 60 || game.countDownLeft === 0)) {
             game.isModalShown = false;
             startTimer();
         }

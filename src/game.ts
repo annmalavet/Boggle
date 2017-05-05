@@ -86,9 +86,7 @@ module game {
   export function clearClickToDrag(row: number, col: number) {
     return "";
   }
-  export function getAnimationClass(row: number, col: number) {
 
-  }
   export function getPieceContainerClass(row: number, col: number) {
     toClearRC.push({ roww: row, coll: col });
     return "growi";
@@ -317,12 +315,6 @@ module game {
     $rootScope.$apply(function () {
       let dic = gameLogic.myDict;
       var res = tempString.toLowerCase();
-      //$rootScope.boxClass = false;
-      console.log(tempString);
-      console.log("trie contains? " + isValidWord(res));
-      //trie.insert(tempString, 0);
-      //for (var v = 0; v < dic.length; v++) {
-      //  if (dic[v] === res) {
       if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
         state.guessList.push(tempString);
         console.log("yes in dictionary");
@@ -361,13 +353,13 @@ module game {
     clearAnimationTimeout();
     state = params.state;
     if (isFirstMove()) {
-      
+   
       isModalShown = false;
       let move = gameLogic.createInitialMove();
       state = move.state;
       if (isMyTurn()) makeMove(move);
     }
-    if (isMyTurn() && countDownLeft === 60) {
+    if (isMyTurn() && (countDownLeft === 60 || countDownLeft ===0)) {
       isModalShown = false;
       startTimer();
     }
