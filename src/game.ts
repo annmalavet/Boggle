@@ -194,7 +194,7 @@ module game {
   export function startTimer() {
     stopTimer();
     isModalShown = false;
-    let timerCount = 10;
+    let timerCount = 60;
     let countDown = function () {
       isModalShown = false;
       if (timerCount < 0) {

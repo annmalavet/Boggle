@@ -167,7 +167,7 @@ var game;
     function startTimer() {
         stopTimer();
         game.isModalShown = false;
-        var timerCount = 10;
+        var timerCount = 60;
         var countDown = function () {
             game.isModalShown = false;
             if (timerCount < 0) {
