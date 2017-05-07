@@ -44,13 +44,11 @@ var game;
     game.showCurWords = showCurWords;
     function showWords() {
         var s = (game.currentUpdateUI.yourPlayerIndex == 0 ? game.state.guessListFirst : game.state.guessList).join(', ');
-        // let s = wordsDiscoveredPerPlayer[currentUpdateUI.yourPlayerIndex];
         return s;
     }
     game.showWords = showWords;
     function showWordsOpponents() {
         var s = (game.currentUpdateUI.yourPlayerIndex == 1 ? game.state.guessListFirst : game.state.guessList).join(', ');
-        //let s = state.guessListFirst;
         return s;
     }
     game.showWordsOpponents = showWordsOpponents;
@@ -70,9 +68,7 @@ var game;
         return "growi";
     }
     game.getPieceContainerClass = getPieceContainerClass;
-    game.cachedPieceClass = getEmpty8Arrays();
     game.cachedPieceSrc = getEmpty8Arrays();
-    game.cachedAvatarPieceCrown = getEmpty8Arrays();
     function getEmpty8Arrays() {
         var res = [];
         for (var i = 0; i < 4; i++)
@@ -90,6 +86,7 @@ var game;
     function showModal() {
         game.isModalShown = true;
     }
+    //for letters
     var cacheIntegersTill = [];
     function getIntegersTill(number) {
         if (cacheIntegersTill[number])
@@ -170,7 +167,7 @@ var game;
     function startTimer() {
         stopTimer();
         game.isModalShown = false;
-        var timerCount = 60;
+        var timerCount = 10;
         var countDown = function () {
             game.isModalShown = false;
             if (timerCount < 0) {
@@ -182,7 +179,13 @@ var game;
                     var scoreDiff = game.state.guessListFirst.length - game.state.guessList.length;
                     //state.guessList = oldGuessList;
                     // state.guessList2 = guessList2;
-                    var endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+                    var endMatchScores = [];
+                    if (scoreDiff == 0) {
+                        endMatchScores = [-1, -1];
+                    }
+                    else {
+                        endMatchScores = scoreDiff > 0 ? [1, 0] : [0, 1];
+                    }
                     move = gameLogic.createEndMove(game.state, endMatchScores);
                 }
                 else {
@@ -208,13 +211,6 @@ var game;
         return game.tempString;
     }
     game.listOf = listOf;
-    function addText(guessList) {
-        //window.alert(tempString);
-        var s = game.state.guessList;
-        var a = 'A';
-        return s;
-    }
-    game.addText = addText;
     function getCellSize() {
         return {
             width: game.gameArea.clientWidth / gameLogic.COLS,
@@ -258,24 +254,6 @@ var game;
             game.dragArr = [];
             game.dragArr.push(4 + '' + 4);
         }
-    }
-    function getSquareTopLeft(row, col) {
-        var size = getSquareWidthHeight();
-        return { top: row * size.height, left: col * size.width };
-    }
-    function getSquareWidthHeight() {
-        var boardArea = document.getElementById("boardArea");
-        return {
-            width: boardArea.clientWidth / (4),
-            height: boardArea.clientHeight / (4)
-        };
-    }
-    function getSquareCenterXY(row, col) {
-        var size = getSquareWidthHeight();
-        return {
-            x: col,
-            y: row // * size.height + size.height / 2
-        };
     }
     function isValidWord(word) {
         return game.myDictObj[word];
@@ -351,7 +329,7 @@ var game;
             turnIndex: game.currentUpdateUI.turnIndex,
         };
         //let move = aiService.findComputerMove(currentMove);
-        //   log.info("Computer move: ", move);
+        // log.info("Computer move: ", move);
         // makeMove(move);
     }
     function makeMove(move) {

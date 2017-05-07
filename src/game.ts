@@ -67,13 +67,11 @@ module game {
 
   export function showWords() {
     let s = (currentUpdateUI.yourPlayerIndex == 0 ?  state.guessListFirst : state.guessList).join(', ');
-   // let s = wordsDiscoveredPerPlayer[currentUpdateUI.yourPlayerIndex];
     return s;
   }
 
   export function showWordsOpponents() {
     let s = (currentUpdateUI.yourPlayerIndex == 1 ?  state.guessListFirst : state.guessList).join(', ');
-   //let s = state.guessListFirst;
     return s;
   }
 
@@ -91,9 +89,8 @@ module game {
     toClearRC.push({ roww: row, coll: col });
     return "growi";
   }
-  export let cachedPieceClass: string[][] = getEmpty8Arrays();
+
   export let cachedPieceSrc: string[][] = getEmpty8Arrays();
-  export let cachedAvatarPieceCrown: string[][] = getEmpty8Arrays();
   function getEmpty8Arrays(): string[][] {
     let res: string[][] = [];
     for (let i = 0; i < 4; i++) res.push([]);
@@ -111,8 +108,9 @@ module game {
     isModalShown = true;
 
   }
-  let cacheIntegersTill: number[][] = [];
 
+  //for letters
+  let cacheIntegersTill: number[][] = [];
     export function getIntegersTill(number: any): number[] {
     if (cacheIntegersTill[number]) return cacheIntegersTill[number];
     let res: number[] = [];
@@ -124,9 +122,7 @@ module game {
   }
 
   export function init($rootScope_: angular.IScope, $timeout_: angular.ITimeoutService) {
-
     makeDic();
-
     $rootScope = $rootScope_;
     $timeout = $timeout_;
     time = document.getElementById("timer");
@@ -198,7 +194,7 @@ module game {
   export function startTimer() {
     stopTimer();
     isModalShown = false;
-    let timerCount = 60;
+    let timerCount = 10;
     let countDown = function () {
       isModalShown = false;
       if (timerCount < 0) {
@@ -210,7 +206,13 @@ module game {
           let scoreDiff = state.guessListFirst.length - state.guessList.length;
           //state.guessList = oldGuessList;
          // state.guessList2 = guessList2;
-          let endMatchScores: number[] = scoreDiff > 0 ? [1, 0] : [0, 1];
+         let endMatchScores: number[] = [];
+         if (scoreDiff ==0){
+           endMatchScores = [-1,-1];
+         }
+         else {
+          endMatchScores= scoreDiff > 0 ? [1, 0] : [0, 1];
+         }
           move = gameLogic.createEndMove(state, endMatchScores);
         } else {
           move = gameLogic.createMove(game.state.chosenBoard,
@@ -236,12 +238,6 @@ module game {
     return tempString;
   }
 
-  export function addText(guessList: string[]) {
-    //window.alert(tempString);
-    let s = state.guessList;
-    let a = 'A';
-    return s;
-  }
   function getCellSize(): CellSize {
     return {
       width: gameArea.clientWidth / gameLogic.COLS,
@@ -288,25 +284,6 @@ module game {
     }
   }
 
-  function getSquareTopLeft(row: number, col: number) {
-    let size = getSquareWidthHeight();
-    return { top: row * size.height, left: col * size.width }
-  }
-  function getSquareWidthHeight() {
-    let boardArea = document.getElementById("boardArea");
-    return {
-      width: boardArea.clientWidth / (4), ///******** * TODO: 9 is hardcoded
-      height: boardArea.clientHeight / (4)
-    };
-  }
-  function getSquareCenterXY(row: number, col: number) {
-    let size = getSquareWidthHeight();
-    return {
-      x: col, // * size.width + size.width / 2,
-      y: row // * size.height + size.height / 2
-    };
-  }
-
   function isValidWord(word: string) {
     return myDictObj[word];
   }
@@ -338,9 +315,6 @@ module game {
     g = tempString;
     return g;
   }
-
-
-
 
   export function updateUI(params: IUpdateUI): void {
     log.info("Game got updateUI:", params);
@@ -385,12 +359,11 @@ module game {
       turnIndex: currentUpdateUI.turnIndex,
     }
     //let move = aiService.findComputerMove(currentMove);
-    //   log.info("Computer move: ", move);
+    // log.info("Computer move: ", move);
     // makeMove(move);
   }
 
   function makeMove(move: IMove) {
-
     didMakeMove = true;
     let chat = "Hello."
     let delta = { board: game.state.chosenBoard, guessList0:state.guessListFirst, guessList1: state.guessList };
@@ -399,7 +372,6 @@ module game {
       chatDescription: chat,
       playerInfo: yourPlayerInfo,
     };
-
     // Decide whether we make a move or not
     gameService.makeMove(move, myProposal);
 
