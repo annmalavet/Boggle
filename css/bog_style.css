@@ -24,6 +24,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
+  font-family: 'Maven Pro', sans-serif;
 }
 .listOf{
   margin: 10%;
@@ -31,25 +32,39 @@ html, body {
   color: white;
 }
 body {
-  font-family: sans-serif;
+  font-family: 'Maven Pro', sans-serif;
   background-color:#F0F8FF;
   z-index: 1;
 }
 .scoreOf {
   top:0%;
  position: top;
-    width:500%;
+
 }
 .timer {
     top:0%;
-    width:100%;
-   
 }
+.right {
+  text-align: right;
+  margin-right: 1em;
+}
+table {
+    width: 100%;
+}
+table, th, td {
 
-.wordBox {
-    width:800%;
-    padding: 2px;
-    position: inline-block;
+}
+img {
+  float:right;
+float: top;
+  height: 40%;  
+}
+td
+{
+  vertical-align:top;
+  float: top;
+  width: 100%;
+
 }
 
 .showEndList{
@@ -99,6 +114,8 @@ background: url(/alphabet/smog_icon.png) no-repeat;
 
 
 button {
+ -webkit-filter: drop-shadow(5px 5px 5px #222);
+  filter: drop-shadow(5px 5px 5px #222);
 display: inline-block;
 position: absolute;
 background-color:rgba(0,0,0,0);
@@ -125,6 +142,7 @@ background-position: center;
   {
 
 div div h3{
+  font-family: 'Maven Pro', sans-serif;
   font-size: 10pt;
 }
 
@@ -134,6 +152,12 @@ html, body {
   width: 100%;
   height: 100%;
   position: fixed!important;
+}
+
+img {
+  float:right;
+float: top;
+  height: 40%;  
 }
 
   }

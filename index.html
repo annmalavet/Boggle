@@ -14,6 +14,7 @@
   <!-- build:[href] css/everything.min.css -->
   <link rel="stylesheet" type="text/css" href="css/bog_style.css">
   <link rel="stylesheet" type="text/css" href="css/csshake-slow.css">
+  <link type="text/css" href="https://fonts.googleapis.com/css?family=Maven+Pro" rel="stylesheet">
   <!-- /build -->
 
   <!-- build:js js/everything.min.js 
@@ -52,10 +53,14 @@
   <!-- ng-if="game.isTimerRunning()"-->
   <div id="gameArea" class="gameArea">
     <div class="topArea">
-      <h3 class="timer">Time left: {{game.countDownLeft}}</h3>
-      <h3 class="scoreOf" id="score">Score: {{game.score()}}</h3>
-      <h3 class="wordBox1" id="inputarea"> Current guess: {{game.showGuess()}}</h3>
-
+      <table>
+      <tr>
+        <td><h3 class="timer">Time left: {{game.countDownLeft}}</h3></td>
+          <td rowspan="2"><img class="right"  ></td>
+          </tr>
+      <tr><td><h3 class="scoreOf" id="score">Score: {{game.score()}}</h3></td></tr>
+</table>
+  <h3 class="wordBox" id="inputarea" colspan="2"> Current guess: {{game.showGuess()}}</h3>
     </div>
 
     <div id="boardArea">
