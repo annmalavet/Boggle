@@ -33,7 +33,7 @@ html, body {
 }
 body {
   font-family: 'Maven Pro', sans-serif;
-  background-color:#F0F8FF;
+  background-color:#bed99b;
   z-index: 1;
 }
 .scoreOf {
@@ -57,7 +57,7 @@ table, th, td {
 img {
   float:right;
 float: top;
-  height: 40%;  
+  height: 70%;  
 }
 td
 {
