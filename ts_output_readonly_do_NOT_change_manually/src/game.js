@@ -262,9 +262,12 @@ var game;
         game.$rootScope.$apply(function () {
             var dic = gameLogic.myDict;
             var res = tempString.toLowerCase();
+            var audio = new Audio();
             if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
                 game.state.guessList.push(tempString);
                 console.log("yes in dictionary");
+                audio = new Audio('sound/chime_up.wav');
+                audio.play();
                 game.answerTrie.insert(tempString, 0);
                 reset();
                 tempString = null;
