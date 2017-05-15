@@ -275,6 +275,8 @@ var game;
             }
             else {
                 console.log("not in dictionary " + res);
+                audio = new Audio('sound/boing.wav');
+                audio.play();
                 reset();
                 tempString = null;
             }
