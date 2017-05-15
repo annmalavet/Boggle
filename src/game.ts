@@ -52,6 +52,7 @@ module game {
   export let gameArea: HTMLElement;
   export let boardArea: HTMLElement;
   export let dim = 4;
+  export let faceState:string = '';
   export let wordsDiscoveredPerPlayer0: string[]=[];
   export let wordsDiscoveredPerPlayer1: string[]=[];
   export let myDictObj: any = {};
@@ -130,6 +131,7 @@ module game {
     boardArea = document.getElementById("boardArea");
     dragAndDropService.addDragListener("boardArea", handleDragEvent);
     dragArr = [];
+    faceState = 'smog_face';
     isModalShown = false;
     dragArr.push(4 + '' + 4);
     toClearRC = [];
@@ -145,7 +147,6 @@ module game {
   }
 
   function checkIf(row: number, col: number) {
-
     for (let i = 0; i < dragArr.length; i++) {
       if (dragArr.indexOf(row + '' + col) === -1) {
         cachedPieceSrc[row][col] = getPieceContainerClass(row, col);
@@ -200,12 +201,8 @@ module game {
       if (timerCount < 0) {
         let move: IMove;
         if (yourPlayerIndex() == 1) {
-          //console.log(oldGuessList.join(', ') + " old guess list");
           isModalShown = true;
-         //let guessList2 = state.guessList;
           let scoreDiff = state.guessListFirst.length - state.guessList.length;
-          //state.guessList = oldGuessList;
-         // state.guessList2 = guessList2;
          let endMatchScores: number[] = [];
          if (scoreDiff ==0){
            endMatchScores = [-1,-1];
@@ -248,6 +245,12 @@ module game {
     let oka = 'alphabet/img_' + game.state.chosenBoard[row][col] + '.png';
     return oka;
   }
+
+  export function setFace(){
+    let s = 'alphabet/'+faceState+'.png';
+    console.log('face state '+s);
+    return s;
+  }
   export function getID(row: number, col: number) {
     let id = game.state.chosenBoard[row][col];
     return id;
@@ -257,7 +260,9 @@ module game {
     //  if (!isHumanTurn() || passes == 2) {
     ///   return; // if the game is over, do not display dragging effect
     //}
+    faceState = 'smog_face';
     if (!isMyTurn()) return;
+    console.log(setFace()+" face se t ");
     let x = clientX - boardArea.offsetLeft - gameArea.offsetLeft;
     let y = clientY - boardArea.offsetTop - gameArea.offsetTop;
     var som = document.elementFromPoint(clientX, clientY);
@@ -265,23 +270,26 @@ module game {
     let arrId = som.id.split("_");
     let a = parseInt(arrId[0]);
     let b = parseInt(arrId[1]);
-
-    checkIf(a, b);
-
-    if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
-      var col = Math.floor(x * 4 / game.boardArea.clientWidth);
-      var row = Math.floor(y * 4 / game.boardArea.clientHeight);
-      return;
-    }
-
-
     if (type === "touchend" || type === "touchcancel" || type === "touchleave" || type === "mouseup") {
       // drag ended
+      checkIf(a, b);
       dragDone(tempString, row, col);
       tempString = '';
       dragArr = [];
       dragArr.push(4 + '' + 4);
     }
+else {
+    checkIf(a, b);
+}
+    if (x < 0 || x >= boardArea.clientWidth || y < 0 || y >= boardArea.clientHeight) {
+      var col = Math.floor(x * 4 / game.boardArea.clientWidth);
+      var row = Math.floor(y * 4 / game.boardArea.clientHeight);
+      dragDone(tempString, row, col);
+      return;
+    }
+
+
+
   }
 
   function isValidWord(word: string) {
@@ -295,6 +303,7 @@ module game {
         var audio = new Audio();
       if (isValidWord(res) && !(game.answerTrie.contains(tempString)) && tempString.length > 2) {
         state.guessList.push(tempString);
+        faceState = 'face_plus';
         console.log("yes in dictionary");
         audio = new Audio('sound/chime_up.wav');
         audio.play();
@@ -303,8 +312,9 @@ module game {
         tempString = null;
         return;
       } else {
+        faceState = 'face_boing';
         console.log("not in dictionary " + res);
-      audio = new Audio('sound/boing.wav');
+        audio = new Audio('sound/boing.wav');
         audio.play();
         reset();
         tempString = null;
